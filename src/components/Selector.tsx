@@ -1,21 +1,35 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native';
 import React from 'react';
 
 type Props = {
   title: string;
   active?: boolean;
   onPress?: () => void;
+  style?: ViewStyle;
 };
 
-const Selector = ({ title, active = false, onPress }: Props) => {
+const Selector = ({
+  title,
+  active = false,
+  onPress,
+  style,
+}: Props) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={onPress}
-        style={[styles.btn, active && styles.activeBtn]}
-      >
+        style={[
+          styles.btn,
+          active && styles.activeBtn,
+          style,
+        ]}>
         <Text style={[styles.btnText, active && styles.activeText]}>
           {title}
         </Text>
@@ -34,11 +48,8 @@ const styles = StyleSheet.create({
   btn: {
     paddingVertical: 10,
     paddingHorizontal: 30,
-
     borderRadius: 6,
-
     backgroundColor: '#F3F3F3',
-
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -50,7 +61,6 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 13,
     color: '#7D7D7D',
-
     fontFamily: 'Montserrat-SemiBold',
   },
 

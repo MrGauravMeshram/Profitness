@@ -5,4 +5,5 @@ export const WeekData = [
   {id:4, day:'Wed', date:'23'},
   {id:5, day:'Thu', date:'24'},
   {id:6, day:'Fri', date:'25'},
+{id:7, day:'Sat', date:'26'},
 ]

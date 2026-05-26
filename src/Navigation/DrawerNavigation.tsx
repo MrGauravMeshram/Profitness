@@ -22,9 +22,13 @@ import Animated, {
 } from 'react-native-reanimated';
 import TrainingScreen from '../Screen/Training/TrainingScreen';
 import Dashboard from '../Screen/DashBoard/Dashboard';
+import FavoriteScreen from '../Screen/Favorites/FavoriteScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MyTabs from './BottomTabNavigation';
+import ReminderScreen from '../Screen/Reminder/ReminderScreen';
 import Categories from '../Screen/Categories/CategoriesScreen';
+import NotificationScreen from '../Screen/Notification/NotificationScreen';
+import ProgressScreen from '../Screen/Progress/ProgressScreen';
 const { width } = Dimensions.get('window');
 const Drawer = createDrawerNavigator();
 
@@ -71,7 +75,10 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => (
         onPress={()=>{
           props.navigation.navigate('Dashboard')
         }}/>
-        <DrawerItem icon="analytics-outline" label="My Progress" />
+        <DrawerItem icon="analytics-outline" label="My Progress" 
+        onPress={()=>{
+          props.navigation.navigate('Progress')
+        }}/>
         <DrawerItem
           icon="barbell-outline"
           label="Training"
@@ -86,8 +93,14 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => (
             props.navigation.navigate('Categories');
           }}
         />
-        <DrawerItem icon="notifications-outline" label="Notification" />
-        <DrawerItem icon="heart-outline" label="My Favorites" />
+        <DrawerItem icon="notifications-outline" label="Reminder" 
+        onPress={() => {
+          props.navigation.navigate('Reminder');
+        }}/>
+        <DrawerItem icon="heart-outline" label="My Favorites" 
+        onPress={() => {
+          props.navigation.navigate('Favorite');
+        }}/>
         <DrawerItem icon="settings-outline" label="App Settings" />
         <DrawerItem icon="call-outline" label="Contact Support" />
       </View>
@@ -185,6 +198,10 @@ function MyDrawer() {
       <Drawer.Screen name="Categories" component={Categories} />
       <Drawer.Screen name="Dashboard" component={Dashboard}
       />
+      <Drawer.Screen name="Favorite" component={FavoriteScreen} />
+      <Drawer.Screen name="Progress" component={ProgressScreen} />
+     
+      <Drawer.Screen name="Reminder" component={ReminderScreen} />
     </Drawer.Navigator>
   );
 }

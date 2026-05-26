@@ -34,7 +34,7 @@ const AdditionalExercise = ({ heading, data }: Props) => {
           <Image
             source={item.image}
             style={styles.image}
-            resizeMode="contain"
+            resizeMode="cover"
           />
         </View>
 
@@ -123,8 +123,9 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: 70,
-    height: 70,
+    width: "100%",
+    height: "100%",
+    borderRadius: 16,
   },
 
   content: {

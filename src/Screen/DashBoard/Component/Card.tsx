@@ -2,7 +2,7 @@ import React, { useEffect,useCallback  } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
 
 
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet ,Image} from 'react-native'
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
@@ -67,7 +67,7 @@ const Card = ({
   return (
 
     <View style={styles.cardView}>
--
+
 
 
       <View style={styles.topPart}>
@@ -90,54 +90,43 @@ const Card = ({
 
 
 
-      <View style={styles.circleContainer}>
+     <View style={styles.circleContainer}>
+  {name === 'Workout' ? (
+   <View style={{height:100,width:100}} >
+<Image source={require("../../../assets/Images/pose.png")} style={{height:"100%", width:"100%"}}/>
+    </View>
+  ) : (
+    <Svg width={120} height={120}>
+      <Circle
+        cx="60"
+        cy="60"
+        r={radius}
+        stroke="#DCDCDC"
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
 
-        <Svg width={120} height={120}>
+      <AnimatedCircle
+        cx="60"
+        cy="60"
+        r={radius}
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill="none"
+        strokeLinecap="round"
+        strokeDasharray={circumference}
+        animatedProps={animatedProps}
+        rotation="-90"
+        origin="60,60"
+      />
+    </Svg>
+  )}
 
-    
-
-          <Circle
-            cx="60"
-            cy="60"
-            r={radius}
-            stroke="#DCDCDC"
-            strokeWidth={strokeWidth}
-            fill="none"
-          />
-
-          
-
-          <AnimatedCircle
-            cx="60"
-            cy="60"
-            r={radius}
-            stroke={color}
-            strokeWidth={strokeWidth}
-            fill="none"
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            animatedProps={animatedProps}
-            rotation="-90"
-            origin="60,60"
-          />
-
-        </Svg>
-
-        
-
-        <View style={styles.textContainer}>
-
-          <Text style={styles.innerText}>
-            {nums}
-          </Text>
-
-          <Text style={styles.innerSubtitle}>
-            {texts}
-          </Text>
-
-        </View>
-
-      </View>
+  <View style={styles.textContainer}>
+    <Text style={styles.innerText}>{nums}</Text>
+    <Text style={styles.innerSubtitle}>{texts}</Text>
+  </View>
+</View>
 
     </View>
 
