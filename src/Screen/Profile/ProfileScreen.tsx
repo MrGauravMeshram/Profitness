@@ -76,6 +76,7 @@ const Profile = ({ navigation }: any) => {
           name="create-outline"
           navigation={navigation}
           onFilterPress={()=>navigation.navigate('EditProfile')}
+          icon={null}
         />
 
         

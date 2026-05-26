@@ -119,14 +119,13 @@ const Home = () => {
             <Banner />
           </View>
 
-          <View style={{ height: 100 }} />
         </View>
         <View />
 
         <View
           style={{
             position: 'absolute',
-            top: 620,
+            top: 570,
             left: 20,
             zIndex: 9999,
             backgroundColor: '#F5F5F5',
@@ -234,7 +233,7 @@ const styles = StyleSheet.create({
   ImageBox: {
     width: 350,
     alignSelf: 'center',
-    marginTop: 40,
+    marginBottom: 90,
   },
 
   goalContainer: {

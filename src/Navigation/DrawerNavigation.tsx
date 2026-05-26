@@ -24,6 +24,7 @@ import TrainingScreen from '../Screen/Training/TrainingScreen';
 import Dashboard from '../Screen/DashBoard/Dashboard';
 import FavoriteScreen from '../Screen/Favorites/FavoriteScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AppSettingsScreen from '../Screen/AppSettings/AppSettingsScreen';
 import MyTabs from './BottomTabNavigation';
 import ReminderScreen from '../Screen/Reminder/ReminderScreen';
 import Categories from '../Screen/Categories/CategoriesScreen';
@@ -101,7 +102,10 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => (
         onPress={() => {
           props.navigation.navigate('Favorite');
         }}/>
-        <DrawerItem icon="settings-outline" label="App Settings" />
+        <DrawerItem icon="settings-outline" label="App Settings" 
+        onPress={() => {
+          props.navigation.navigate('AppSettings');
+        }}/>
         <DrawerItem icon="call-outline" label="Contact Support" />
       </View>
 
@@ -202,6 +206,7 @@ function MyDrawer() {
       <Drawer.Screen name="Progress" component={ProgressScreen} />
      
       <Drawer.Screen name="Reminder" component={ReminderScreen} />
+      <Drawer.Screen name="AppSettings" component={AppSettingsScreen} />
     </Drawer.Navigator>
   );
 }

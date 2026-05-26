@@ -22,7 +22,8 @@ const [isChoose,setChoose] = useState(0)
   return (
     <SafeAreaView style={{flex:1,backgroundColor:"white"}}>
       <View style={{paddingBottom:15}}>
-      <Header title='MEAL PLAN' name='funnel' onFilterPress={()=>{}} navigation={navigation}/>
+      <Header title='MEAL PLAN' name='funnel' onFilterPress={()=>{}} navigation={navigation}
+        icon={null}/>
         </View>
         <ScrollView
         keyboardShouldPersistTaps="handled"
@@ -111,7 +112,7 @@ const Styles = StyleSheet.create({
     mealText:{
       paddingHorizontal:16,
       marginBottom:-20,
-      marginTop:25,
+      marginTop:10,
 
     },
     text:{

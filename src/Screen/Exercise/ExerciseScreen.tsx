@@ -34,7 +34,7 @@ const Exercise = ({navigation}:any) => {
   }
   return (
     <SafeAreaView style={{flex:1,backgroundColor:"#FFF"}}>
-      <Header title='FULL EXERCISE' name='' navigation={navigation} />
+      <Header title='FULL EXERCISE' name='' navigation={navigation} icon={null} />
       
       <View style={style.SelectorView}>
    

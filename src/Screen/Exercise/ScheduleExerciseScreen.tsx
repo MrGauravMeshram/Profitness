@@ -7,6 +7,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import WeekCard from './component/WeekCard';
 import { WeekData } from '../../Data/WeekData';
 import TimePickerButton from './component/TimeComponent';
+import Arrow from '../../components/ArrowComponent';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import ToggleButton from '../../components/ToggleButton';
 import AuthButton from '../Auth/component/AuthButton';
@@ -45,6 +46,9 @@ const handleConfirm = (selectedTime:any) => {
       
       <ScrollView>
          <View style={Styles.imageContainer}>
+            <View style={{position:"absolute",top:50,left:20,zIndex:1}}>
+        <Arrow/>
+        </View>
         <ImageBackground source={require('../../assets/Images/suryashan.png')}
         style={Styles.image}>
            <View style={Styles.innerbox}>

@@ -8,14 +8,15 @@ type Props = {
   name?: string;
   title: string;
   navigation: any;
+  icon?: any;
   onFilterPress?: () => void;
 };
 
-const Header = ({ title, navigation, name, onFilterPress }: Props) => {
+const Header = ({ title, navigation, name, icon="chevron-back", onFilterPress }: Props) => {
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Ionicons name="chevron-back" size={24} color="#111" />
+        <Ionicons name={icon} size={24} color="#111" />
       </TouchableOpacity>
 
       <Text style={styles.headerTitle}>{title}</Text>
