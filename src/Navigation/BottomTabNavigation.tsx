@@ -3,13 +3,14 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../Screen/Home/HomeScreen';
+
 import Exercise from '../Screen/Exercise/ExerciseScreen';
 import Meal from '../Screen/Meal/MealPlanScreen';
 import Profile from '../Screen/Profile/ProfileScreen';
-import MealDetailsScreen from '../Screen/Meal/MealDetailsScreen';
+
 
 const Tab = createBottomTabNavigator();
-const MealStack = createNativeStackNavigator();
+
 
 const TabIcon = ({ focused, icon, label }: any) => {
   return (

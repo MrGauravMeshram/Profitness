@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
+import {SharedElement} from 'react-navigation-shared-element';
 import Animated from 'react-native-reanimated';
 
 type ExerciseItem = {
@@ -38,7 +39,7 @@ const ExerciseList = ({
   onPressSeeAll,
   index,
 }: Props) => {
- 
+  
   return (
     <View>
       <View style={styles.container}>
@@ -64,12 +65,13 @@ const ExerciseList = ({
               style={styles.card}
               onPress={() => onPressItem?.(item)}>
               <View style={styles.imageBox}>
-                <Animated.Image
-                  source={item.image}
-                 sharedTransitionTag={'meal-image'}
-                  style={styles.image}
-                  resizeMode="cover"
-                />
+              <SharedElement id={`meal.${item.id}.photo`}>
+  <Image
+    source={item.image}
+    style={styles.image}
+    resizeMode="cover"
+  />
+</SharedElement>
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.favoriteButton}

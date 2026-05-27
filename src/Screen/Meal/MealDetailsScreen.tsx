@@ -1,7 +1,7 @@
 import {View, Text, ScrollView, StyleSheet, Image,ImageBackground} from 'react-native';
 import Animated, {FadeIn} from 'react-native-reanimated';
 import React from 'react';
-
+import {SharedElement} from 'react-navigation-shared-element';
 import Feather from 'react-native-vector-icons/Feather';
 import AddtionalExercise from '../Home/components/AdditionalExercise';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -25,7 +25,7 @@ const MealDetailsScreen = ({route}: Props) => {
     {id: '7', title: 'Paneer Salad', calories: '190 kcal', duration: '9 min', level: 'Medium', image: require('../../assets/Images/Tortilla.jpg'), backgroundColor: '#FFECEC'},
     {id: '8', title: 'Smoothie Bowl', calories: '145 kcal', duration: '6 min', level: 'Easy', image: require('../../assets/Images/chickensalad.jpg'), backgroundColor: '#EEF4FF'},
   ];
-
+ 
   return (
 
     <View style={styles.root}>
@@ -34,12 +34,13 @@ const MealDetailsScreen = ({route}: Props) => {
         contentContainerStyle={{paddingBottom: 50}}
         showsVerticalScrollIndicator={false}>
    <View style={styles.heroContainer}>
-  <Animated.Image
+ <SharedElement id={`meal.${item.id}.photo`}>
+  <Image
     source={item.image}
-  sharedTransitionTag={"meal-image"}
     style={styles.heroImage}
     resizeMode="cover"
   />
+</SharedElement>
 
   <Animated.View
     entering={FadeIn.delay(150).duration(500)}
@@ -101,6 +102,11 @@ const MealDetailsScreen = ({route}: Props) => {
 };
 
 export default MealDetailsScreen;
+MealDetailsScreen.sharedElements = (route: any) => {
+  const {item} = route.params;
+
+  return [`meal.${item.id}.photo`];
+};
 
 const styles = StyleSheet.create({
   root: {
