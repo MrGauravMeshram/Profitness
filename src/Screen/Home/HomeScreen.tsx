@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, StyleSheet, Animated, Text } from 'react-native';
+import { View, StyleSheet, Animated, Text, TouchableOpacity } from 'react-native';
 
 import Header from './components/Header';
 import Banner from './components/Banner';
@@ -9,7 +9,8 @@ import Popular from './components/PopularExercise';
 import SearchBar from '../../components/searchBar';
 import { Image } from 'react-native-svg';
 import AdditionalExercise from './components/AdditionalExercise';
-const Home = () => {
+import { AnyComponent } from 'react-native-reanimated/lib/typescript/createAnimatedComponent/commonTypes';
+const Home = ({navigation}:any) => {
   const [selectedGoal, setSelectedGoal] = useState('2');
   const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -195,8 +196,11 @@ const Home = () => {
           },
         ]}
       >
+        
         <SearchBar />
+
       </Animated.View>
+     
     </View>
   );
 };

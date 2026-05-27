@@ -12,14 +12,8 @@ import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerContentComponentProps,
-  useDrawerProgress,
 } from '@react-navigation/drawer';
 
-import Animated, {
-  useAnimatedStyle,
-  interpolate,
-  Extrapolation,
-} from 'react-native-reanimated';
 import TrainingScreen from '../Screen/Training/TrainingScreen';
 import Dashboard from '../Screen/DashBoard/Dashboard';
 import FavoriteScreen from '../Screen/Favorites/FavoriteScreen';
@@ -28,8 +22,8 @@ import AppSettingsScreen from '../Screen/AppSettings/AppSettingsScreen';
 import MyTabs from './BottomTabNavigation';
 import ReminderScreen from '../Screen/Reminder/ReminderScreen';
 import Categories from '../Screen/Categories/CategoriesScreen';
-import NotificationScreen from '../Screen/Notification/NotificationScreen';
 import ProgressScreen from '../Screen/Progress/ProgressScreen';
+
 const { width } = Dimensions.get('window');
 const Drawer = createDrawerNavigator();
 
@@ -72,40 +66,41 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => (
       <Text style={styles.member}>Basic member</Text>
 
       <View style={styles.menuContainer}>
-        <DrawerItem icon="grid-outline" label="Dashboard" 
-        onPress={()=>{
-          props.navigation.navigate('Dashboard')
-        }}/>
-        <DrawerItem icon="analytics-outline" label="My Progress" 
-        onPress={()=>{
-          props.navigation.navigate('Progress')
-        }}/>
+        <DrawerItem
+          icon="grid-outline"
+          label="Dashboard"
+          onPress={() => props.navigation.navigate('Dashboard')}
+        />
+        <DrawerItem
+          icon="analytics-outline"
+          label="My Progress"
+          onPress={() => props.navigation.navigate('Progress')}
+        />
         <DrawerItem
           icon="barbell-outline"
           label="Training"
-          onPress={() => {
-            props.navigation.navigate('Training');
-          }}
+          onPress={() => props.navigation.navigate('Training')}
         />
         <DrawerItem
           icon="apps-outline"
           label="Categories"
-          onPress={() => {
-            props.navigation.navigate('Categories');
-          }}
+          onPress={() => props.navigation.navigate('Categories')}
         />
-        <DrawerItem icon="notifications-outline" label="Reminder" 
-        onPress={() => {
-          props.navigation.navigate('Reminder');
-        }}/>
-        <DrawerItem icon="heart-outline" label="My Favorites" 
-        onPress={() => {
-          props.navigation.navigate('Favorite');
-        }}/>
-        <DrawerItem icon="settings-outline" label="App Settings" 
-        onPress={() => {
-          props.navigation.navigate('AppSettings');
-        }}/>
+        <DrawerItem
+          icon="notifications-outline"
+          label="Reminder"
+          onPress={() => props.navigation.navigate('Reminder')}
+        />
+        <DrawerItem
+          icon="heart-outline"
+          label="My Favorites"
+          onPress={() => props.navigation.navigate('Favorite')}
+        />
+        <DrawerItem
+          icon="settings-outline"
+          label="App Settings"
+          onPress={() => props.navigation.navigate('AppSettings')}
+        />
         <DrawerItem icon="call-outline" label="Contact Support" />
       </View>
 
@@ -117,143 +112,75 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => (
   </DrawerContentScrollView>
 );
 
-const AnimatedScreen = ({ children }: { children: React.ReactNode }) => {
-  const progress = useDrawerProgress();
-
-  const animatedStyle = useAnimatedStyle(() => {
-    const translateX = interpolate(
-      progress.value,
-      [0, 1],
-      [0, width * 0.6],
-      Extrapolation.CLAMP,
-    );
-
-    const scale = interpolate(
-      progress.value,
-      [0, 1],
-      [1, 0.9],
-      Extrapolation.CLAMP,
-    );
-
-    const translateY = interpolate(
-      progress.value,
-      [0, 1],
-      [0, 90],
-      Extrapolation.CLAMP,
-    );
-
-    const borderRadius = interpolate(
-      progress.value,
-      [0, 1],
-      [0, 20],
-      Extrapolation.CLAMP,
-    );
-
-    const rotateY = interpolate(
-      progress.value,
-      [0, 0],
-      [0, 0],
-      Extrapolation.CLAMP,
-    );
-
-    return {
-      transform: [
-        { translateX },
-        { translateY },
-        { scale },
-        { rotateZ: `${rotateY}deg` },
-      ],
-      borderRadius,
-      overflow: 'hidden' as const,
-    };
-  });
-
-  return (
-    <Animated.View style={[styles.screenWrapper, animatedStyle]}>
-      {children}
-    </Animated.View>
-  );
-};
-
-const WrappedTabs = () => (
-  <AnimatedScreen>
-    <MyTabs />
-  </AnimatedScreen>
-);
-
 function MyDrawer() {
   return (
     <Drawer.Navigator
       drawerContent={props => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerShown: false,
-        drawerType: 'front',
+        drawerType: 'slide',   // 👈 slide moves drawer + screen together
+        unmountOnBlur: true,
         overlayColor: 'transparent',
         drawerStyle: {
           width: '65%',
           backgroundColor: '#F5F5F5',
         },
-
         swipeEdgeWidth: 60,
+        // 👇 this gives the screen a shadow like your old AnimatedScreen
+        sceneStyle: {
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.4,
+          shadowRadius: 24,
+          elevation: 24,
+          backgroundColor: '#fff',
+        },
       }}
     >
-      <Drawer.Screen name="Home" component={WrappedTabs} />
+      {/* 👇 MyTabs directly — no AnimatedScreen wrapper */}
+      <Drawer.Screen name="Home" component={MyTabs} />
       <Drawer.Screen name="Training" component={TrainingScreen} />
       <Drawer.Screen name="Categories" component={Categories} />
-      <Drawer.Screen name="Dashboard" component={Dashboard}
-      />
+      <Drawer.Screen name="Dashboard" component={Dashboard} />
       <Drawer.Screen name="Favorite" component={FavoriteScreen} />
       <Drawer.Screen name="Progress" component={ProgressScreen} />
-     
       <Drawer.Screen name="Reminder" component={ReminderScreen} />
       <Drawer.Screen name="AppSettings" component={AppSettingsScreen} />
     </Drawer.Navigator>
   );
 }
+
 export default MyDrawer;
 
 const styles = StyleSheet.create({
-  screenWrapper: {
-    flex: 1,
-    backgroundColor: '#fff',
-
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.4,
-    shadowRadius: 24,
-    elevation: 24,
-  },
-
   drawerContainer: {
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 20,
     backgroundColor: '#F5F5F5',
   },
-
-  closeButton: { marginBottom: 20 },
-
+  closeButton: {
+    marginBottom: 20,
+  },
   profileImage: {
     width: 90,
     height: 90,
     borderRadius: 45,
   },
-
   name: {
     fontSize: 20,
     color: '#111',
     marginTop: 20,
     fontFamily: 'DMSans-Medium',
   },
-
   member: {
     fontSize: 18,
     color: '#666',
     marginTop: 4,
   },
-
-  menuContainer: { marginTop: 40 },
-
+  menuContainer: {
+    marginTop: 40,
+  },
   drawerItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -261,21 +188,18 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#E5E5E5',
   },
-
   drawerLabel: {
     fontSize: 14,
     color: '#333',
     fontFamily: 'Montserrat-Medium',
     marginLeft: 18,
   },
-
   signOut: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 'auto',
     marginBottom: 30,
   },
-
   signOutText: {
     fontSize: 15,
     color: '#111',
