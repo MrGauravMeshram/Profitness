@@ -5,7 +5,7 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import Animated, {FadeIn} from 'react-native-reanimated';
+import Animated, {FadeIn, SharedTransition,} from 'react-native-reanimated';
 import Feather from 'react-native-vector-icons/Feather';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {RouteProp} from '@react-navigation/native';
@@ -38,21 +38,26 @@ const MealDetailsScreen = ({route}: Props) => {
       image: require('../../assets/Images/chickensalad.jpg'),
     },
   ];
-
+console.log('detail item', item.id);
+const transition = SharedTransition
+  .springify()
+  .damping(18)
+  .stiffness(140);
   return (
     <View style={styles.root}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 40}}>
 
-        {/* Shared Transition Image */}
+        
         <View style={styles.heroContainer}>
-          <Animated.Image
-            source={item.image}
-            sharedTransitionTag={`meal-${item.id}`}
-            style={styles.heroImage}
-            resizeMode="cover"
-          />
+         <Animated.Image
+  source={item.image}
+  sharedTransitionTag={`meal-${item.id}`}
+  sharedTransitionStyle={transition}
+  style={styles.heroImage}
+  resizeMode="cover"
+/>
 
           <Animated.View
             entering={FadeIn.delay(150).duration(500)}
@@ -126,11 +131,11 @@ const styles = StyleSheet.create({
     height: 380,
     position: 'relative',
   },
-
-  heroImage: {
-    width: '100%',
-    height: '100%',
-  },
+heroImage: {
+  width: '100%',
+  height: 380,
+   borderRadius: 18,
+},
 
   bannerBox: {
     position: 'absolute',

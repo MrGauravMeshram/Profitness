@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../Screen/Home/HomeScreen';
 
 import Exercise from '../Screen/Exercise/ExerciseScreen';
-import Meal from '../Screen/Meal/MealPlanScreen';
+import MealStack from './MealStack';
 import Profile from '../Screen/Profile/ProfileScreen';
 import Test from '../Screen/Test/Test';
 import {TestDetailScreen, TestListScreen} from '../Screen/Test/Text';
@@ -61,15 +61,20 @@ function MyTabs() {
           ),
         }}
       />
-      <Tab.Screen
-        name="MealTab"
-        component={Meal}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <TabIcon focused={focused} label="Meal Plans" icon={require('../assets/png/spoon.png')} />
-          ),
-        }}
+     {/* <Tab.Screen
+  name="MealTab"
+  component={MealStack}
+  options={{
+    
+    tabBarIcon: ({focused}) => (
+      <TabIcon
+        focused={focused}
+        label="Meal Plans"
+        icon={require('../assets/png/spoon.png')}
       />
+    ),
+  }}
+/> */}
       <Tab.Screen
         name="ExerciseTab"
         component={Exercise}
@@ -89,8 +94,8 @@ function MyTabs() {
         }}
       />
       <Tab.Screen
-      name="TestTab"
-      component={TestListScreen}/>
+      name="MealTab"
+      component={MealStack}/>
     </Tab.Navigator>
   );
 }

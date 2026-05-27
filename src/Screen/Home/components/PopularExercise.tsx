@@ -8,7 +8,11 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+    SharedTransition,
+  LinearTransition,
+} from 'react-native-reanimated';
 
 type ExerciseItem = {
   id: string;
@@ -38,6 +42,10 @@ const ExerciseList = ({
   onPressSeeAll,
   index,
 }: Props) => {
+  const transition = SharedTransition
+  .springify()
+  .damping(18)
+  .stiffness(140);
   return (
     <View>
       <View style={styles.container}>
@@ -62,13 +70,17 @@ const ExerciseList = ({
             <Pressable
               style={styles.card}
               onPress={() => onPressItem?.(item)}>
-              <View style={styles.imageBox}>
-                <Animated.Image
-                  source={item.image}
-                  sharedTransitionTag={`meal-${item.id}`}
-                  style={styles.image}
-                  resizeMode="cover"
-                />
+             <View
+  style={styles.imageBox}
+  collapsable={false}
+>
+  <Animated.Image
+  source={item.image}
+  sharedTransitionTag={`meal-${item.id}`}
+  sharedTransitionStyle={transition}
+  style={styles.image}
+  resizeMode="cover"
+/>
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.favoriteButton}
@@ -130,10 +142,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   image: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 18,
-  },
+  width: '100%',
+  height: 190,
+  borderRadius: 18,
+},
   favoriteButton: {
     position: 'absolute',
     top: 12,

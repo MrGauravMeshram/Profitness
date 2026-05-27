@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 const Test = ({navigation}:any) => {
   return (
     <SafeAreaView>
-      <TouchableOpacity onPress={() => navigation.navigate('TestList')}>
+      <TouchableOpacity onPress={() => navigation.navigate('MealPlanTest')}>
         <Text>Go to Test List</Text>
       </TouchableOpacity>
     </SafeAreaView>

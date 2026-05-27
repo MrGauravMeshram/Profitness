@@ -78,8 +78,8 @@ const MealPlanScreen = ({ navigation }: any) => {
             heading: '',
           }))}
           onPressItem={(item: any) =>
-            navigation.navigate('MealDetails', { item })
-          }
+  navigation.push('MealDetails', { item })
+}
         />
       </ScrollView>
     </SafeAreaView>

@@ -146,6 +146,7 @@ function MyDrawer() {
       <Drawer.Screen name="Progress" component={ProgressScreen} />
       <Drawer.Screen name="Reminder" component={ReminderScreen} />
       <Drawer.Screen name="AppSettings" component={AppSettingsScreen} />
+      
     </Drawer.Navigator>
   );
 }

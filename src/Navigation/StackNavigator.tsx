@@ -17,6 +17,7 @@ import EditProfile from '../Screen/Profile/EditProfileScreen';
 import ExerciseDetialsScreen from '../Screen/Exercise/ExerciseDetialsScreen';
 import ScheduleExerciseScreen from '../Screen/Exercise/ScheduleExerciseScreen';
 import MealDetailsScreen from '../Screen/Meal/MealDetailsScreen';
+import MealPlanScreen from '../Screen/Meal/MealPlanScreen';
 const Stack = createNativeStackNavigator();
 
 export type RootStackParamList = {
@@ -69,14 +70,21 @@ const StackNavigation = () => {
           component={ScheduleExerciseScreen}
         />
       
-          <Stack.Screen name="TestDetail" component={TestDetailScreen} />
-          <Stack.Screen
+          <Stack.Screen name="TestDetail" component={TestDetailScreen} options={{
+    headerShown: false,
+    animation: 'fade',
+  }}/>
+         <Stack.Screen
   name="MealDetails"
   component={MealDetailsScreen}
   options={{
     headerShown: false,
-    animation: 'fade',
+    animation: 'none',
   }}
+/>
+<Stack.Screen
+  name="MealPlanTest"
+  component={MealPlanScreen}
 />
       </Stack.Navigator>
     </NavigationContainer>
