@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native';
-
+import { useNavigation } from '@react-navigation/native';
 import Header from '../../components/ScreensHeader';
 import { WeekData } from '../../Data/WeekData';
 import { Food } from './Data/Data';

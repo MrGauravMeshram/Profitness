@@ -1,6 +1,6 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Splash from '../Screen/Onboarding/Splash';
 import Onboarding from '../Screen/Onboarding/Onboarding';
 import Login from '../Screen/Auth/Login';
@@ -17,7 +17,7 @@ import EditProfile from '../Screen/Profile/EditProfileScreen';
 import ExerciseDetialsScreen from '../Screen/Exercise/ExerciseDetialsScreen';
 import ScheduleExerciseScreen from '../Screen/Exercise/ScheduleExerciseScreen';
 import MealDetailsScreen from '../Screen/Meal/MealDetailsScreen';
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 export type RootStackParamList = {
   Splash: undefined;
@@ -69,13 +69,13 @@ const StackNavigation = () => {
           component={ScheduleExerciseScreen}
         />
       
-          <Stack.Screen name="TestList" component={TestListScreen} />
           <Stack.Screen name="TestDetail" component={TestDetailScreen} />
           <Stack.Screen
   name="MealDetails"
   component={MealDetailsScreen}
   options={{
     headerShown: false,
+    animation: 'fade',
   }}
 />
       </Stack.Navigator>

@@ -7,7 +7,8 @@ import Home from '../Screen/Home/HomeScreen';
 import Exercise from '../Screen/Exercise/ExerciseScreen';
 import Meal from '../Screen/Meal/MealPlanScreen';
 import Profile from '../Screen/Profile/ProfileScreen';
-
+import Test from '../Screen/Test/Test';
+import {TestDetailScreen, TestListScreen} from '../Screen/Test/Text';
 
 const Tab = createBottomTabNavigator();
 
@@ -87,6 +88,9 @@ function MyTabs() {
           ),
         }}
       />
+      <Tab.Screen
+      name="TestTab"
+      component={TestListScreen}/>
     </Tab.Navigator>
   );
 }

@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-
 import Animated from 'react-native-reanimated';
 
 type ExerciseItem = {
@@ -39,7 +38,6 @@ const ExerciseList = ({
   onPressSeeAll,
   index,
 }: Props) => {
-  
   return (
     <View>
       <View style={styles.container}>
@@ -65,11 +63,12 @@ const ExerciseList = ({
               style={styles.card}
               onPress={() => onPressItem?.(item)}>
               <View style={styles.imageBox}>
-              <Animated.Image
-  source={item.image}
-  sharedTransitionTag={`meal-${item.id}`}
-  style={styles.image}
-/>
+                <Animated.Image
+                  source={item.image}
+                  sharedTransitionTag={`meal-${item.id}`}
+                  style={styles.image}
+                  resizeMode="cover"
+                />
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.favoriteButton}
