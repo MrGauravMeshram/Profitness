@@ -31,7 +31,8 @@ function MyTabs() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        
+      freezeOnBlur: false,
+    lazy: false,
         tabBarShowLabel: false,
         tabBarStyle: {
           position: 'absolute',

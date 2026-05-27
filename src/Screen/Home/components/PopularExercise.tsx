@@ -38,6 +38,7 @@ const ExerciseList = ({
   onPressSeeAll,
   index,
 }: Props) => {
+ 
   return (
     <View>
       <View style={styles.container}>
@@ -65,7 +66,7 @@ const ExerciseList = ({
               <View style={styles.imageBox}>
                 <Animated.Image
                   source={item.image}
-                  sharedTransitionTag={`meal-${item.id}`}
+                 sharedTransitionTag={'meal-image'}
                   style={styles.image}
                   resizeMode="cover"
                 />

@@ -27,7 +27,7 @@ const MealDetailsScreen = ({route}: Props) => {
   ];
 
   return (
-  
+
     <View style={styles.root}>
 
         <ScrollView
@@ -36,7 +36,7 @@ const MealDetailsScreen = ({route}: Props) => {
    <View style={styles.heroContainer}>
   <Animated.Image
     source={item.image}
-    sharedTransitionTag={`meal-${item.id}`}
+  sharedTransitionTag={"meal-image"}
     style={styles.heroImage}
     resizeMode="cover"
   />
