@@ -119,7 +119,7 @@ function MyDrawer() {
       screenOptions={{
         headerShown: false,
         drawerType: 'slide',   // 👈 slide moves drawer + screen together
-        unmountOnBlur: true,
+        
         overlayColor: 'transparent',
         drawerStyle: {
           width: '65%',
