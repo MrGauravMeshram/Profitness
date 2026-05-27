@@ -1,7 +1,7 @@
 import {View, Text, ScrollView, StyleSheet, Image,ImageBackground} from 'react-native';
 import Animated, {FadeIn} from 'react-native-reanimated';
 import React from 'react';
-import {SharedElement} from 'react-navigation-shared-element';
+
 import Feather from 'react-native-vector-icons/Feather';
 import AddtionalExercise from '../Home/components/AdditionalExercise';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -34,13 +34,11 @@ const MealDetailsScreen = ({route}: Props) => {
         contentContainerStyle={{paddingBottom: 50}}
         showsVerticalScrollIndicator={false}>
    <View style={styles.heroContainer}>
- <SharedElement id={`meal.${item.id}.photo`}>
-  <Image
-    source={item.image}
-    style={styles.heroImage}
-    resizeMode="cover"
-  />
-</SharedElement>
+ <Animated.Image
+  source={item.image}
+  sharedTransitionTag={`meal-${item.id}`}
+  style={styles.heroImage}
+/>
 
   <Animated.View
     entering={FadeIn.delay(150).duration(500)}

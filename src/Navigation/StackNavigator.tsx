@@ -1,6 +1,6 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
+import {createStackNavigator} from '@react-navigation/stack';
 import Splash from '../Screen/Onboarding/Splash';
 import Onboarding from '../Screen/Onboarding/Onboarding';
 import Login from '../Screen/Auth/Login';
@@ -17,7 +17,7 @@ import EditProfile from '../Screen/Profile/EditProfileScreen';
 import ExerciseDetialsScreen from '../Screen/Exercise/ExerciseDetialsScreen';
 import ScheduleExerciseScreen from '../Screen/Exercise/ScheduleExerciseScreen';
 import MealDetailsScreen from '../Screen/Meal/MealDetailsScreen';
-const Stack = createSharedElementStackNavigator();
+const Stack = createStackNavigator();
 
 export type RootStackParamList = {
   Splash: undefined;
@@ -76,7 +76,6 @@ const StackNavigation = () => {
   component={MealDetailsScreen}
   options={{
     headerShown: false,
-    animation: 'fade',
   }}
 />
       </Stack.Navigator>
