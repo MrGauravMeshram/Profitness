@@ -42,7 +42,7 @@ const handleConfirm = (selectedTime:any) => {
         )
     }
   return (
-    <View style={{flex:1}}>
+    <View style={{flex:1,backgroundColor:"#FFF"}}>
       
       <ScrollView>
          <View style={Styles.imageContainer}>

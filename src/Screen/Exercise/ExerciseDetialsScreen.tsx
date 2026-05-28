@@ -11,21 +11,24 @@ import Header from '../../components/ScreensHeader'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import StatsContainer from './component/StatsContainer'
 import { BtnData } from './Data/btnData'
-import React from 'react'
+import Animated,{FadeIn,SharedTransition} from 'react-native-reanimated'
+import React,{useState} from 'react'
 import Selector from '../../components/Selector'
 import { ProgramData } from './Data/programData'
 import { ExerciseCardData } from './Data/ExerciseData'
 import ExerciseCard from './component/ExerciseCard'
 import Buttons from '../Auth/component/AuthButton'
-
-const ExerciseDetailsScreen = ({ navigation }: any) => {
-
-  // ====================================================
-  // INNER SECTION LIST
-  // — Title is sticky header
-  // — desc, week, label are items that scroll away
-  // — scrollEnabled FALSE (outer list drives scroll)
-  // ====================================================
+import { RouteProp } from '@react-navigation/native'
+import { RootStackParamList } from '../../Navigation/StackNavigator'
+type Props = {
+  route:RouteProp<RootStackParamList,'ExerciseDetails'>
+}
+type ExerciseType = 'Cardio' | 'Legs' | 'Back' | 'Chest'|'Shoulder';
+const ExerciseDetailsScreen = ({ navigation, route }: Props & any) => {
+  const item = route?.params?.item;
+const [selected, setSelected] = useState<ExerciseType>('Cardio');
+const [selectLevel,setSelectLevel] = useState('Beginner');
+console.log(item);
   const innerSections = [
     {
       id: 'title',
@@ -83,7 +86,7 @@ const ExerciseDetailsScreen = ({ navigation }: any) => {
   const outerSections = [
     {
       id: 'exercises',
-      data: ExerciseCardData,
+      data: ExerciseCardData[selected],
     },
   ]
 
@@ -96,7 +99,7 @@ const ExerciseDetailsScreen = ({ navigation }: any) => {
             keyExtractor={(_, i) => i.toString()}
             renderItem={({ item }) => (
               <View>
-                <Selector title={item} />
+                <Selector title={item} onPress={()=>setSelected(item)} active={selected===item}/>
               </View>
             )}
             contentContainerStyle={{ flexDirection: 'row', gap: 10, paddingVertical: 10 }}
@@ -112,8 +115,9 @@ const ExerciseDetailsScreen = ({ navigation }: any) => {
 
   const renderOuterItem = ({ item, index }: any) => (
     <>
-      <View style={{ paddingVertical: 25 }}>
+      <View style={{ paddingVertical: 15,gap:25, paddingHorizontal:16}}>
         <ExerciseCard
+        id={item.id}
           image={item.image}
           title={item.title}
           time={item.time}
@@ -122,25 +126,32 @@ const ExerciseDetailsScreen = ({ navigation }: any) => {
           level={item.level}
           onPress={() => {}}
         />
+         {index !== ExerciseCardData[selected].length - 1 && (
+  <View style={styles.lines} />
+)}
       </View>
-      {index !== ExerciseCardData.length - 1 && <View style={styles.lines} />}
+      
+     
     </>
   )
 
 
   const OuterListHeader = () => (
-    <View>
+    <View style={{flex:1}}>
   
       <View style={styles.ViewBox}>
-        <ImageBackground
-          source={require('../../assets/Images/dhyan.jpg')}
-          resizeMode="cover"
-          style={{ height: '100%', width: '100%' }}
-        >
+      {item && (
+  <Animated.Image
+    sharedTransitionTag={`Exercise-${item.id}`}
+    source={{ uri: item.image }}
+    style={styles.detailImage}
+    resizeMode="cover"
+  />
+)}
           <View style={styles.HeaderContainer}>
             <Header title="" navigation={navigation} />
           </View>
-        </ImageBackground>
+  
 
         <View style={styles.bannerBox}>
           <View style={styles.innerText}>
@@ -159,7 +170,12 @@ const ExerciseDetailsScreen = ({ navigation }: any) => {
       <View style={styles.stateBox}>
         {BtnData.map((Stats) => (
           <View key={Stats.id}>
-            <StatsContainer title={Stats.title} btnTitle={Stats.subtitle} />
+          <StatsContainer
+  title={Stats.title}
+  btnTitle={Stats.subtitle}
+  onpress={() => setSelectLevel(Stats.subtitle)}
+  active={selectLevel === Stats.subtitle}
+/>
           </View>
         ))}
       </View>
@@ -179,7 +195,7 @@ const ExerciseDetailsScreen = ({ navigation }: any) => {
   )
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1 ,backgroundColor:"#FFF"}}>
       
       <SectionList
         sections={outerSections}
@@ -243,6 +259,10 @@ const styles = StyleSheet.create({
     gap: 15,
     marginTop: 25,
   },
+  detailImage: {
+  width: '100%',
+  height: 380,
+},
   titleContainer: {
     paddingHorizontal: 16,
     marginTop: 10,
@@ -251,12 +271,12 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: 'white',
+  
   },
   stickyPills: {
     width: '100%',
     paddingHorizontal: 16,
-    backgroundColor: 'white',
+   
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },

@@ -1,46 +1,152 @@
-export const ExerciseCardData = [
+export const ExerciseCardData = {
+  Cardio: [
+    {
+      id: 1,
+      title: 'Exercises with Jumping Rope',
+      kcal: '110 kcal',
+      time: '10 min',
+      level: 'Beginner',
+      image: 'https://images.unsplash.com/photo-1526401485004-46910ecc8e51',
+    },
+    {
+      id: 2,
+      title: 'High Knees',
+      kcal: '135 kcal',
+      time: '8 min',
+      level: 'Beginner',
+      image: 'https://images.unsplash.com/photo-1599058917765-a780eda07a3e',
+    },
+    {
+      id: 3,
+      title: 'Burpees',
+      kcal: '150 kcal',
+      time: '12 min',
+      level: 'Intermediate',
+      image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438',
+    },
+    {
+      id: 4,
+      title: 'Mountain Climbers',
+      kcal: '125 kcal',
+      time: '9 min',
+      level: 'Beginner',
+      image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b',
+    },
+  ],
+
+  Legs: [
+    {
+      id: 5,
+      title: 'Squats',
+      kcal: '140 kcal',
+      time: '12 min',
+      level: 'Beginner',
+      image: 'https://images.unsplash.com/photo-1434682881908-b43d0467b798',
+    },
+    {
+      id: 6,
+      title: 'Walking Lunges',
+      kcal: '125 kcal',
+      time: '10 min',
+      level: 'Beginner',
+      image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd',
+    },
+    {
+      id: 7,
+      title: 'Leg Press',
+      kcal: '160 kcal',
+      time: '15 min',
+      level: 'Intermediate',
+      image: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e',
+    },
+    {
+      id: 8,
+      title: 'Calf Raises',
+      kcal: '100 kcal',
+      time: '7 min',
+      level: 'Beginner',
+      image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b',
+    },
+  ],
+
+  Back: [
+    {
+      id: 9,
+      title: 'Lat Pulldown',
+      kcal: '135 kcal',
+      time: '10 min',
+      level: 'Beginner',
+      image: 'https://images.unsplash.com/photo-1534367610401-9f5ed68180aa',
+    },
+    {
+      id: 10,
+      title: 'Deadlift',
+      kcal: '160 kcal',
+      time: '15 min',
+      level: 'Advanced',
+      image: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61',
+    },
+    {
+      id: 11,
+      title: 'Seated Cable Row',
+      kcal: '130 kcal',
+      time: '10 min',
+      level: 'Intermediate',
+      image: 'https://images.unsplash.com/photo-1594737625785-cf2d9d58d0f9',
+    },
+    {
+      id: 12,
+      title: 'Superman Hold',
+      kcal: '90 kcal',
+      time: '6 min',
+      level: 'Beginner',
+      image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a',
+    },
+  ],
+
+  Chest: [
+    {
+      id: 13,
+      title: 'Push Ups',
+      kcal: '120 kcal',
+      time: '8 min',
+      level: 'Beginner',
+      image: 'https://images.unsplash.com/photo-1598971639058-ae6b6f4b63bb',
+    },
+    {
+      id: 14,
+      title: 'Bench Press',
+      kcal: '155 kcal',
+      time: '12 min',
+      level: 'Intermediate',
+      image: 'https://images.unsplash.com/photo-1534258936925-c58bed479fcb',
+    },
+    {
+      id: 15,
+      title: 'Incline Dumbbell Press',
+      kcal: '140 kcal',
+      time: '10 min',
+      level: 'Intermediate',
+      image: 'https://images.unsplash.com/photo-1584466977773-e625c37cdd50',
+    },
+    {
+      id: 16,
+      title: 'Chest Fly',
+      kcal: '115 kcal',
+      time: '9 min',
+      level: 'Beginner',
+      image: 'https://images.unsplash.com/photo-1571019613576-2b22c76fd955',
+    },
+    
+  ],
+  Shoulder: [
   {
-    id: 1,
-    title: 'Exercises with Jumping Rope',
-    kcal: '110 kcal',
+    id: 17,
+    title: 'Shoulder Press',
+    kcal: '120 kcal',
     time: '10 min',
     level: 'Beginner',
-    image: require('../../../assets/Images/rope.png'),
+    image: 'https://images.unsplash.com/....',
   },
-
-  {
-    id: 2,
-    title: 'Exercises with Holding Jumping Rope',
-    kcal: '135 kcal',
-    time: '8 min',
-    level: 'Beginner',
-    image: require('../../../assets/Images/push.jpg'),
-  },
-
-  {
-    id: 3,
-    title: 'Exercises with Sitting Dumbbells',
-    kcal: '135 kcal',
-    time: '5 min',
-    level: 'Beginner',
-    image: require('../../../assets/Images/jumpping.png'),
-  },
-
-  {
-    id: 4,
-    title: 'Exercises with Sitting Dumbbells',
-    kcal: '135 kcal',
-    time: '5 min',
-    level: 'Beginner',
-    image: require('../../../assets/Images/dump.png'),
-  },
-
-  {
-    id: 5,
-    title: 'Exercises with Sitting Dumbbells',
-    kcal: '135 kcal',
-    time: '5 min',
-    level: 'Beginner',
-    image: require('../../../assets/Images/dumbell.png'),
-  },
-]
+],
+};

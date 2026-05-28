@@ -1,21 +1,27 @@
-import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
-import React from 'react';
+import { View, Text, StyleSheet, FlatList, ScrollView ,TouchableOpacity} from 'react-native';
+import React ,{useState}from 'react';
 import Header from '../../components/ScreensHeader';
 import Selector from '../../components/Selector';
 import ExerciseCard from './component/ExerciseCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {ExerciseCardData} from './Data/ExerciseData'
+type ExerciseType = 'Cardio' | 'Legs' | 'Back' | 'Chest';
 const Exercise = ({navigation}:any) => {
+const [selected, setSelected] = useState<ExerciseType>('Cardio')
+
   const ExerciseData =[
     'Cardio',
     'Legs',
     'Back',
     'Chest'
   ]
-  const renderItem = ({item}:any)=>{
+ 
+  const renderItem = ({item,index}:any)=>{
     return(
         <>
-        <Selector title={item}/>
+    
+        <Selector title={item} active={selected===item} onPress={()=>setSelected(item)}/>
+  
         </>
     )
   }
@@ -23,11 +29,11 @@ const Exercise = ({navigation}:any) => {
     return(
       <>
       <View style={{paddingVertical:25}}>
-        <ExerciseCard title={item.title} kcal={item.kcal} time={item.time} level={item.level} image={item.image} subtitle='' onPress={()=>navigation.navigate('ExerciseDetails')}/>
+        <ExerciseCard id={item.id} title={item.title} kcal={item.kcal} time={item.time} level={item.level} image={item.image} subtitle='' onPress={()=>navigation.navigate('ExerciseDetails',{item})}/>
       </View>
-       {index !== ExerciseCardData.length - 1 && (
-        <View style={style.line} />
-      )}
+       {index !== ExerciseCardData[selected].length - 1 && (
+  <View style={style.line} />
+)}
      
       </>
     )
@@ -44,22 +50,23 @@ const Exercise = ({navigation}:any) => {
       data={ExerciseData}
       renderItem={renderItem}
       horizontal
-      scrollEnabled={false}
+      showsHorizontalScrollIndicator={false}
+  
       nestedScrollEnabled
       contentContainerStyle={style.list}/>
       
       </View>
-      <ScrollView>
+      
       <FlatList 
-      data={ExerciseCardData}
+      data={ExerciseCardData[selected]|| []}
       renderItem={renderData}
-      scrollEnabled={false}
+       scrollEnabled
       nestedScrollEnabled
       keyExtractor={(item)=>item.id.toString()}
       contentContainerStyle={style.cardlist}
 
       />
- </ScrollView>
+ 
    
     </SafeAreaView>
   );
@@ -87,6 +94,6 @@ const style = StyleSheet.create({
   line:{
     height:1,
     width:400,
-    backgroundColor:"grey",
+    backgroundColor:"lightgrey",
   }
 })

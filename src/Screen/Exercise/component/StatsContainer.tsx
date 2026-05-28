@@ -5,14 +5,16 @@ import React from 'react'
 type Props={
     title:string,
     btnTitle:string
+    active:any
+    onpress:any
 }
 
-const StatsContainer = ({title,btnTitle}:Props) => {
+const StatsContainer = ({title,btnTitle,active,onpress}:Props) => {
   return (
     <View>
-      <View style={style.box}>
+      <View style={[style.box,]}>
         <Text style={style.text}>{title}</Text>
-       <Selector title={btnTitle}/>
+    <Selector title={btnTitle} active={active} onPress={onpress}/>
       </View>
     </View>
   )

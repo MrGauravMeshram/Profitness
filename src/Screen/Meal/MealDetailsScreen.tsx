@@ -12,7 +12,7 @@ import {RouteProp} from '@react-navigation/native';
 
 import AddtionalExercise from '../Home/components/AdditionalExercise';
 import {RootStackParamList} from '../../Navigation/StackNavigator';
-
+type ExerciseType = 'Cardio' | 'Legs' | 'Back' | 'Chest';
 type Props = {
   route: RouteProp<RootStackParamList, 'MealDetails'>;
 };
@@ -157,7 +157,7 @@ heroImage: {
       width: 0,
       height: 3,
     },
-    elevation: 5,
+   
   },
 
   innerText: {

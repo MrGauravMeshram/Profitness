@@ -33,7 +33,7 @@ export type RootStackParamList = {
   Subscription: undefined;
   Newworkout: undefined;
   EditProfile: undefined;
-  ExerciseDetails: undefined;
+  ExerciseDetails: {item:any};
   ScheduleExercise: undefined;
     MealDetails: {item: any};  
 
@@ -64,10 +64,14 @@ const StackNavigation = () => {
         <Stack.Screen
           name="ExerciseDetails"
           component={ExerciseDetialsScreen}
+            options={{
+            animation:"fade"
+          }}
         />
         <Stack.Screen
           name="ScheduleExercise"
           component={ScheduleExerciseScreen}
+        
         />
       
           <Stack.Screen name="TestDetail" component={TestDetailScreen} options={{

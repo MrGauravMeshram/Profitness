@@ -1,24 +1,27 @@
 import { View, Text,Image,StyleSheet ,TouchableOpacity} from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import React from 'react'
+import  Animated from 'react-native-reanimated'
 
 
 type PropsCard={
     title:string,
     subtitle:string,
     kcal:string,
+    id:number
     time:string,
     level:string,
     image:any
     onPress:()=>void
 }
-const ExerciseCard = ({title,subtitle,kcal,time,level,image,onPress}:PropsCard) => {
+const ExerciseCard = ({id,title,subtitle,kcal,time,level,image,onPress}:PropsCard) => {
   return (
  <TouchableOpacity onPress={onPress}>
     <View style={style.container}>
       <View style={style.ImageContainer}>
-       <Image
-          source={image}
+       <Animated.Image  
+       sharedTransitionTag={`Exercise-${id}`}
+          source={{uri:image}}
           style={style.image}
        />
       </View>
@@ -68,6 +71,7 @@ const style = StyleSheet.create({
     title:{
         fontFamily:"Montserrat-SemiBold",
         fontSize:14,
+        width:250
     },
     subTitle:{
         fontFamily:"Montserrat-Medium",
