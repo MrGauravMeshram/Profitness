@@ -12,11 +12,13 @@ import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerContentComponentProps,
+    useDrawerProgress,
 } from '@react-navigation/drawer';
 
 import TrainingScreen from '../Screen/Training/TrainingScreen';
 import Dashboard from '../Screen/DashBoard/Dashboard';
 import FavoriteScreen from '../Screen/Favorites/FavoriteScreen';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AppSettingsScreen from '../Screen/AppSettings/AppSettingsScreen';
 import MyTabs from './BottomTabNavigation';
@@ -112,6 +114,11 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => (
   </DrawerContentScrollView>
 );
 
+function AnimatedScreen({ children }: { children: React.ReactNode }) {
+  const progress = useDrawerProgress();
+
+  return <View style={{ flex: 1 }}>{children}</View>;
+}
 function MyDrawer() {
   return (
     <Drawer.Navigator
