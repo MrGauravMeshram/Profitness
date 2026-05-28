@@ -61,20 +61,7 @@ function MyTabs() {
           ),
         }}
       />
-     {/* <Tab.Screen
-  name="MealTab"
-  component={MealStack}
-  options={{
-    
-    tabBarIcon: ({focused}) => (
-      <TabIcon
-        focused={focused}
-        label="Meal Plans"
-        icon={require('../assets/png/spoon.png')}
-      />
-    ),
-  }}
-/> */}
+     
       <Tab.Screen
         name="ExerciseTab"
         component={Exercise}
@@ -93,9 +80,28 @@ function MyTabs() {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
       name="MealTab"
-      component={MealStack}/>
+      component={MealStack}
+       options={{
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} label="Meal Plans" icon={require('../assets/png/spoon.png')} />
+          ),
+        }}/> */}
+        <Tab.Screen
+  name="MealTab"
+  component={MealStack}
+  options={{
+    
+    tabBarIcon: ({focused}) => (
+      <TabIcon
+        focused={focused}
+        label="Meal Plans"
+        icon={require('../assets/png/spoon.png')}
+      />
+    ),
+  }}
+/>
     </Tab.Navigator>
   );
 }
