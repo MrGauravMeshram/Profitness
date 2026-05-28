@@ -10,6 +10,7 @@ import Verify from '../Screen/Auth/Verify';
 import Favorite from '../Screen/SteppingScreen/SteppingScreen';
 import MyDrawer from './DrawerNavigation';
 import {TestListScreen, TestDetailScreen} from '../Screen/Test/Text';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FilterScreen from '../Screen/Filter/FilterScreen';
 import Subscription from '../Screen/Subscription/SubscriptionScreen';
 import NewWorkout from '../Screen/Newworkout/NewworkoutScreen';
@@ -18,6 +19,7 @@ import ExerciseDetialsScreen from '../Screen/Exercise/ExerciseDetialsScreen';
 import ScheduleExerciseScreen from '../Screen/Exercise/ScheduleExerciseScreen';
 import MealDetailsScreen from '../Screen/Meal/MealDetailsScreen';
 import MealPlanScreen from '../Screen/Meal/MealPlanScreen';
+import { TouchableOpacity } from 'react-native';
 const Stack = createNativeStackNavigator();
 
 export type RootStackParamList = {
@@ -64,9 +66,17 @@ const StackNavigation = () => {
         <Stack.Screen
           name="ExerciseDetails"
           component={ExerciseDetialsScreen}
-            options={{
-            animation:"fade"
-          }}
+            options={({navigation})=>({
+            animation:"fade",
+            headerShown:true,
+            headerTransparent:true,
+            headerTitle:'',
+            headerLeft:()=>(
+              <TouchableOpacity onPress={()=>navigation.goBack()}>
+                   <MaterialIcons name="keyboard-arrow-left" color="#000" size={24} />
+                   </TouchableOpacity>
+            )
+          })}
         />
         <Stack.Screen
           name="ScheduleExercise"
