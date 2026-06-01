@@ -1,8 +1,9 @@
 import { View, Text,Image,StyleSheet ,TouchableOpacity} from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import React from 'react'
+import React ,{useState}from 'react'
 import { Skeleton } from '@rneui/themed'
 import  Animated from 'react-native-reanimated'
+import LinearGradient from 'react-native-linear-gradient'
 
 
 type PropsCard={
@@ -17,23 +18,32 @@ type PropsCard={
     onPress:()=>void
 }
 const ExerciseCard = ({id,title,subtitle,kcal,time,level,image,onPress,loader}:PropsCard) => {
+  const [imageLoading, setImageLoading] = useState(true);
  if (loader) {
   return (
     <View style={style.container}>
       <Skeleton
+      LinearGradientComponent={LinearGradient}
+      animation='wave'
         width={120}
         height={120}
         style={{borderRadius: 12}}
       />
 
       <View style={{flex: 1, marginLeft: 16}}>
-        <Skeleton width={160} height={18} />
+        <Skeleton width={160} height={18} 
+         LinearGradientComponent={LinearGradient}
+      animation='wave'/>
         <Skeleton
+         LinearGradientComponent={LinearGradient}
+      animation='wave'
           width={120}
           height={14}
           style={{marginTop: 12}}
         />
         <Skeleton
+         LinearGradientComponent={LinearGradient}
+      animation='wave'
           width={80}
           height={14}
           style={{marginTop: 12}}
@@ -48,11 +58,28 @@ const ExerciseCard = ({id,title,subtitle,kcal,time,level,image,onPress,loader}:P
     <View style={style.container}>
       
       <View style={style.ImageContainer}>
-       <Animated.Image  
-       sharedTransitionTag={`Exercise-${id}`}
-          source={{uri:image}}
-          style={style.image}
-       />
+     <View style={style.ImageContainer}>
+  {imageLoading && (
+    <Skeleton
+      width="100%"
+      height="100%"
+      style={{
+        borderRadius: 12,
+        position: 'absolute',
+      }}
+      LinearGradientComponent={LinearGradient}
+      animation="wave"
+    />
+  )}
+
+  <Animated.Image
+    sharedTransitionTag={`Exercise-${id}`}
+    source={{uri: image}}
+    style={style.image}
+    onLoadStart={() => setImageLoading(true)}
+    onLoadEnd={() => setImageLoading(false)}
+  />
+</View>
       </View>
       <View style={{paddingHorizontal:16,gap:10,paddingVertical:10}}>
       

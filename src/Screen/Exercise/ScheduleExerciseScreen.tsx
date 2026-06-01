@@ -15,6 +15,7 @@ import AuthButton from '../Auth/component/AuthButton';
 const ScheduleExerciseScreen = ({navigation}:any) => {
     const [isPickerVisible, setPickerVisible] = useState(false)
     const [selectedIndex, setSelectedIndex] = useState(0)
+    const [imageLoading, setImageLoading] = useState(true);
 const [time, setTime] = useState('05:44 AM')
 const showPicker = () => {
   setPickerVisible(true)

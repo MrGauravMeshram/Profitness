@@ -206,6 +206,7 @@ console.log(item);
     </View>
   )
 const Insets = useSafeAreaInsets()
+
   return (
     <View style={{ flex: 1 ,backgroundColor:"#FFF"}}>
       

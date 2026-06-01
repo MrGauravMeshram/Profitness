@@ -92,10 +92,19 @@ const StackNavigation = () => {
          <Stack.Screen
   name="MealDetails"
   component={MealDetailsScreen}
-  options={{
-    headerShown: false,
+  options={({navigation})=>({
+    headerShown: true,
+    headerTitle:"",
+    headerTransparent:true,
     animation: 'none',
-  }}
+    headerLeft:(()=>(
+       <TouchableOpacity onPress={()=>navigation.goBack()} style={{backgroundColor:"#FFF",borderRadius:50}}>
+                   <MaterialIcons name="keyboard-arrow-left" color="#000" size={24} />
+                   </TouchableOpacity>
+
+    ))
+    
+  })}
 />
 <Stack.Screen
   name="MealPlanTest"

@@ -11,7 +11,7 @@ import { FoodData } from './Data/FoodData';
 import Selector from '../../components/Selector';
 import WeekCard from '../Exercise/component/WeekCard';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
+import { Skeleton } from '@rneui/base';
 const MealPlanScreen = ({ navigation }: any) => {
   
   const [selected, setSelected] = useState(0);
