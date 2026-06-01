@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { View, Text, StyleSheet, Image, FlatList } from 'react-native';
-
+import { Skeleton } from '@rneui/themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type ExerciseItem = {
@@ -17,10 +17,12 @@ type ExerciseItem = {
 type Props = {
   heading: string;
   data: ExerciseItem[];
+  loading?: boolean;
 };
 
-const AdditionalExercise = ({ heading, data }: Props) => {
+const AdditionalExercise = ({ heading, data ,loading}: Props) => {
   const renderItem = ({ item }: { item: ExerciseItem }) => {
+    
     return (
       <View style={styles.card}>
         <View
@@ -60,7 +62,37 @@ const AdditionalExercise = ({ heading, data }: Props) => {
       </View>
     );
   };
+const renderSkeleton = () => {
+  return (
+    <View style={styles.card}>
+      <Skeleton
+        width={92}
+        height={92}
+        style={{ borderRadius: 16 }}
+      />
 
+      <View style={{ flex: 1, marginLeft: 16 }}>
+        <Skeleton width={140} height={16} />
+
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 12,
+          }}>
+          <Skeleton width={60} height={12} />
+          <View style={{ width: 12 }} />
+          <Skeleton width={60} height={12} />
+        </View>
+
+        <Skeleton
+          width={90}
+          height={12}
+          style={{ marginTop: 12 }}
+        />
+      </View>
+    </View>
+  );
+};
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -69,15 +101,16 @@ const AdditionalExercise = ({ heading, data }: Props) => {
         <Text style={styles.seeAll}>See all</Text>
       </View>
 
-      <FlatList
-        data={data}
-        keyExtractor={item => item.id}
-        scrollEnabled={false}
-        nestedScrollEnabled
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={() => <View style={styles.line} />}
-      />
+     <FlatList
+  data={loading ? [1, 2, 3] : data}
+  keyExtractor={(item, index) =>
+    loading ? index.toString() : item.id
+  }
+  scrollEnabled={false}
+  nestedScrollEnabled
+  renderItem={loading ? renderSkeleton : renderItem}
+  ItemSeparatorComponent={() => <View style={styles.line} />}
+/>
     </View>
   );
 };

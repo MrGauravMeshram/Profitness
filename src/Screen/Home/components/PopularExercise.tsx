@@ -13,7 +13,7 @@ import Animated, {
     SharedTransition,
   LinearTransition,
 } from 'react-native-reanimated';
-
+import { Skeleton } from '@rneui/themed';
 type ExerciseItem = {
   id: string;
   image: any;
@@ -21,6 +21,7 @@ type ExerciseItem = {
   level: string;
   duration: string;
   isFavorite?: boolean;
+
 };
 
 type Props = {
@@ -31,6 +32,7 @@ type Props = {
   onPressFavorite?: (item: ExerciseItem) => void;
   index?: any;
   onPressSeeAll?: () => void;
+  loader?:boolean
 };
 
 const ExerciseList = ({
@@ -41,6 +43,7 @@ const ExerciseList = ({
   onPressFavorite,
   onPressSeeAll,
   index,
+  loader
 }: Props) => {
   const transition = SharedTransition
   .springify()
@@ -64,7 +67,7 @@ const ExerciseList = ({
           removeClippedSubviews={false}
           initialNumToRender={data.length}
           maxToRenderPerBatch={data.length}
-          windowSize={data.length}
+        
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           renderItem={({item}) => (
             <Pressable
@@ -74,13 +77,14 @@ const ExerciseList = ({
   style={styles.imageBox}
   collapsable={false}
 >
+  {loader?(<Skeleton style={styles.image}/>):(
   <Animated.Image
   source={item.image}
   sharedTransitionTag={`meal-${item.id}`}
   sharedTransitionStyle={transition}
   style={styles.image}
   resizeMode="cover"
-/>
+/>)}
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.favoriteButton}

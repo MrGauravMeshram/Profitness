@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -16,7 +16,18 @@ const MealPlanScreen = ({ navigation }: any) => {
   
   const [selected, setSelected] = useState(0);
   const [isChoose, setChoose] = useState(0);
-
+  const [loader,setloader]= useState(true);
+  const [itemdata,setItemdata] = useState<any[]>([])
+  useEffect(()=>{
+        setloader(true)
+        let timer = setTimeout(()=>{
+         setItemdata(FoodData)
+          setloader(false)
+       
+        },500)
+        
+        return ()=>clearTimeout(timer)
+        },[FoodData])
   const renderWeekData = ({ item, index }: any) => (
     <TouchableOpacity onPress={() => setSelected(index)}>
       <WeekCard days={item.day} date={item.date} active={selected === index} />
@@ -69,18 +80,20 @@ const MealPlanScreen = ({ navigation }: any) => {
           <Text style={Styles.text}>15 meals</Text>
         </View>
         <PopularExercise
-          data={FoodData.map(item => ({
+          data={itemdata.map(item => ({
             id: item.id.toString(),
             image: item.image,
             title: item.title,
             level: item.kcal,
             duration: item.time,
             heading: '',
+           
           }))}
           onPressItem={(item: any) =>
   navigation.push('MealDetails', { item })
+
 }
-        />
+      loader={loader}  />
       </ScrollView>
     </SafeAreaView>
   );

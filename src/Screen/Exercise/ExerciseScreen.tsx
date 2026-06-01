@@ -1,13 +1,26 @@
 import { View, Text, StyleSheet, FlatList, ScrollView ,TouchableOpacity} from 'react-native';
-import React ,{useState}from 'react';
+import React ,{useState,useEffect}from 'react';
 import Header from '../../components/ScreensHeader';
 import Selector from '../../components/Selector';
 import ExerciseCard from './component/ExerciseCard';
+import { Skeleton } from '@rneui/themed';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {ExerciseCardData} from './Data/ExerciseData'
 type ExerciseType = 'Cardio' | 'Legs' | 'Back' | 'Chest';
 const Exercise = ({navigation}:any) => {
 const [selected, setSelected] = useState<ExerciseType>('Cardio')
+const [exerciselist,setExerciselist] = useState(ExerciseCardData[selected]||[]);
+const [loader,setLoader] = useState(true)
+useEffect(() => {
+  setLoader(true);
+
+  const timer = setTimeout(() => {
+    setExerciselist(ExerciseCardData[selected] || []);
+    setLoader(false);
+  }, 500);
+
+  return () => clearTimeout(timer);
+}, [selected]);
 
   const ExerciseData =[
     'Cardio',
@@ -29,7 +42,7 @@ const [selected, setSelected] = useState<ExerciseType>('Cardio')
     return(
       <>
       <View style={{paddingVertical:25}}>
-        <ExerciseCard id={item.id} title={item.title} kcal={item.kcal} time={item.time} level={item.level} image={item.image} subtitle='' onPress={()=>navigation.navigate('ExerciseDetails',{item})}/>
+        <ExerciseCard id={item.id} title={item.title} kcal={item.kcal} time={item.time} level={item.level} image={item.image} subtitle='' onPress={()=>navigation.navigate('ExerciseDetails',{item})} loader={loader}/>
       </View>
        {index !== ExerciseCardData[selected].length - 1 && (
   <View style={style.line} />
@@ -40,6 +53,9 @@ const [selected, setSelected] = useState<ExerciseType>('Cardio')
   }
   return (
     <SafeAreaView style={{flex:1,backgroundColor:"#FFF"}}>
+      <ScrollView
+      stickyHeaderIndices={[1]}
+       contentContainerStyle={{paddingBottom:100}}>
       <Header title='FULL EXERCISE' name='' navigation={navigation} icon={null} />
       
       <View style={style.SelectorView}>
@@ -57,17 +73,18 @@ const [selected, setSelected] = useState<ExerciseType>('Cardio')
       
       </View>
       
-      <FlatList 
-      data={ExerciseCardData[selected]|| []}
+       <FlatList 
+      data={exerciselist}
       renderItem={renderData}
-       scrollEnabled
+       scrollEnabled ={false}
       nestedScrollEnabled
       keyExtractor={(item)=>item.id.toString()}
       contentContainerStyle={style.cardlist}
 
       />
+     
  
-   
+   </ScrollView>
     </SafeAreaView>
   );
 };
@@ -83,12 +100,14 @@ const style = StyleSheet.create({
     paddingHorizontal:16
   },
   list:{
-    gap:10
+    gap:10,
+      backgroundColor:"#FFF"
     
   },
   cardlist:{
         paddingHorizontal:16,
-        paddingBottom:120
+        paddingBottom:120,
+      
       
   },
   line:{

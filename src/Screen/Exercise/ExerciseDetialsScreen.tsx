@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   SectionList,
+  Image
 } from 'react-native'
 import Header from '../../components/ScreensHeader'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -140,30 +141,40 @@ console.log(item);
     <View style={{flex:1}}>
   
       <View style={styles.ViewBox}>
-      {item && (
-  <Animated.Image
+     {item && (
+  <Animated.View
     sharedTransitionTag={`Exercise-${item.id}`}
-    source={{ uri: item.image }}
-    style={styles.detailImage}
-    resizeMode="cover"
-  />
-)}
-          <View style={styles.HeaderContainer}>
-            <Header title="" navigation={navigation} />
-          </View>
-  
+    style={styles.imageWrapper}
+  >
+    <Image
+      source={{uri: item.image}}
+      style={styles.detailImage}
+      resizeMode="cover"
+    />
 
-        <View style={styles.bannerBox}>
-          <View style={styles.innerText}>
-            <MaterialCommunityIcons name="fire" size={24} color="black" />
-            <Text style={styles.subtitle}>135kcl</Text>
-          </View>
-          <View style={styles.line} />
-          <View style={styles.innerText}>
-            <MaterialCommunityIcons name="clock" size={24} color="black" />
-            <Text style={styles.subtitle}>5 min</Text>
-          </View>
-        </View>
+    <View style={styles.bannerBox}>
+      <View style={styles.innerText}>
+        <MaterialCommunityIcons
+          name="fire"
+          size={24}
+          color="black"
+        />
+        <Text style={styles.subtitle}>135 kcal</Text>
+      </View>
+
+      <View style={styles.line} />
+
+      <View style={styles.innerText}>
+        <MaterialCommunityIcons
+          name="clock"
+          size={24}
+          color="black"
+        />
+        <Text style={styles.subtitle}>5 min</Text>
+      </View>
+    </View>
+  </Animated.View>
+)}
       </View>
 
     
@@ -315,4 +326,9 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: 'grey',
   },
+  imageWrapper: {
+  width: '100%',
+  height: 380,
+  position: 'relative',
+},
 })

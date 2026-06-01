@@ -72,7 +72,7 @@ const StackNavigation = () => {
             headerTransparent:true,
             headerTitle:'',
             headerLeft:()=>(
-              <TouchableOpacity onPress={()=>navigation.goBack()}>
+              <TouchableOpacity onPress={()=>navigation.goBack()} style={{backgroundColor:"#FFF",borderRadius:50}}>
                    <MaterialIcons name="keyboard-arrow-left" color="#000" size={24} />
                    </TouchableOpacity>
             )

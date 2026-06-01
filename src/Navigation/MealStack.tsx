@@ -17,10 +17,10 @@ export default function MealStack() {
         name="MealPlan"
         component={MealPlanScreen}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="MealDetails"
         component={MealDetailsScreen}
-      />
+      /> */}
     </Stack.Navigator>
   );
 }
