@@ -125,7 +125,7 @@ function MyDrawer() {
       drawerContent={props => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerShown: false,
-        drawerType: 'slide',   // 👈 slide moves drawer + screen together
+        drawerType: 'slide',   
         
         overlayColor: 'transparent',
         drawerStyle: {
@@ -133,7 +133,7 @@ function MyDrawer() {
           backgroundColor: '#F5F5F5',
         },
         swipeEdgeWidth: 60,
-        // 👇 this gives the screen a shadow like your old AnimatedScreen
+       
         sceneStyle: {
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 8 },
@@ -144,7 +144,7 @@ function MyDrawer() {
         },
       }}
     >
-      {/* 👇 MyTabs directly — no AnimatedScreen wrapper */}
+     
       <Drawer.Screen name="Home" component={MyTabs} />
       <Drawer.Screen name="Training" component={TrainingScreen} />
       <Drawer.Screen name="Categories" component={Categories} />
