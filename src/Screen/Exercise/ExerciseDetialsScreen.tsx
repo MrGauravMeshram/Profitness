@@ -9,6 +9,7 @@ import {
   Image
 } from 'react-native'
 import Header from '../../components/ScreensHeader'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import StatsContainer from './component/StatsContainer'
 import { BtnData } from './Data/btnData'
@@ -204,7 +205,7 @@ console.log(item);
       />
     </View>
   )
-
+const Insets = useSafeAreaInsets()
   return (
     <View style={{ flex: 1 ,backgroundColor:"#FFF"}}>
       
@@ -219,7 +220,7 @@ console.log(item);
         contentContainerStyle={{ paddingBottom: 20 }}
       />
 
-      <View style={{ paddingVertical: 10, marginHorizontal: 16 }}>
+      <View style={{ height: 70 + Insets.bottom, marginHorizontal: 16, paddingTop:5}}>
         <Buttons title="Start Now" onPress={()=>navigation.navigate('ScheduleExercise')}/>
       </View>
     </View>

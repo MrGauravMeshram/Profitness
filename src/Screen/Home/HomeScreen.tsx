@@ -13,7 +13,7 @@ import { AnyComponent } from 'react-native-reanimated/lib/typescript/createAnima
 const Home = ({navigation}:any) => {
   const [selectedGoal, setSelectedGoal] = useState('2');
   const scrollY = useRef(new Animated.Value(0)).current;
-
+const [isSticky, setIsSticky] = useState(false);
   const searchBackground = '#B7CF1A';
 
   const searchTop = scrollY.interpolate({

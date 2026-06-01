@@ -17,19 +17,43 @@ type PropsCard={
     onPress:()=>void
 }
 const ExerciseCard = ({id,title,subtitle,kcal,time,level,image,onPress,loader}:PropsCard) => {
-  
+ if (loader) {
+  return (
+    <View style={style.container}>
+      <Skeleton
+        width={120}
+        height={120}
+        style={{borderRadius: 12}}
+      />
+
+      <View style={{flex: 1, marginLeft: 16}}>
+        <Skeleton width={160} height={18} />
+        <Skeleton
+          width={120}
+          height={14}
+          style={{marginTop: 12}}
+        />
+        <Skeleton
+          width={80}
+          height={14}
+          style={{marginTop: 12}}
+        />
+      </View>
+    </View>
+  );
+}
   
   return (
  <TouchableOpacity onPress={onPress}>
     <View style={style.container}>
-      {loader?(<Skeleton style={style.ImageContainer}/>):(
+      
       <View style={style.ImageContainer}>
        <Animated.Image  
        sharedTransitionTag={`Exercise-${id}`}
           source={{uri:image}}
           style={style.image}
        />
-      </View>)}
+      </View>
       <View style={{paddingHorizontal:16,gap:10,paddingVertical:10}}>
       
         <Text style={style.title}>{title}</Text>

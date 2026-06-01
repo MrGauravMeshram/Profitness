@@ -1,9 +1,9 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View,TouchableOpacity } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../Screen/Home/HomeScreen';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Exercise from '../Screen/Exercise/ExerciseScreen';
 import MealStack from './MealStack';
 import Profile from '../Screen/Profile/ProfileScreen';
@@ -14,6 +14,7 @@ const Tab = createBottomTabNavigator();
 
 
 const TabIcon = ({ focused, icon, label }: any) => {
+ 
   return (
     <View style={styles.tabItem}>
       <Image
@@ -29,26 +30,34 @@ const TabIcon = ({ focused, icon, label }: any) => {
 };
 
 function MyTabs() {
+   const Insets = useSafeAreaInsets()
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
       freezeOnBlur: false,
+     tabBarButton: (props:any) => (
+      <TouchableOpacity
+        {...props}
+        activeOpacity={0.7}
+      />
+    ),
     lazy: false,
         tabBarShowLabel: false,
         tabBarStyle: {
           position: 'absolute',
+          
           bottom: 0,
           left: 0,
           right: 0,
-          height: 95,
+          height: 70+ Insets.bottom,
           backgroundColor: '#FFF',
           borderTopWidth: 0,
           elevation: 10,
           alignItems: 'center',
           justifyContent: 'center',
           paddingTop: 12,
-          paddingBottom: 10,
+          paddingBottom: 10 + Insets.bottom,
         },
       }}
     >

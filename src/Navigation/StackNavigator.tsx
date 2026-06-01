@@ -6,6 +6,7 @@ import Onboarding from '../Screen/Onboarding/Onboarding';
 import Login from '../Screen/Auth/Login';
 import Signup from '../Screen/Auth/Register';
 import Forgot from '../Screen/Auth/Forgotpass';
+import NotificationScreen from '../Screen/Notification/NotificationScreen';
 import Verify from '../Screen/Auth/Verify';
 import Favorite from '../Screen/SteppingScreen/SteppingScreen';
 import MyDrawer from './DrawerNavigation';
@@ -60,8 +61,8 @@ const StackNavigation = () => {
         <Stack.Screen name="Main" component={MyDrawer} />
         <Stack.Screen name="Filter" component={FilterScreen} />
         <Stack.Screen name="Subscription" component={Subscription} />
-    
-        <Stack.Screen name="Newworkout" component={NewWorkout} />
+    <Stack.Screen name='Notification' component={NotificationScreen}/>
+         <Stack.Screen name="Newworkout" component={NewWorkout} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
         <Stack.Screen
           name="ExerciseDetails"

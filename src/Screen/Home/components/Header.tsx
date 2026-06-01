@@ -1,7 +1,10 @@
 import React from 'react';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
+import SearchBar from '../../../components/searchBar';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-
+type Props = {
+  isSticky?: boolean;
+};
 const HomeHeader = () => {
   const navigation: any = useNavigation();
   return (
@@ -27,7 +30,7 @@ const HomeHeader = () => {
           />
         </View>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('Notification')}>
           <Image
             source={require('../../../assets/png/bell.png')}
             style={styles.bell}
@@ -38,6 +41,9 @@ const HomeHeader = () => {
         <Text style={styles.greeting}>Hello, Good Morning</Text>
 
         <Text style={styles.name}>Gaurav !</Text>
+      </View>
+      <View>
+      
       </View>
     </>
   );

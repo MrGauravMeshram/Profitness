@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import Animated, {FadeIn, SharedTransition,} from 'react-native-reanimated';
 import Feather from 'react-native-vector-icons/Feather';
+import LinearGradient from 'react-native-linear-gradient';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {RouteProp} from '@react-navigation/native';
 
@@ -50,15 +51,19 @@ const transition = SharedTransition
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 40}}>
 
-        
+         <LinearGradient colors={['#FFF','#000']}>
         <View style={styles.heroContainer}>
+       
          <Animated.Image
   source={item.image}
   sharedTransitionTag={`meal-${item.id}`}
   sharedTransitionStyle={transition}
   style={styles.heroImage}
   resizeMode="cover"
-/>
+/>      
+
+        </View>
+        </LinearGradient>
 
           <Animated.View
             entering={FadeIn.delay(150).duration(500)}
@@ -75,7 +80,8 @@ const transition = SharedTransition
               <Text style={styles.subtitle}>5 min</Text>
             </View>
           </Animated.View>
-        </View>
+
+
 
         <Animated.View
           entering={FadeIn.delay(250).duration(500)}
@@ -134,13 +140,14 @@ const styles = StyleSheet.create({
   },
 heroImage: {
   width: '100%',
-  height: 380,
+  height: 350,
    borderRadius: 18,
 },
 
   bannerBox: {
-    position: 'absolute',
-    bottom: -30,
+    position:"absolute",
+    top:350,
+    
     alignSelf: 'center',
     width: '90%',
     height: 60,
