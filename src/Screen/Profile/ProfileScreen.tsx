@@ -1,11 +1,15 @@
-import React from 'react';
+import React ,{useCallback}from 'react';
 import {
   View,
   Text,
   Image,
   StyleSheet,
   ScrollView,
+  BackHandler,
 } from 'react-native';
+import Toast from 'react-native-toast-message';
+import { useFocusEffect } from '@react-navigation/native';  
+
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../../components/ScreensHeader';
@@ -66,7 +70,39 @@ const Profile = ({ navigation }: any) => {
       subtitle: 'Grams per day',
     },
   ];
+ useFocusEffect(
+  useCallback(() => {
+    let backPressedOnce = false;
 
+    const backAction = () => {
+      if (backPressedOnce) {
+        BackHandler.exitApp();
+        return true;
+      }
+
+      backPressedOnce = true;
+
+      Toast.show({
+        type: 'info',
+        text1: 'Press back again to exit',
+        position: 'bottom',
+      });
+
+      setTimeout(() => {
+        backPressedOnce = false;
+      }, 1500);
+
+      return true;
+    };
+
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => subscription.remove();
+  }, []),
+);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>

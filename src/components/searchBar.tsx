@@ -1,19 +1,31 @@
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 import { View, TextInput, StyleSheet, Image } from 'react-native';
+type SearchBarProps = {
+  disablekeyboard?: boolean;
+};
+const SearchBar = ({disablekeyboard}:SearchBarProps) => {
+  const navigation = useNavigation();
 
-const SearchBar = () => {
   return (
     <View style={styles.searchBox}>
       <Image
         source={require('../assets/png/search.png')}
         style={styles.searchIcon}
+        
       />
 
       <TextInput
         placeholder="Search"
         placeholderTextColor="#444"
         style={styles.input}
+         showSoftInputOnFocus={!disablekeyboard}
+       onPressIn={() => {
+    if (disablekeyboard) {
+      navigation.navigate('SearchBarScreen' as never);
+    }
+  }}
       />
     </View>
   );

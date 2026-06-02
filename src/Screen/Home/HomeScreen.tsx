@@ -1,15 +1,15 @@
-import React, { useState, useRef } from 'react';
-import { View, StyleSheet, Animated, Text, TouchableOpacity } from 'react-native';
-
+import React, { useState, useRef,useEffect  ,useCallback } from 'react';
+import { View, StyleSheet, Animated, Text, TouchableOpacity ,BackHandler} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import Header from './components/Header';
 import Banner from './components/Banner';
 import SelectGoal from './components/SelectGoal';
+import Toast from 'react-native-toast-message';
 import CategoryList from './components/Category';
 import Popular from './components/PopularExercise';
 import SearchBar from '../../components/searchBar';
-import { Image } from 'react-native-svg';
+
 import AdditionalExercise from './components/AdditionalExercise';
-import { AnyComponent } from 'react-native-reanimated/lib/typescript/createAnimatedComponent/commonTypes';
 const Home = ({navigation}:any) => {
   const [selectedGoal, setSelectedGoal] = useState('2');
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -99,6 +99,39 @@ const [isSticky, setIsSticky] = useState(false);
       duration: '',
     },
   ];
+  useFocusEffect(
+  useCallback(() => {
+    let backPressedOnce = false;
+
+    const backAction = () => {
+      if (backPressedOnce) {
+        BackHandler.exitApp();
+        return true;
+      }
+
+      backPressedOnce = true;
+
+      Toast.show({
+        type: 'info',
+        text1: 'Press back again to exit',
+        position: 'bottom',
+      });
+
+      setTimeout(() => {
+        backPressedOnce = false;
+      }, 1500);
+
+      return true;
+    };
+
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => subscription.remove();
+  }, []),
+);
 
   return (
     <View style={styles.container}>
@@ -197,7 +230,7 @@ const [isSticky, setIsSticky] = useState(false);
         ]}
       >
         
-        <SearchBar />
+        <SearchBar disablekeyboard/>
 
       </Animated.View>
      

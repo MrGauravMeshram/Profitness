@@ -142,7 +142,11 @@ const FavoriteScreen = ({ navigation }: any) => {
  const handleNext = async () => {
   if (currentStep === steps.length - 1) {
     await asyncStorage.setItem('steppingCompleted', 'true');
-    navigation.navigate('Main');
+       navigation.reset({
+      index: 0,
+      routes: [{ name: 'Main' }],
+    });
+
     return;
   }
 
@@ -366,6 +370,8 @@ getitem();
           }
           
           onPress={handleNext}
+
+
         />
       </View>
     </SafeAreaView>

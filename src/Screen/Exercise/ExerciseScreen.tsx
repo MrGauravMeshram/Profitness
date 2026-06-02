@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, FlatList, ScrollView ,TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView ,TouchableOpacity,BackHandler} from 'react-native';
+import Toast from 'react-native-toast-message';
 import React ,{useState,useEffect}from 'react';
 import Header from '../../components/ScreensHeader';
 import Selector from '../../components/Selector';
@@ -11,15 +12,49 @@ const Exercise = ({navigation}:any) => {
 const [selected, setSelected] = useState<ExerciseType>('Cardio')
 const [exerciselist,setExerciselist] = useState(ExerciseCardData[selected]||[]);
 const [loader,setLoader] = useState(true)
+
 useEffect(() => {
   setLoader(true);
+
 
   const timer = setTimeout(() => {
     setExerciselist(ExerciseCardData[selected] || []);
     setLoader(false);
   }, 500);
 
-  return () => clearTimeout(timer);
+  
+  let backPressedOnce = false;
+  
+    const backAction = () => {
+      if (backPressedOnce) {
+        BackHandler.exitApp();
+        return true;
+      }
+  
+      backPressedOnce = true;
+  
+      Toast.show({
+        type: 'info',
+        text1: 'Are you sure you want to exit',
+        position: 'bottom',
+        visibilityTime: 1000,
+      });
+  
+      setTimeout(() => {
+        backPressedOnce = false;
+      }, 1000);
+  
+      return true;
+    };
+  
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+   return () => {
+    clearTimeout(timer);
+    subscription.remove();
+  };
 }, [selected]);
 
   const ExerciseData =[

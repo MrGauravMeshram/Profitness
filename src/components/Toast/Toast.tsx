@@ -12,7 +12,7 @@ export const Toastconfig ={
             fontWeight: '400',
             color: 'white',
           }}
-          style={{ borderLeftColor: 'black', backgroundColor:'black',borderRadius:50}}
+          style={{ borderLeftColor: 'black', backgroundColor:'black',borderRadius:15}}
         />
       ),
 }

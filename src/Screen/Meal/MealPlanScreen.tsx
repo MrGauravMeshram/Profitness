@@ -1,11 +1,13 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import React, { useState,useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity ,BackHandler} from 'react-native';
+import Toast from 'react-native-toast-message';
+import React, { useState,useEffect ,useCallback} from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../../components/ScreensHeader';
 import { WeekData } from '../../Data/WeekData';
 import { Food } from './Data/Data';
+import {useFocusEffect} from '@react-navigation/native';
 import PopularExercise from '../Home/components/PopularExercise';
 import { FoodData } from './Data/FoodData';
 import Selector from '../../components/Selector';
@@ -18,16 +20,52 @@ const MealPlanScreen = ({ navigation }: any) => {
   const [isChoose, setChoose] = useState(0);
   const [loader,setloader]= useState(true);
   const [itemdata,setItemdata] = useState<any[]>([])
+ 
   useEffect(()=>{
         setloader(true)
         let timer = setTimeout(()=>{
+
          setItemdata(FoodData)
           setloader(false)
        
         },500)
         
+        
         return ()=>clearTimeout(timer)
         },[FoodData])
+         useFocusEffect(
+  useCallback(() => {
+    let backPressedOnce = false;
+
+    const backAction = () => {
+      if (backPressedOnce) {
+        BackHandler.exitApp();
+        return true;
+      }
+
+      backPressedOnce = true;
+
+      Toast.show({
+        type: 'info',
+        text1: 'Press back again to exit',
+        position: 'bottom',
+      });
+
+      setTimeout(() => {
+        backPressedOnce = false;
+      }, 1500);
+
+      return true;
+    };
+
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => subscription.remove();
+  }, []),
+);
   const renderWeekData = ({ item, index }: any) => (
     <TouchableOpacity onPress={() => setSelected(index)}>
       <WeekCard days={item.day} date={item.date} active={selected === index} />

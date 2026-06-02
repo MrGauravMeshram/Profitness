@@ -2,6 +2,7 @@ import { View, Text ,FlatList,Image,StyleSheet} from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Header from '../../components/ScreensHeader';
+import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import {NotificationData} from './Data/NotificationData';
 
 const NotificationScreen = ({navigation}:any) => {
