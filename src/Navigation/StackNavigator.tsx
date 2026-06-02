@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Splash from '../Screen/Onboarding/Splash';
@@ -10,6 +10,7 @@ import NotificationScreen from '../Screen/Notification/NotificationScreen';
 import Verify from '../Screen/Auth/Verify';
 import Favorite from '../Screen/SteppingScreen/SteppingScreen';
 import MyDrawer from './DrawerNavigation';
+import asyncStorage from '@react-native-async-storage/async-storage';
 import {TestListScreen, TestDetailScreen} from '../Screen/Test/Text';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FilterScreen from '../Screen/Filter/FilterScreen';
@@ -22,6 +23,7 @@ import MealDetailsScreen from '../Screen/Meal/MealDetailsScreen';
 import MealPlanScreen from '../Screen/Meal/MealPlanScreen';
 import { TouchableOpacity } from 'react-native';
 const Stack = createNativeStackNavigator();
+
 
 export type RootStackParamList = {
   Splash: undefined;

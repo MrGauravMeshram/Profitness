@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import asyncStorage from '@react-native-async-storage/async-storage';
 import AgeMeter from './component/Age';
 import WeightSelector from './component/AgeScale';
 import HeadingText from '../../components/headingText';
@@ -122,6 +122,7 @@ const FavoriteScreen = ({ navigation }: any) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [goal, setGoal] = useState('Improve fitness');
 
+
   const [selected, setSelected] = useState<string[]>([]);
 
   const [selectedAge, setSelectedAge] = useState(27);
@@ -138,15 +139,21 @@ const FavoriteScreen = ({ navigation }: any) => {
 
   const currentData = steps[currentStep];
 
-  const handleNext = () => {
-    if (currentStep === steps.length - 1) {
-      navigation.navigate('Main');
+ const handleNext = async () => {
+  if (currentStep === steps.length - 1) {
+    await asyncStorage.setItem('steppingCompleted', 'true');
+    navigation.navigate('Main');
+    return;
+  }
 
-      return;
-    }
+  setCurrentStep(prev => prev + 1);
+};
 
-    setCurrentStep(prev => prev + 1);
-  };
+const getitem = async () => {
+  const value = await asyncStorage.getItem('steppingCompleted');
+  console.log(value);
+}
+getitem();
 
   const handleSelect = (id: string) => {
     if (selected.includes(id)) {
@@ -352,11 +359,12 @@ const FavoriteScreen = ({ navigation }: any) => {
         <AuthButton
           title={
             currentStep === steps.length - 1
-              ? 'GET STARTED!'
+              ? ('GET STARTED!')            
               : currentStep === 6
               ? 'FINISH STEP'
               : 'NEXT STEPS'
           }
+          
           onPress={handleNext}
         />
       </View>
