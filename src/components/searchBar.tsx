@@ -4,12 +4,13 @@ import {useNavigation} from '@react-navigation/native';
 import { View, TextInput, StyleSheet, Image } from 'react-native';
 type SearchBarProps = {
   disablekeyboard?: boolean;
+  style?: any;
 };
-const SearchBar = ({disablekeyboard}:SearchBarProps) => {
+const SearchBar = ({disablekeyboard, style}:SearchBarProps) => {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.searchBox}>
+    <View style={[styles.searchBox, style]}>
       <Image
         source={require('../assets/png/search.png')}
         style={styles.searchIcon}
