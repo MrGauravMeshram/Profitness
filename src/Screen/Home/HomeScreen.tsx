@@ -7,12 +7,14 @@ import SelectGoal from './components/SelectGoal';
 import Toast from 'react-native-toast-message';
 import Carousel from 'react-native-reanimated-carousel';
 import CategoryList from './components/Category';
+import Animateds from 'react-native-reanimated';
 import Popular from './components/PopularExercise';
 import SearchBar from '../../components/searchBar';
 import {BannerData} from './BannerImageData/ImageData';
  const {width} = Dimensions.get('window');
 import AdditionalExercise from './components/AdditionalExercise';
 const Home = ({navigation}:any) => {
+  const [activeIndex, setActiveIndex] = useState(0);
  
   const [selectedGoal, setSelectedGoal] = useState('2');
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -153,35 +155,57 @@ const [isSticky, setIsSticky] = useState(false);
             <Header />
           </View>
           <View>
-         <Carousel
+    <Carousel
   loop
   width={width}
   height={250}
   autoPlay
+  scrollAnimationDuration={1000}
   data={BannerData}
-  overscrollEnabled={true}
-  scrollAnimationDuration={2000}
-   onConfigurePanGesture={(gesture) => {
+   onConfigurePanGesture={gesture => {
     gesture.activeOffsetX([-10, 10]);
     gesture.failOffsetY([-5, 5]);
   }}
+  onProgressChange={(_, absoluteProgress) => {
+  const index = Math.round(absoluteProgress) % BannerData.length;
+  setActiveIndex(index);
+}}
   renderItem={({ item }) => (
-    <View style={styles.ImageBox}>
+    <Animated.View style={styles.ImageBox}>
       <Image
         source={item.image}
         style={{
           width: '100%',
           height: '100%',
           borderRadius: 20,
-          alignSelf: 'center',
         }}
         resizeMode="contain"
       />
-    </View>
+    </Animated.View>
   )}
 />
-          </View>
-
+<View
+  style={{
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 10,
+  }}
+>
+  {BannerData.map((_, index) => (
+    <View
+      key={index}
+      style={{
+        width: activeIndex === index ? 20 : 8,
+        height: 8,
+        borderRadius: 4,
+        backgroundColor:
+          activeIndex === index ? '#B7CF1A' : '#D3D3D3',
+        marginHorizontal: 4,
+      }}
+    />
+  ))}
+</View>
+</View>
         </View>
         <View />
 
