@@ -8,7 +8,8 @@ import {
   SectionList,
   Image
 } from 'react-native'
-import Header from '../../components/ScreensHeader'
+
+
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import StatsContainer from './component/StatsContainer'

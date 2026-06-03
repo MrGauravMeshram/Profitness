@@ -1,16 +1,19 @@
-import React, { useState, useRef,useEffect  ,useCallback } from 'react';
-import { View, StyleSheet, Animated, Text, TouchableOpacity ,BackHandler} from 'react-native';
+import React, { useState, useRef,useEffect  ,useCallback,} from 'react';
+import { View, StyleSheet, Animated, Text, TouchableOpacity ,BackHandler,Image,FlatList,Dimensions} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import Header from './components/Header';
 import Banner from './components/Banner';
 import SelectGoal from './components/SelectGoal';
 import Toast from 'react-native-toast-message';
+import Carousel from 'react-native-reanimated-carousel';
 import CategoryList from './components/Category';
 import Popular from './components/PopularExercise';
 import SearchBar from '../../components/searchBar';
-
+import {BannerData} from './BannerImageData/ImageData';
+ const {width} = Dimensions.get('window');
 import AdditionalExercise from './components/AdditionalExercise';
 const Home = ({navigation}:any) => {
+ 
   const [selectedGoal, setSelectedGoal] = useState('2');
   const scrollY = useRef(new Animated.Value(0)).current;
 const [isSticky, setIsSticky] = useState(false);
@@ -149,22 +152,50 @@ const [isSticky, setIsSticky] = useState(false);
           <View style={styles.con}>
             <Header />
           </View>
-          <View style={styles.ImageBox}>
-            <Banner />
+          <View>
+         <Carousel
+  loop
+  width={width}
+  height={250}
+  autoPlay
+  data={BannerData}
+  overscrollEnabled={true}
+  scrollAnimationDuration={2000}
+   onConfigurePanGesture={(gesture) => {
+    gesture.activeOffsetX([-10, 10]);
+    gesture.failOffsetY([-5, 5]);
+  }}
+  renderItem={({ item }) => (
+    <View style={styles.ImageBox}>
+      <Image
+        source={item.image}
+        style={{
+          width: '100%',
+          height: '100%',
+          borderRadius: 20,
+          alignSelf: 'center',
+        }}
+        resizeMode="contain"
+      />
+    </View>
+  )}
+/>
           </View>
 
         </View>
         <View />
 
         <View
-          style={{
-            position: 'absolute',
-            top: 570,
-            left: 20,
-            zIndex: 9999,
-            backgroundColor: '#F5F5F5',
-            paddingRight: 10,
-          }}
+          // style={{
+          //   position: 'absolute',
+          //   top: 480,
+          //   left: 20,
+          //   zIndex: 9999,
+          //   backgroundColor: '#FFF',
+          //   paddingRight: 10,
+          
+          // }}
+          style={{paddingHorizontal: 20,backgroundColor: '#FFF',paddingTop: 16}}
         >
           <Text style={styles.heading}>Select your Goal</Text>
         </View>
@@ -243,7 +274,7 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFF',
   },
 
   con: {
@@ -268,18 +299,19 @@ const styles = StyleSheet.create({
   },
 
   ImageBox: {
-    width: 350,
-    alignSelf: 'center',
-    marginBottom: 90,
-  },
+  height: 230,
+  width: width - 40,
+  marginHorizontal: 10,
+  marginTop: 10,
+  backgroundColor: '#FFF',
+  alignSelf: 'center',
+},
 
   goalContainer: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFF',
     paddingHorizontal: 20,
-    paddingTop: 100,
-    paddingBottom: 10,
-    zIndex: 998,
-    marginTop: -100,
+    paddingTop: 16,
+   paddingBottom: 20,
   },
 
   line: {

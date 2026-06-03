@@ -136,8 +136,15 @@ const style = StyleSheet.create({
   },
   list:{
     gap:10,
-      backgroundColor:"#FFF"
-    
+      backgroundColor:"#FFF",
+      borderBottomWidth:0.5,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation:2,
+      paddingTop:15,
+      borderBottomColor: 'lightgrey'  
+
   },
   cardlist:{
         paddingHorizontal:16,
