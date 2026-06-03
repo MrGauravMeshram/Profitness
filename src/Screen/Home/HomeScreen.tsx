@@ -62,6 +62,28 @@ const Home = ({ navigation }: any) => {
     };
   });
 
+
+  const goalPillsAnimatedStyle = useAnimatedStyle(() => {
+
+    const top = interpolate(
+      scrollY.value,
+      [0, 465],
+      [570, 105],
+      Extrapolation.CLAMP,
+    );
+
+    const isStuck = scrollY.value >= 465;
+
+    return {
+      top,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: isStuck ? 0.08 : 0,
+      shadowRadius: isStuck ? 3 : 0,
+      elevation: isStuck ? 3 : 0,
+    };
+  });
+
   const goalData = [
     { id: '1', title: 'Loose Weight' },
     { id: '2', title: 'Gain Weight' },
@@ -228,13 +250,9 @@ const Home = ({ navigation }: any) => {
         >
           <Text style={styles.heading}>Select your Goal</Text>
         </View>
-        <View style={styles.goalContainer}>
-          <SelectGoal
-            data={goalData}
-            selectedId={selectedGoal}
-            onSelect={setSelectedGoal}
-          />
-        </View>
+
+
+        <View style={{ height: 75, backgroundColor: '#FFF' }} />
 
         <CategoryList data={categoryData} />
         <View style={styles.line} />
@@ -276,7 +294,21 @@ const Home = ({ navigation }: any) => {
         />
       </Animated.ScrollView>
 
-      {/* Sticky search bar — animated on UI thread via Reanimated */}
+
+      <Animated.View
+        style={[
+          styles.goalStickyContainer,
+          goalPillsAnimatedStyle,
+        ]}
+      >
+        <SelectGoal
+          data={goalData}
+          selectedId={selectedGoal}
+          onSelect={setSelectedGoal}
+        />
+      </Animated.View>
+
+
       <Animated.View
         style={[
           styles.stickyContainer,
@@ -333,11 +365,16 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 
-  goalContainer: {
+  goalStickyContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
     backgroundColor: '#FFF',
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 20,
+    paddingLeft: 16,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 90,
   },
 
   line: {

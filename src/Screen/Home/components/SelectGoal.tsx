@@ -56,6 +56,9 @@ export default GoalTabs;
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    alignSelf: "center",
+    marginBottom: 5,
+
   },
 
   listContainer: {

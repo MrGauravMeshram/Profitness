@@ -26,34 +26,34 @@ const EditProfile = ({ navigation }: any) => {
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
   const [age, setAge] = useState('');
-const [weightUnit, setWeightUnit] = useState('KG');
-const [heightUnit, setHeightUnit] = useState('CM');
+  const [weightUnit, setWeightUnit] = useState('KG');
+  const [heightUnit, setHeightUnit] = useState('CM');
   return (
     <SafeAreaView style={styles.container}>
-<KeyboardAwareScrollView
-  showsVerticalScrollIndicator={false}
-  enableOnAndroid={true}
-  keyboardShouldPersistTaps="handled"
-  extraScrollHeight={250}
-  contentContainerStyle={{ paddingBottom: 40 }}
->
+      <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        enableOnAndroid={true}
+        keyboardShouldPersistTaps="handled"
+        extraScrollHeight={250}
+        contentContainerStyle={{ paddingBottom: 40 }}
+      >
 
         <Header
           title="EDIT PROFILE"
           navigation={navigation}
         />
 
-      
+
 
         <View style={styles.imageSection}>
 
           <View style={styles.imageContainer}>
-          <MaterialCommunityIcons
-  name="account"
-  size={100}
-  color="#1D1E2C"
-  style={styles.icon}
-/>
+            <MaterialCommunityIcons
+              name="account"
+              size={100}
+              color="#1D1E2C"
+              style={styles.icon}
+            />
 
 
             <TouchableOpacity style={styles.cameraButton}>
@@ -70,11 +70,11 @@ const [heightUnit, setHeightUnit] = useState('CM');
 
         </View>
 
-        
+
 
         <View style={styles.formContainer}>
 
-          
+
 
           <Text style={styles.label}>Full Name</Text>
 
@@ -88,15 +88,9 @@ const [heightUnit, setHeightUnit] = useState('CM');
               placeholderTextColor="#777"
             />
 
-            <Ionicons
-              name="checkmark"
-              size={22}
-              color="#111"
-            />
-
           </View>
 
-    
+
 
           <Text style={styles.label}>Phone</Text>
 
@@ -113,7 +107,7 @@ const [heightUnit, setHeightUnit] = useState('CM');
 
           </View>
 
-          
+
 
           <Text style={styles.label}>Email address</Text>
 
@@ -129,7 +123,7 @@ const [heightUnit, setHeightUnit] = useState('CM');
 
           </View>
 
-  
+
 
           <Text style={styles.label}>Weight</Text>
 
@@ -142,53 +136,53 @@ const [heightUnit, setHeightUnit] = useState('CM');
               keyboardType="numeric"
             />
 
-           <View style={styles.unitContainer}>
+            <View style={styles.unitContainer}>
 
-  <TouchableOpacity
-    style={[
-      styles.unitButton,
-      weightUnit === 'LBS' && styles.activeUnit,
-    ]}
-    onPress={() => setWeightUnit('LBS')}
-  >
+              <TouchableOpacity
+                style={[
+                  styles.unitButton,
+                  weightUnit === 'LBS' && styles.activeUnit,
+                ]}
+                onPress={() => setWeightUnit('LBS')}
+              >
 
-    <Text
-      style={
-        weightUnit === 'LBS'
-          ? styles.activeUnitText
-          : styles.unitText
-      }
-    >
-      LBS
-    </Text>
+                <Text
+                  style={
+                    weightUnit === 'LBS'
+                      ? styles.activeUnitText
+                      : styles.unitText
+                  }
+                >
+                  LBS
+                </Text>
 
-  </TouchableOpacity>
+              </TouchableOpacity>
 
-  <TouchableOpacity
-    style={[
-      styles.unitButton,
-      weightUnit === 'KG' && styles.activeUnit,
-    ]}
-    onPress={() => setWeightUnit('KG')}
-  >
+              <TouchableOpacity
+                style={[
+                  styles.unitButton,
+                  weightUnit === 'KG' && styles.activeUnit,
+                ]}
+                onPress={() => setWeightUnit('KG')}
+              >
 
-    <Text
-      style={
-        weightUnit === 'KG'
-          ? styles.activeUnitText
-          : styles.unitText
-      }
-    >
-      KG
-    </Text>
+                <Text
+                  style={
+                    weightUnit === 'KG'
+                      ? styles.activeUnitText
+                      : styles.unitText
+                  }
+                >
+                  KG
+                </Text>
 
-  </TouchableOpacity>
+              </TouchableOpacity>
 
-</View>
+            </View>
 
           </View>
 
-    
+
 
           <Text style={styles.label}>Height</Text>
 
@@ -201,53 +195,53 @@ const [heightUnit, setHeightUnit] = useState('CM');
               keyboardType="numeric"
             />
 
-         <View style={styles.unitContainer}>
+            <View style={styles.unitContainer}>
 
-  <TouchableOpacity
-    style={[
-      styles.unitButton,
-      heightUnit === 'FEET' && styles.activeUnit,
-    ]}
-    onPress={() => setHeightUnit('FEET')}
-  >
+              <TouchableOpacity
+                style={[
+                  styles.unitButton,
+                  heightUnit === 'FEET' && styles.activeUnit,
+                ]}
+                onPress={() => setHeightUnit('FEET')}
+              >
 
-    <Text
-      style={
-        heightUnit === 'FEET'
-          ? styles.activeUnitText
-          : styles.unitText
-      }
-    >
-      FEET
-    </Text>
+                <Text
+                  style={
+                    heightUnit === 'FEET'
+                      ? styles.activeUnitText
+                      : styles.unitText
+                  }
+                >
+                  FEET
+                </Text>
 
-  </TouchableOpacity>
+              </TouchableOpacity>
 
-  <TouchableOpacity
-    style={[
-      styles.unitButton,
-      heightUnit === 'CM' && styles.activeUnit,
-    ]}
-    onPress={() => setHeightUnit('CM')}
-  >
+              <TouchableOpacity
+                style={[
+                  styles.unitButton,
+                  heightUnit === 'CM' && styles.activeUnit,
+                ]}
+                onPress={() => setHeightUnit('CM')}
+              >
 
-    <Text
-      style={
-        heightUnit === 'CM'
-          ? styles.activeUnitText
-          : styles.unitText
-      }
-    >
-      CM
-    </Text>
+                <Text
+                  style={
+                    heightUnit === 'CM'
+                      ? styles.activeUnitText
+                      : styles.unitText
+                  }
+                >
+                  CM
+                </Text>
 
-  </TouchableOpacity>
+              </TouchableOpacity>
 
-</View>
+            </View>
 
           </View>
 
-  
+
           <Text style={styles.label}>Gender</Text>
 
           <TouchableOpacity style={styles.inputContainer}>
@@ -289,7 +283,7 @@ const [heightUnit, setHeightUnit] = useState('CM');
 
           </View>
 
-    
+
 
           <View style={styles.btn}>
 
@@ -333,9 +327,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  icon:{
-position:"absolute",
-bottom:0,
+  icon: {
+    position: "absolute",
+    bottom: 0,
   },
 
   cameraButton: {
@@ -365,7 +359,7 @@ bottom:0,
     borderWidth: 1,
     borderColor: '#D9D9D9',
     paddingHorizontal: 14,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#FFF',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -419,12 +413,12 @@ bottom:0,
     color: '#2F3A4A',
     fontFamily: 'Montserrat-Medium',
   },
-  btn:{
-    position:"absolute",
-    bottom:-40,
-    width:"100%",
-    left:20,
-    marginTop:50,
+  btn: {
+    position: "absolute",
+    bottom: -40,
+    width: "100%",
+    left: 20,
+    marginTop: 50,
   }
 
 });
