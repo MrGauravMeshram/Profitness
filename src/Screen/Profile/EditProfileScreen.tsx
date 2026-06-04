@@ -30,20 +30,20 @@ const EditProfile = ({ navigation }: any) => {
   const [heightUnit, setHeightUnit] = useState('CM');
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAwareScrollView
-        showsVerticalScrollIndicator={false}
-        enableOnAndroid={true}
-        keyboardShouldPersistTaps="handled"
-        extraScrollHeight={250}
-        contentContainerStyle={{ paddingBottom: 40 }}
-      >
+     
 
         <Header
           title="EDIT PROFILE"
           navigation={navigation}
         />
 
-
+ <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        enableOnAndroid={true}
+        keyboardShouldPersistTaps="handled"
+        extraScrollHeight={250}
+        contentContainerStyle={{ paddingBottom: 40 }}
+      >
 
         <View style={styles.imageSection}>
 
@@ -285,15 +285,16 @@ const EditProfile = ({ navigation }: any) => {
 
 
 
-          <View style={styles.btn}>
-
-            <AuthButton title="SAVE" />
-
-          </View>
+        
 
         </View>
 
       </KeyboardAwareScrollView>
+        <View style={styles.btn}>
+
+            <AuthButton title="SAVE" />
+
+          </View>
 
     </SafeAreaView>
   );
@@ -414,11 +415,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Medium',
   },
   btn: {
-    position: "absolute",
-    bottom: -40,
+    marginTop: 35,
+    paddingHorizontal:20,
+    marginBottom: 20,
     width: "100%",
-    left: 20,
-    marginTop: 50,
   }
 
 });

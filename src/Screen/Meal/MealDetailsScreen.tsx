@@ -6,21 +6,21 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
-import Animated, {FadeIn, SharedTransition,} from 'react-native-reanimated';
+import Animated, { FadeIn, SharedTransition, withTiming } from 'react-native-reanimated';
 import Feather from 'react-native-vector-icons/Feather';
 import LinearGradient from 'react-native-linear-gradient';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import {RouteProp} from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
 
 import AddtionalExercise from '../Home/components/AdditionalExercise';
-import {RootStackParamList} from '../../Navigation/StackNavigator';
+import { RootStackParamList } from '../../Navigation/StackNavigator';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'MealDetails'>;
 };
 
-const MealDetailsScreen = ({route}: Props) => {
-  const {item} = route.params;
+const MealDetailsScreen = ({ route }: Props & any) => {
+  const { item } = route.params;
 
   const mealData = [
     {
@@ -40,46 +40,43 @@ const MealDetailsScreen = ({route}: Props) => {
       image: require('../../assets/Images/chickensalad.jpg'),
     },
   ];
-console.log('detail item', item.id);
-const transition = SharedTransition
-  .springify()
-  .damping(18)
-  .stiffness(140);
+  console.log('detail item', item.id);
+  const transition = SharedTransition.duration(330) as any;
   return (
     <View style={styles.root}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 40}}>
+        contentContainerStyle={{ paddingBottom: 40 }}>
 
-         <LinearGradient colors={['#FFF','#000']}>
-        <View style={styles.heroContainer}>
-       
-         <Animated.Image
-  source={item.image}
-  sharedTransitionTag={`meal-${item.id}`}
-  sharedTransitionStyle={transition}
-  style={styles.heroImage}
-  resizeMode="cover"
-/>      
+        <LinearGradient colors={['#FFF', '#000']}>
+          <View style={styles.heroContainer}>
 
-        </View>
+            <Animated.Image
+              source={item.image}
+              sharedTransitionTag={`meal-${item.id}`}
+              sharedTransitionStyle={transition}
+              style={styles.heroImage}
+              resizeMode="cover"
+            />
+
+          </View>
         </LinearGradient>
 
-          <Animated.View
-            entering={FadeIn.delay(150).duration(500)}
-            style={styles.bannerBox}>
-            <View style={styles.innerText}>
-              <SimpleLineIcons name="fire" size={22} color="#000" />
-              <Text style={styles.subtitle}>135 kcal</Text>
-            </View>
+        <Animated.View
+          entering={FadeIn.delay(150).duration(500)}
+          style={styles.bannerBox}>
+          <View style={styles.innerText}>
+            <SimpleLineIcons name="fire" size={22} color="#000" />
+            <Text style={styles.subtitle}>135 kcal</Text>
+          </View>
 
-            <View style={styles.line} />
+          <View style={styles.line} />
 
-            <View style={styles.innerText}>
-              <Feather name="clock" size={22} color="#000" />
-              <Text style={styles.subtitle}>5 min</Text>
-            </View>
-          </Animated.View>
+          <View style={styles.innerText}>
+            <Feather name="clock" size={22} color="#000" />
+            <Text style={styles.subtitle}>5 min</Text>
+          </View>
+        </Animated.View>
 
 
 
@@ -138,16 +135,16 @@ const styles = StyleSheet.create({
     height: 380,
     position: 'relative',
   },
-heroImage: {
-  width: '100%',
-  height: 350,
-   borderRadius: 18,
-},
+  heroImage: {
+    width: '100%',
+    height: 350,
+    borderRadius: 18,
+  },
 
   bannerBox: {
-    position:"absolute",
-    top:350,
-    
+    position: "absolute",
+    top: 350,
+
     alignSelf: 'center',
     width: '90%',
     height: 60,
@@ -165,7 +162,7 @@ heroImage: {
       width: 0,
       height: 3,
     },
-   
+
   },
 
   innerText: {

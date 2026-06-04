@@ -1,4 +1,4 @@
-import React ,{useState}from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -10,8 +10,9 @@ import {
 } from 'react-native';
 import Animated, {
   FadeIn,
-    SharedTransition,
+  SharedTransition,
   LinearTransition,
+  withTiming,
 } from 'react-native-reanimated';
 import { Skeleton } from '@rneui/themed';
 import LinearGradient from 'react-native-linear-gradient';
@@ -33,7 +34,7 @@ type Props = {
   onPressFavorite?: (item: ExerciseItem) => void;
   index?: any;
   onPressSeeAll?: () => void;
-  loader?:boolean
+  loader?: boolean
 };
 
 const ExerciseList = ({
@@ -46,57 +47,54 @@ const ExerciseList = ({
   index,
   loader
 }: Props) => {
-  const [isLoaded,setIsLoaded] = useState(true)
-  const transition = SharedTransition
-  .springify()
-  .damping(18)
-  .stiffness(140);
- if (loader) {
-  return (
-    <View style={[styles.container,{paddingTop:30}]}>
-      {[1, 2, 3].map((_, index) => (
-        <View key={index} style={{marginBottom: 28}}>
-          <Skeleton
-            LinearGradientComponent={LinearGradient}
-            animation="wave"
-            height={190}
-            style={{
-              borderRadius: 18,
-              width: '100%',
-            }}
-          />
-
-          <Skeleton
-            LinearGradientComponent={LinearGradient}
-            animation="wave"
-            height={16}
-            width={180}
-            style={{
-              marginTop: 14,
-              borderRadius: 6,
-            }}
-          />
-
-          <View style={{flexDirection: 'row', marginTop: 10}}>
+  const [isLoaded, setIsLoaded] = useState(true)
+  const transition = SharedTransition.duration(350) as any;
+  if (loader) {
+    return (
+      <View style={[styles.container, { paddingTop: 30 }]}>
+        {[1, 2, 3].map((_, index) => (
+          <View key={index} style={{ marginBottom: 28 }}>
             <Skeleton
-              height={14}
-              width={70}
-              style={{borderRadius: 6}}
+              LinearGradientComponent={LinearGradient}
+              animation="wave"
+              height={190}
+              style={{
+                borderRadius: 18,
+                width: '100%',
+              }}
             />
 
-            <View style={{width: 12}} />
-
             <Skeleton
-              height={14}
-              width={70}
-              style={{borderRadius: 6}}
+              LinearGradientComponent={LinearGradient}
+              animation="wave"
+              height={16}
+              width={180}
+              style={{
+                marginTop: 14,
+                borderRadius: 6,
+              }}
             />
+
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
+              <Skeleton
+                height={14}
+                width={70}
+                style={{ borderRadius: 6 }}
+              />
+
+              <View style={{ width: 12 }} />
+
+              <Skeleton
+                height={14}
+                width={70}
+                style={{ borderRadius: 6 }}
+              />
+            </View>
           </View>
-        </View>
-      ))}
-    </View>
-  );
-}
+        ))}
+      </View>
+    );
+  }
   return (
     <View>
       <View style={styles.container}>
@@ -115,26 +113,26 @@ const ExerciseList = ({
           removeClippedSubviews={false}
           initialNumToRender={data.length}
           maxToRenderPerBatch={data.length}
-        
+
           ItemSeparatorComponent={() => <View style={styles.separator} />}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <Pressable
               style={styles.card}
               onPress={() => onPressItem?.(item)}>
-             <View
-  style={styles.imageBox}
-  collapsable={false}
->
- {isLoaded&&<Skeleton style = {styles.image} animation='wave' LinearGradientComponent={LinearGradient}/>}
-  <Animated.Image
-  source={item.image}
-  sharedTransitionTag={`meal-${item.id}`}
-  sharedTransitionStyle={transition}
-  onLoadStart={()=>setIsLoaded(true)}
-  onLoadEnd={()=>setIsLoaded(false)}
-  style={styles.image}
-  resizeMode="cover"
-/>
+              <View
+                style={styles.imageBox}
+                collapsable={false}
+              >
+                {isLoaded && <Skeleton style={styles.image} animation='wave' LinearGradientComponent={LinearGradient} />}
+                <Animated.Image
+                  source={item.image}
+                  sharedTransitionTag={`meal-${item.id}`}
+                  sharedTransitionStyle={transition}
+                  onLoadStart={() => setIsLoaded(true)}
+                  onLoadEnd={() => setIsLoaded(false)}
+                  style={styles.image}
+                  resizeMode="cover"
+                />
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.favoriteButton}
@@ -196,10 +194,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   image: {
-  width: '100%',
-  height: 190,
-  borderRadius: 18,
-},
+    width: '100%',
+    height: 190,
+    borderRadius: 18,
+  },
   favoriteButton: {
     position: 'absolute',
     top: 12,

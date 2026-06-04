@@ -14,7 +14,7 @@ const App = () => {
   const [isConnected, setIsConnected] = useState(true); 
   useEffect(() => {
     const checkInternetConnection = Netinfo.addEventListener(state => {
-      setIsConnected(state.isConnected);
+      setIsConnected(!!state.isConnected);
     }); 
     return () => {      checkInternetConnection();
     };  

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/headingText';
 import Inputs from '../../components/inputfield';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,7 +14,23 @@ const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
 
   const [password, setPassword] = useState('');
+//  useEffect(() => {
+//   getData();
+//  },[])
 
+ const getData = async () => {
+  try {
+    const value = await AsyncStorage.getItem('steppingCompleted');
+    if (value !== 'true') {
+    
+      navigation.navigate('SteppingScreen');
+    }else{
+      navigation.navigate('Main')
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAwareScrollView enableOnAndroid={true} extraScrollHeight={130}>
@@ -51,9 +67,7 @@ const Login = ({ navigation }: any) => {
         <View style={styles.buttonContainer}>
           <AuthButton
             title="LOGIN"
-            onPress={() => {
-              navigation.navigate('Favorite');
-            }}
+            onPress={getData}
           />
         </View>
 

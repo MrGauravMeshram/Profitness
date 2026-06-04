@@ -11,7 +11,7 @@ type ExerciseItem = {
   duration: string;
   level: string;
   image: any;
-  backgroundColor: string;
+  backgroundColor?: string;
 };
 
 type Props = {
@@ -59,7 +59,7 @@ const AdditionalExercise = ({ heading, data ,loading}: Props) => {
           style={[
             styles.imageContainer,
             {
-              backgroundColor: item.backgroundColor,
+              backgroundColor: item.backgroundColor || '#F5F5F5',
             },
           ]}
         >

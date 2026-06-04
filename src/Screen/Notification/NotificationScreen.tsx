@@ -9,14 +9,14 @@ import {NotificationData} from './Data/NotificationData';
 
 const NotificationScreen = ({navigation}:any) => {
     const [notifications, setNotifications] = useState(NotificationData);
-    const handleDelete = (id) => {
+    const handleDelete = (id: any) => {
   setNotifications(prev =>
     prev.filter(item => item.id !== id),
   );
 };
 
 
-const RightAction = ({id}) => {
+const RightAction = ({id}: {id: any}) => {
   return (
     <TouchableOpacity
       onPress={() => handleDelete(id)}

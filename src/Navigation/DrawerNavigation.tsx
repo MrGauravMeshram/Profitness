@@ -99,7 +99,10 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => (
         <DrawerItem icon="call-outline" label="Contact Support" />
       </View>
 
-      <TouchableOpacity style={styles.signOut}>
+      <TouchableOpacity style={styles.signOut}
+      onPress={()=>{
+        props.navigation.navigate('Login')
+      }}>
         <Ionicons name="log-out-outline" size={24} color="#111" />
         <Text style={styles.signOutText}>Sign Out</Text>
       </TouchableOpacity>

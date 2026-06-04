@@ -102,7 +102,7 @@ console.log(item);
             keyExtractor={(_, i) => i.toString()}
             renderItem={({ item }) => (
               <View>
-                <Selector title={item} onPress={()=>setSelected(item)} active={selected===item}/>
+                <Selector title={item} onPress={()=>setSelected(item as ExerciseType)} active={selected===item}/>
               </View>
             )}
             contentContainerStyle={{ flexDirection: 'row', gap: 10, paddingVertical: 10 }}

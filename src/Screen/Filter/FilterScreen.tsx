@@ -170,15 +170,9 @@ const styles = StyleSheet.create({
     fontFamily: 'BebasNeue-Regular',
   },
 
-  rowWrap: {
+  row: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     justifyContent: 'space-between',
-  },
-
-  gridItem: {
-    width: '31%',
-    marginBottom: 12,
   },
 
   buttonBox: {
