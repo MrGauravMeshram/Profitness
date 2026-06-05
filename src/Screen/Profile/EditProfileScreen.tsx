@@ -15,7 +15,7 @@ import {
   Modal
 } from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-
+import { Storage } from '../../Storage/MMkvstore';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet, { BottomSheetView ,  BottomSheetBackdrop,} from '@gorhom/bottom-sheet';
 import Foundation from 'react-native-vector-icons/Foundation';
@@ -28,6 +28,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../../components/ScreensHeader';
@@ -44,6 +45,17 @@ const EditProfile = ({ navigation }: any) => {
   const [imageUri, setImageUri] = useState('');
   const [showPermissionModal, setShowPermissionModal] =
   useState(false);
+
+  const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [weight, setWeight] = useState('');
+  const [gender, setGender] = useState('');
+  const [height, setHeight] = useState('');
+  const [age, setAge] = useState('');
+  const [weightUnit, setWeightUnit] = useState('KG');
+  const [heightUnit, setHeightUnit] = useState('CM');
+
  useEffect(() => {
   getData();
 }, []);
@@ -58,6 +70,20 @@ const getData = async () => {
     if (checkimg) {
       setPushImage(checkimg);
       setCheckImage(true);
+    }
+
+    const data = Storage.getString('userDetails');
+    if (data) {
+      const parsedData = JSON.parse(data);
+      if (parsedData.userName) setFullName(parsedData.userName);
+      if (parsedData.userNumber) setPhone(parsedData.userNumber);
+      if (parsedData.userEmail) setEmail(parsedData.userEmail);
+      if (parsedData.userWeight) setWeight(parsedData.userWeight);
+      if (parsedData.userGender) setGender(parsedData.userGender);
+      if (parsedData.userHeight) setHeight(parsedData.userHeight);
+      if (parsedData.userAge) setAge(parsedData.userAge);
+      if (parsedData.userWeightUnit) setWeightUnit(parsedData.userWeightUnit);
+      if (parsedData.userHeightUnit) setHeightUnit(parsedData.userHeightUnit);
     }
   } catch (error) {
     console.log(error);
@@ -212,20 +238,25 @@ const saveProfile = async () => {
       pushImage,
     );
 
-    console.log('Saved Successfully');
+    userData();
+
+    Toast.show({
+      type: 'success',
+      text1: 'Profile saved successfully',
+      position: 'bottom',
+    });
+
+    navigation.goBack();
   } catch (error) {
     console.log(error);
+    Toast.show({
+      type: 'error',
+      text1: 'Failed to save profile',
+      position: 'bottom',
+    });
   }
 };
-  const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [weight, setWeight] = useState('');
-  const [gender, setGender] = useState('');
-  const [height, setHeight] = useState('');
-  const [age, setAge] = useState('');
-  const [weightUnit, setWeightUnit] = useState('KG');
-  const [heightUnit, setHeightUnit] = useState('CM');
+
 
   useEffect(() => {
   if (fullName.trim() === '') {
@@ -257,7 +288,7 @@ const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 useEffect(() => {
   if (weight.trim() === '') {
-    setValidation(prev => ({
+    setValidation((prev: any) => ({
       ...prev,
       weight: false,
     }));
@@ -271,7 +302,7 @@ useEffect(() => {
     weightNum > 0 &&
     weightNum <= 500;
 
-  setValidation(prev => ({
+  setValidation((prev: any) => ({
     ...prev,
     weight: !isValidWeight,
   }));
@@ -279,7 +310,7 @@ useEffect(() => {
 
 useEffect(() => {
   if (height.trim() === '') {
-    setValidation(prev => ({
+    setValidation((prev: any) => ({
       ...prev,
       height: false,
     }));
@@ -291,14 +322,14 @@ useEffect(() => {
     Number(height) > 0 &&
     Number(height) <= 300;
 
-  setValidation(prev => ({
+  setValidation((prev: any) => ({
     ...prev,
     height: !isValidHeight,
   }));
 }, [height]);
 useEffect(() => {
   if (age.trim() === '') {
-    setValidation(prev => ({
+    setValidation((prev: any) => ({
       ...prev,
       age: false,
     }));
@@ -310,11 +341,26 @@ useEffect(() => {
     Number(age) >= 1 &&
     Number(age) <= 120;
 
-  setValidation(prev => ({
+  setValidation((prev: any) => ({
     ...prev,
     age: !isValidAge,
   }));
 }, [age]);
+const profileData = {
+  userName: fullName,
+  userNumber: phone,
+  userEmail: email,
+  userWeight: weight,
+  userHeight: height,
+  userGender: gender,
+  userAge: age,
+  userWeightUnit: weightUnit,
+  userHeightUnit: heightUnit,
+}
+
+const userData = () => {
+  Storage.set("userDetails", JSON.stringify(profileData))
+}
   return (
      <GestureHandlerRootView style={{ flex: 1 }}>
     <SafeAreaView style={styles.container}>

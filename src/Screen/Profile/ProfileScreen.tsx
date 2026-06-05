@@ -11,12 +11,14 @@ import Toast from 'react-native-toast-message';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';  
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Storage } from '../../Storage/MMkvstore';
 import Header from '../../components/ScreensHeader';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CategoryList from '../Home/components/Category'
 
 const Profile = ({ navigation }: any) => {
   const [profileImage,setProfileImage] = useState<any>('')
+  const[profileDetailsdata,setProfileDetials] = useState<any>('')
 const getProfileImage = async () => {
   try{
   const profile = await AsyncStorage.getItem('ImageContainer');
@@ -34,9 +36,21 @@ const getProfileImage = async () => {
 useFocusEffect(
   useCallback(() => {
     getProfileImage();
+    getProfileData();
+  
   }, [])
 );
 
+const getProfileData = () => {
+  const data = Storage.getString('userDetails');
+
+  if (data) {
+    const parsedData = JSON.parse(data);
+    setProfileDetials(parsedData);
+  } else {
+    setProfileDetials(null);
+  }
+};
   const GoalsData = [
     {
       id: '1',
@@ -156,7 +170,9 @@ useFocusEffect(
             )}
           </View>
 
-          <Text style={styles.name}>Gaurav</Text>
+         <Text style={styles.name}>
+  {profileDetailsdata?.userName || 'Guest'}
+</Text>
 
           <Text style={styles.memberText}>
             Basic member
@@ -170,8 +186,8 @@ useFocusEffect(
 
           <View style={styles.statBox}>
             <Text style={styles.statNumber}>
-              55
-              <Text style={styles.smallText}> kg</Text>
+              {profileDetailsdata?.userWeight || '55'}
+              <Text style={styles.smallText}> {profileDetailsdata?.userWeightUnit?.toLowerCase() || 'kg'}</Text>
             </Text>
 
             <Text style={styles.statLabel}>
@@ -183,8 +199,8 @@ useFocusEffect(
 
           <View style={styles.statBox}>
             <Text style={styles.statNumber}>
-              170
-              <Text style={styles.smallText}> cm</Text>
+              {profileDetailsdata?.userHeight || '170'}
+              <Text style={styles.smallText}> {profileDetailsdata?.userHeightUnit?.toLowerCase() || 'cm'}</Text>
             </Text>
 
             <Text style={styles.statLabel}>
@@ -196,8 +212,8 @@ useFocusEffect(
 
           <View style={styles.statBox}>
             <Text style={styles.statNumber}>
-              18
-              <Text style={styles.smallText}> year</Text>
+              {profileDetailsdata?.userAge || '18'}
+              <Text style={styles.smallText}> {Number(profileDetailsdata?.userAge) === 1 ? 'year' : 'years'}</Text>
             </Text>
 
             <Text style={styles.statLabel}>
