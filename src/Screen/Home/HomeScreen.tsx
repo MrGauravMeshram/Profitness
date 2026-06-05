@@ -256,9 +256,17 @@ const Home = ({ navigation }: any) => {
 
         <CategoryList data={categoryData} />
         <View style={styles.line} />
-        <Popular heading="POPULAR EXERCISE" data={popularData} />
+        <Popular
+          heading="POPULAR EXERCISE"
+          data={popularData}
+          onPressItem={(item) => navigation.navigate('ExerciseDetails', { item })}
+        />
         <View style={[styles.line, { width: 380 }]} />
-        <Popular heading="MEAL PLANS" data={mealData} />
+        <Popular
+          heading="MEAL PLANS"
+          data={mealData}
+          onPressItem={(item) => navigation.navigate('MealDetails', { item })}
+        />
         <View style={[styles.line, { width: 380, marginBottom: 10 }]} />
         <AdditionalExercise
           heading="ADDITIONAL EXERCISE"

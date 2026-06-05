@@ -74,7 +74,7 @@ const ExerciseCard = ({id,title,subtitle,kcal,time,level,image,onPress,loader}:P
 
   <Animated.Image
     sharedTransitionTag={`Exercise-${id}`}
-    source={{uri: image}}
+    source={typeof image === 'string' ? {uri: image} : image}
     style={style.image}
     onLoadStart={() => setImageLoading(true)}
     onLoadEnd={() => setImageLoading(false)}

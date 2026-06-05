@@ -52,7 +52,7 @@ const MealDetailsScreen = ({ route }: Props & any) => {
           <View style={styles.heroContainer}>
 
             <Animated.Image
-              source={item.image}
+              source={typeof item.image === 'string' ? {uri: item.image} : item.image}
               sharedTransitionTag={`meal-${item.id}`}
               sharedTransitionStyle={transition}
               style={styles.heroImage}

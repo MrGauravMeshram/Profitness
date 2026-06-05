@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../../components/ScreensHeader';
 import { WeekData } from '../../Data/WeekData';
+import {Months} from './Data/MonthData'
 import { Food } from './Data/Data';
 import {useFocusEffect} from '@react-navigation/native';
 import PopularExercise from '../Home/components/PopularExercise';
@@ -15,7 +16,7 @@ import WeekCard from '../Exercise/component/WeekCard';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Skeleton } from '@rneui/base';
 const MealPlanScreen = ({ navigation }: any) => {
-  
+ const [monthIndex, setMonthIndex] = useState(0);
   const [selected, setSelected] = useState(0);
   const [isChoose, setChoose] = useState(0);
   const [loader,setloader]= useState(true);
@@ -58,6 +59,10 @@ const MealPlanScreen = ({ navigation }: any) => {
       return true;
     };
 
+   
+    // const handlePrev = ()=>{
+    //   setCurrentMonth(Months[])
+    // }
     const subscription = BackHandler.addEventListener(
       'hardwareBackPress',
       backAction,
@@ -66,6 +71,14 @@ const MealPlanScreen = ({ navigation }: any) => {
     return () => subscription.remove();
   }, []),
 );
+ const handleNext = () => {
+  setMonthIndex((prev) => (prev + 1) % Months.length);
+};
+const handlePrev = () => {
+  setMonthIndex((prev) =>
+    prev === 0 ? Months.length - 1 : prev - 1
+  );
+};
   const renderWeekData = ({ item, index }: any) => (
     <TouchableOpacity onPress={() => setSelected(index)}>
       <WeekCard days={item.day} date={item.date} active={selected === index} />
@@ -87,12 +100,18 @@ const MealPlanScreen = ({ navigation }: any) => {
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ paddingBottom: 120 }}>
         <View style={Styles.dateContainer}>
+          <TouchableOpacity onPress={handlePrev} >
           <MaterialIcons name="keyboard-arrow-left" size={28} color="black" />
+          </TouchableOpacity>
           <View style={{ alignItems: 'center' }}>
-            <Text style={Styles.dateText}>February</Text>
+            <Text style={Styles.dateText}>
+  {Months[monthIndex]}
+</Text>
             <Text style={Styles.year}>2026</Text>
           </View>
-          <MaterialIcons name="keyboard-arrow-right" size={28} color="black" />
+          <TouchableOpacity onPress={handleNext}>
+          <MaterialIcons name="keyboard-arrow-right" size={28} color="black"/>
+          </TouchableOpacity>
         </View>
         <View>
           <FlatList
@@ -149,6 +168,8 @@ const Styles = StyleSheet.create({
   dateText: {
     fontFamily: 'Montserrat-SemiBold',
     fontSize: 16,
+    textAlign:"center",
+    minWidth:90
   },
   year: {
     fontFamily: 'Montserrat-Medium',

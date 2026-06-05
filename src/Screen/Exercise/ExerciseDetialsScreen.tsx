@@ -144,12 +144,10 @@ console.log(item);
   
       <View style={styles.ViewBox}>
      {item && (
-  <Animated.View
-    sharedTransitionTag={`Exercise-${item.id}`}
-    style={styles.imageWrapper}
-  >
-    <Image
-      source={{uri: item.image}}
+  <View style={styles.imageWrapper}>
+    <Animated.Image
+      sharedTransitionTag={`Exercise-${item.id}`}
+      source={typeof item.image === 'string' ? {uri: item.image} : item.image}
       style={styles.detailImage}
       resizeMode="cover"
     />
@@ -175,7 +173,7 @@ console.log(item);
         <Text style={styles.subtitle}>5 min</Text>
       </View>
     </View>
-  </Animated.View>
+  </View>
 )}
       </View>
 

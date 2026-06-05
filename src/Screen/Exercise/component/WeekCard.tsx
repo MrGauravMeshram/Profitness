@@ -21,13 +21,14 @@ const WeekCard = ({days,date,active}:Props) => {
   )
 }
 
-export default WeekCard
+export default React.memo(WeekCard);
 const Style = StyleSheet.create({
     container:{
         height:120,
         width:80,
         justifyContent:"center",
         gap:10,
+         overflow: 'hidden', 
         borderRadius:20,
         alignItems:'center',
         backgroundColor:'#F2F2F2'
