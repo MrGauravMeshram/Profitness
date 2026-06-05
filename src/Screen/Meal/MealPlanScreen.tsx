@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity ,BackHandler} from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, BackHandler, Pressable } from 'react-native';
 import Toast from 'react-native-toast-message';
 import React, { useState,useEffect ,useCallback} from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -19,9 +19,11 @@ const MealPlanScreen = ({ navigation }: any) => {
  const [monthIndex, setMonthIndex] = useState(0);
   const [selected, setSelected] = useState(0);
   const [isChoose, setChoose] = useState(0);
+
   const [loader,setloader]= useState(true);
-  const [itemdata,setItemdata] = useState<any[]>([])
- 
+const [itemdata, setItemdata] = useState<any[]>([]);
+
+
   useEffect(()=>{
         setloader(true)
         let timer = setTimeout(()=>{
@@ -60,6 +62,8 @@ const MealPlanScreen = ({ navigation }: any) => {
     };
 
    
+
+   
     // const handlePrev = ()=>{
     //   setCurrentMonth(Months[])
     // }
@@ -71,6 +75,21 @@ const MealPlanScreen = ({ navigation }: any) => {
     return () => subscription.remove();
   }, []),
 );
+useEffect(() => {
+  setloader(true);
+
+  const timer = setTimeout(() => {
+    setItemdata(
+      FoodData.map(item => ({
+        ...item,
+        isFavorite: false,
+      })),
+    );
+    setloader(false);
+  }, 500);
+
+  return () => clearTimeout(timer);
+}, []);
  const handleNext = () => {
   setMonthIndex((prev) => (prev + 1) % Months.length);
 };
@@ -80,10 +99,19 @@ const handlePrev = () => {
   );
 };
   const renderWeekData = ({ item, index }: any) => (
-    <TouchableOpacity onPress={() => setSelected(index)}>
+    <Pressable onPress={() => setSelected(index)}>
       <WeekCard days={item.day} date={item.date} active={selected === index} />
-    </TouchableOpacity>
+    </Pressable>
   );
+   const handleFavorite = (item: any) => {
+  setItemdata(prev =>
+    prev.map(food =>
+      food.id === item.id
+        ? { ...food, isFavorite: !food.isFavorite }
+        : food,
+    ),
+  );
+};
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -119,6 +147,7 @@ const handlePrev = () => {
             renderItem={renderWeekData}
             keyExtractor={item => item.id.toString()}
             horizontal
+            showsHorizontalScrollIndicator={false}
             nestedScrollEnabled
             contentContainerStyle={Styles.week}
           />
@@ -136,21 +165,21 @@ const handlePrev = () => {
         <View style={Styles.mealText}>
           <Text style={Styles.text}>15 meals</Text>
         </View>
-        <PopularExercise
-          data={itemdata.map(item => ({
-            id: item.id.toString(),
-            image: item.image,
-            title: item.title,
-            level: item.kcal,
-            duration: item.time,
-            heading: '',
-           
-          }))}
-          onPressItem={(item: any) =>
-  navigation.push('MealDetails', { item })
-
-}
-      loader={loader}  />
+      <PopularExercise
+  data={itemdata.map(item => ({
+    id: item.id.toString(),
+    image: item.image,
+    title: item.title,
+    level: item.kcal,
+    duration: item.time,
+    isFavorite: item.isFavorite,
+  }))}
+  onPressItem={(item: any) =>
+    navigation.push('MealDetails', { item })
+  }
+  onPressFavorite={handleFavorite}
+  loader={loader}
+/>
       </ScrollView>
     </SafeAreaView>
   );

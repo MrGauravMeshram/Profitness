@@ -1,4 +1,4 @@
-import { View, Text, ScrollView ,ImageBackground,StyleSheet,FlatList,TouchableOpacity} from 'react-native'
+import { View, Text, ScrollView ,ImageBackground,StyleSheet,FlatList,TouchableOpacity,Pressable} from 'react-native'
 import Header from '../../components/ScreensHeader'
 import React ,{useState,useEffect}from 'react'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -37,9 +37,9 @@ const handleConfirm = (selectedTime:any) => {
 }
     const renderWeekData = ({item,index}:any)=>{
         return(
-            <TouchableOpacity onPress={()=>setSelectedIndex(index)}>
+            <Pressable onPress={()=>setSelectedIndex(index)}>
                 <WeekCard days={item.day} date={item.date} active={selectedIndex===index}/>
-            </TouchableOpacity>   
+            </Pressable>   
         )
     }
   return (
@@ -87,13 +87,14 @@ const handleConfirm = (selectedTime:any) => {
         </ImageBackground>
          </View>
 
-         <FlatList 
-         data={WeekData}
-         renderItem={renderWeekData}
-         keyExtractor={(item)=>item.id.toString()}
-         horizontal
-         nestedScrollEnabled
-         contentContainerStyle={Styles.Week}/>
+          <FlatList 
+          data={WeekData}
+          renderItem={renderWeekData}
+          keyExtractor={(item)=>item.id.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          nestedScrollEnabled
+          contentContainerStyle={Styles.Week}/>
      <View style={Styles.TimeSection}>
         
         <View style={{flexDirection:"row",gap:5,alignItems:"center"}}>

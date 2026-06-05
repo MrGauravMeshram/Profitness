@@ -28,10 +28,8 @@ const Style = StyleSheet.create({
         width:80,
         justifyContent:"center",
         gap:10,
-         overflow: 'hidden', 
         borderRadius:20,
         alignItems:'center',
-        backgroundColor:'#F2F2F2'
     },
     dateContainer:{
           backgroundColor:"white",

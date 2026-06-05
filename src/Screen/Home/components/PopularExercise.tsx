@@ -14,6 +14,8 @@ import Animated, {
   LinearTransition,
   withTiming,
 } from 'react-native-reanimated';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Feather from 'react-native-vector-icons/Feather';
 import { Skeleton } from '@rneui/themed';
 import LinearGradient from 'react-native-linear-gradient';
 type ExerciseItem = {
@@ -35,6 +37,7 @@ type Props = {
   index?: any;
   onPressSeeAll?: () => void;
   loader?: boolean
+  isFavorite?: boolean;
 };
 
 const ExerciseList = ({
@@ -45,10 +48,13 @@ const ExerciseList = ({
   onPressFavorite,
   onPressSeeAll,
   index,
-  loader
+  loader,
+  isFavorite
 }: Props) => {
   const [isLoaded, setIsLoaded] = useState(true)
+   const [isLiked,setisLiked] = useState(false);
   const transition = SharedTransition.duration(350) as any;
+ 
   if (loader) {
     return (
       <View style={[styles.container, { paddingTop: 30 }]}>
@@ -115,46 +121,58 @@ const ExerciseList = ({
           maxToRenderPerBatch={data.length}
 
           ItemSeparatorComponent={() => <View style={styles.separator} />}
-          renderItem={({ item }) => (
-            <Pressable
-              style={styles.card}
-              onPress={() => onPressItem?.(item)}>
-              <View
-                style={styles.imageBox}
-                collapsable={false}
-              >
-                {isLoaded && <Skeleton style={styles.image} animation='wave' LinearGradientComponent={LinearGradient} />}
-                <Animated.Image
-                  source={item.image}
-                  sharedTransitionTag={`meal-${item.id}`}
-                  sharedTransitionStyle={transition}
-                  onLoadStart={() => setIsLoaded(true)}
-                  onLoadEnd={() => setIsLoaded(false)}
-                  style={styles.image}
-                  resizeMode="cover"
-                />
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={styles.favoriteButton}
-                  onPress={() => onPressFavorite?.(item)}>
-                  <Image
-                    source={require('../../../assets/png/heart.png')}
-                    style={styles.heart}
+          renderItem={({ item }) => {
+            const isMeal = heading?.toLowerCase().includes('meal') || data?.some(i => i.level?.toLowerCase().includes('kcal'));
+            const tagPrefix = isMeal ? 'meal' : 'Exercise';
+            const imageSource = typeof item.image === 'string' ? { uri: item.image } : item.image;
+            return (
+              <Pressable
+                style={styles.card}
+                onPress={() => onPressItem?.(item)}>
+                <View
+                  style={styles.imageBox}
+                  collapsable={false}
+                >
+                  {isLoaded && (
+                    <Skeleton
+                      style={[styles.image, { position: 'absolute' }]}
+                      animation="wave"
+                      LinearGradientComponent={LinearGradient}
+                    />
+                  )}
+                  <Animated.Image
+                    source={imageSource}
+                    sharedTransitionTag={`${tagPrefix}-${item.id}`}
+                    sharedTransitionStyle={isMeal ? transition : undefined}
+                    onLoadStart={() => setIsLoaded(true)}
+                    onLoadEnd={() => setIsLoaded(false)}
+                    style={styles.image}
+                    resizeMode="cover"
                   />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.title}>{item.title}</Text>
-              <View style={styles.infoRow}>
-                <Text style={styles.level}>{item.level}</Text>
-                <View style={styles.dot} />
-                <Image
-                  source={require('../../../assets/png/clock.png')}
-                  style={styles.clock}
-                />
-                <Text style={styles.duration}>{item.duration}</Text>
-              </View>
-            </Pressable>
-          )}
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.favoriteButton}
+                    onPress={() => onPressFavorite?.(item)}>
+                    {item.isFavorite ? (
+  <FontAwesome name="heart" color="red" size={24} />
+) : (
+  <Feather name="heart" color="#000" size={24} />
+)}
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.title}>{item.title}</Text>
+                <View style={styles.infoRow}>
+                  <Text style={styles.level}>{item.level}</Text>
+                  <View style={styles.dot} />
+                  <Image
+                    source={require('../../../assets/png/clock.png')}
+                    style={styles.clock}
+                  />
+                  <Text style={styles.duration}>{item.duration}</Text>
+                </View>
+              </Pressable>
+            );
+          }}
         />
       </View>
     </View>

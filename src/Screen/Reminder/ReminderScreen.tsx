@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Pressable,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -27,15 +28,14 @@ const [selectedTime, setSelectedTime] = useState<Date>(new Date());
 
   const renderWeekData = ({item}: any) => {
     return (
-      <TouchableOpacity
-        activeOpacity={0.7}
+      <Pressable
         onPress={() => setSelected(item.id)}>
         <WeekCard
           days={item.day}
           date={item.date}
           active={selected === item.id}
         />
-      </TouchableOpacity>
+      </Pressable>
     );
   };
 
