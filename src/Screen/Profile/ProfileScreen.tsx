@@ -1,4 +1,4 @@
-import React ,{useCallback}from 'react';
+import React ,{useCallback,useEffect,useState}from 'react';
 import {
   View,
   Text,
@@ -8,14 +8,34 @@ import {
   BackHandler,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
+import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';  
-
-
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../../components/ScreensHeader';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CategoryList from '../Home/components/Category'
 
 const Profile = ({ navigation }: any) => {
+  const [profileImage,setProfileImage] = useState<any>('')
+const getProfileImage = async () => {
+  try{
+  const profile = await AsyncStorage.getItem('ImageContainer');
+
+  if (profile) {
+    setProfileImage(profile);
+  }else{
+    setProfileImage('')
+  }
+}catch(err){
+      console.log(err)
+}
+};
+
+useFocusEffect(
+  useCallback(() => {
+    getProfileImage();
+  }, [])
+);
 
   const GoalsData = [
     {
@@ -120,11 +140,20 @@ const Profile = ({ navigation }: any) => {
         <View style={styles.profileContainer}>
 
           <View style={styles.imageContainer}>
+          {profileImage?(
             <Image
-              source={require('../../assets/Images/Profile.jpg')}
+              source={{uri:profileImage}}
               resizeMode="cover"
               style={styles.profileImage}
-            />
+            />):(
+              (
+            <MaterialCommunityIcons
+              name="account"
+              size={100}
+              color="#1D1E2C"
+            style={styles.icon}
+            />)
+            )}
           </View>
 
           <Text style={styles.name}>Gaurav</Text>
@@ -243,10 +272,15 @@ const styles = StyleSheet.create({
   },
 
   imageContainer: {
-    height: 130,
-    width: 130,
+    width: 120,
+    height: 120,
+    alignSelf:"center",
     borderRadius: 100,
+    
     overflow: 'hidden',
+    backgroundColor: '#F3B400',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   profileImage: {
@@ -353,5 +387,9 @@ const styles = StyleSheet.create({
     color: '#666',
     fontFamily: 'Montserrat-Regular',
     textAlign: 'center',
+  },
+    icon: {
+    position: "absolute",
+    bottom: 10,
   },
 });
