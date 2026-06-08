@@ -10,6 +10,7 @@ import {
   Linking,
   ScrollView,
   Alert,
+    KeyboardAvoidingView,
   PermissionsAndroid,
   Platform,
   Modal
@@ -47,7 +48,8 @@ const EditProfile = ({ navigation }: any) => {
   const [originalImage, setOriginalImage] = useState('');
   const [showPermissionModal, setShowPermissionModal] =
     useState(false);
-
+const [weightConversion,setWeightConversion] = useState();
+const [heightCoversion,setHeightCoversion] = useState();
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -257,7 +259,6 @@ if (data) {
 
   
   if (!isProfileChanged && !isImageChanged) {
-    navigation.goBack();
     return;
   }
 
@@ -309,47 +310,51 @@ if (data) {
     setValidation({ ...checkValidation, email: !isValidEmail })
   }, [email])
 
-  useEffect(() => {
-    if (weight.trim() === '') {
+ useEffect(() => {
+  if (!weight || weight.trim() === '') {
+    setValidation(prev => ({
+      ...prev,
+      weight: false,
+    }));
+    return;
+  }
+
+  const weightNum = Number(weight);
+
+  const maxWeight =
+    weightUnit === 'KG'
+      ? 500
+      : 500 * 2.20462;
+
+  const isValidWeight =
+    /^\d+(\.\d{1,2})?$/.test(weight) &&
+    weightNum > 0 &&
+    weightNum <= maxWeight;
+
+  setValidation(prev => ({
+    ...prev,
+    weight: !isValidWeight,
+  }));
+}, [weight, weightUnit]);
+    useEffect(() => {
+      if (height.trim() === '') {
+        setValidation((prev: any) => ({
+          ...prev,
+          height: false,
+        }));
+        return;
+      }
+
+      const isValidHeight =
+        /^\d+(\.\d{1,2})?$/.test(height) &&
+        Number(height) > 0 &&
+        Number(height) <= 300;
+
       setValidation((prev: any) => ({
         ...prev,
-        weight: false,
+        height: !isValidHeight,
       }));
-      return;
-    }
-
-    const weightNum = Number(weight);
-
-    const isValidWeight =
-      /^\d+(\.\d{1,2})?$/.test(weight) &&
-      weightNum > 0 &&
-      weightNum <= 500;
-
-    setValidation((prev: any) => ({
-      ...prev,
-      weight: !isValidWeight,
-    }));
-  }, [weight]);
-
-  useEffect(() => {
-    if (height.trim() === '') {
-      setValidation((prev: any) => ({
-        ...prev,
-        height: false,
-      }));
-      return;
-    }
-
-    const isValidHeight =
-      /^\d+(\.\d{1,2})?$/.test(height) &&
-      Number(height) > 0 &&
-      Number(height) <= 300;
-
-    setValidation((prev: any) => ({
-      ...prev,
-      height: !isValidHeight,
-    }));
-  }, [height]);
+    }, [height]);
   useEffect(() => {
     if (age.trim() === '') {
       setValidation((prev: any) => ({
@@ -384,6 +389,60 @@ if (data) {
   const userData = () => {
     Storage.set("userDetails", JSON.stringify(profileData))
   }
+  const isProfileChanged =
+  JSON.stringify(profileData) !== JSON.stringify(originalData);
+
+const isImageChanged =
+  pushImage !== originalImage;
+
+const lbsvalue = 2.2046226218;
+
+
+const isSaveEnabled =  isProfileChanged || isImageChanged;        
+const handleWeightUnitChange = (newUnit:string) => {
+  if (newUnit === weightUnit) return;
+
+  let currentWeight = Number(weight);
+
+  if (!currentWeight) {
+    setWeightUnit(newUnit);
+    return;
+  }
+
+  if (weightUnit === 'KG' && newUnit === 'LBS') {
+    currentWeight = currentWeight * 2.20462;
+  } else if (weightUnit === 'LBS' && newUnit === 'KG') {
+    currentWeight = currentWeight / 2.20462;
+  }
+
+  setWeight(currentWeight.toFixed(2));
+  setWeightUnit(newUnit);
+};
+
+const handleHeightChange = (newUnit:string) =>{
+  if(newUnit === heightUnit) return;
+  let currentHeight = Number(height);
+  if(!currentHeight){
+    setHeight(newUnit);
+    return;
+  }
+  if(heightUnit === "CM" && newUnit === "FEET"){
+    currentHeight = currentHeight * 0.0328084;
+  }else if(heightUnit === 'FEET' && newUnit === "CM"){
+    currentHeight = currentHeight / 0.0328084;
+  }
+  setHeight(currentHeight.toFixed(2));
+  setHeightUnit(newUnit);
+}
+
+
+const handleHeightLength = ()=>{
+  if(heightUnit==="FEET"){
+    if(height>="12"){
+           return true;
+    }
+  }
+}
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
@@ -394,16 +453,18 @@ if (data) {
           navigation={navigation}
         />
 
-        <KeyboardAwareScrollView
-          showsVerticalScrollIndicator={false}
-          enableOnAndroid={true}
-          keyboardShouldPersistTaps="handled"
-          extraScrollHeight={250}
-
-
-          contentContainerStyle={{ paddingBottom: 40 }}
-        >
-
+     <KeyboardAwareScrollView
+  enableOnAndroid={true}
+  enableAutomaticScroll={true}
+  keyboardShouldPersistTaps="handled"
+  showsVerticalScrollIndicator={false}
+  extraScrollHeight={60}
+  extraHeight={60}
+  contentContainerStyle={{
+    flexGrow: 1,
+    paddingBottom: 120,
+  }}
+>
           <View style={styles.imageSection}>
 
             <View style={styles.imageContainer}>
@@ -441,7 +502,7 @@ if (data) {
 
 
             <Text style={styles.label}>Full Name</Text>
-            <View >
+            <View style={styles.inputBox}>
               <View style={[styles.inputContainer, { borderColor: checkValidation.name ? "red" : "lightgrey" }]}>
 
                 <TextInput
@@ -460,7 +521,7 @@ if (data) {
 
 
             <Text style={styles.label}>Phone</Text>
-            <View>
+            <View style={styles.inputBox}>
               <View style={[styles.inputContainer, { borderColor: checkValidation.phone ? "red" : "lightgrey" }]}>
 
                 <TextInput
@@ -479,7 +540,7 @@ if (data) {
 
 
             <Text style={styles.label}>Email address</Text>
-            <View>
+            <View style={styles.inputBox}>
               <View style={[styles.inputContainer, { borderColor: checkValidation.email ? "red" : "lightgrey" }]}>
 
                 <TextInput
@@ -497,7 +558,7 @@ if (data) {
 
 
             <Text style={styles.label}>Weight</Text>
-            <View>
+            <View style={styles.inputBox}>
               <View style={[styles.inputContainer, { borderColor: checkValidation.weight ? "red" : "lightgrey" }]}>
 
                 <TextInput
@@ -506,6 +567,7 @@ if (data) {
                   placeholder='Weight'
                   placeholderTextColor='#777'
                   style={styles.input}
+                   maxLength={weightUnit === 'KG' ? 3 : 7}
                   keyboardType="numeric"
                 />
 
@@ -516,7 +578,7 @@ if (data) {
                       styles.unitButton,
                       weightUnit === 'LBS' && styles.activeUnit,
                     ]}
-                    onPress={() => setWeightUnit('LBS')}
+                  onPress={() => handleWeightUnitChange('LBS')}
                   >
 
                     <Text
@@ -536,7 +598,7 @@ if (data) {
                       styles.unitButton,
                       weightUnit === 'KG' && styles.activeUnit,
                     ]}
-                    onPress={() => setWeightUnit('KG')}
+              onPress={() => handleWeightUnitChange('KG')}
                   >
 
                     <Text
@@ -563,7 +625,7 @@ if (data) {
 
 
             <Text style={styles.label}>Height</Text>
-            <View>
+            <View style={styles.inputBox}>
               <View style={[styles.inputContainer, { borderColor: checkValidation.height ? "red" : "lightgrey" }]}>
 
                 <TextInput
@@ -573,6 +635,7 @@ if (data) {
                   placeholder='Height'
                   placeholderTextColor='#777'
                   keyboardType="numeric"
+                  maxLength={handleHeightLength ? 3:5}
                 />
 
                 <View style={styles.unitContainer}>
@@ -582,7 +645,7 @@ if (data) {
                       styles.unitButton,
                       heightUnit === 'FEET' && styles.activeUnit,
                     ]}
-                    onPress={() => setHeightUnit('FEET')}
+                    onPress={() => handleHeightChange('FEET')}
                   >
 
                     <Text
@@ -602,7 +665,7 @@ if (data) {
                       styles.unitButton,
                       heightUnit === 'CM' && styles.activeUnit,
                     ]}
-                    onPress={() => setHeightUnit('CM')}
+                    onPress={() => handleHeightChange('CM')}
                   >
 
                     <Text
@@ -629,7 +692,7 @@ if (data) {
 
             <Text style={styles.label}>Gender</Text>
 
-            <View style={styles.inputContainer}>
+            <View style={[styles.inputContainer,styles.inputBox]}>
               <Dropdown
                 style={{ flex: 1 }}
                 placeholderStyle={{ color: '#777' }}
@@ -644,6 +707,7 @@ if (data) {
                 }}
               />
             </View>
+            
 
 
 
@@ -656,6 +720,7 @@ if (data) {
                   placeholder='Age'
                   placeholderTextColor='#777'
                   onChangeText={setAge}
+                  maxLength={3}
                   style={styles.input}
                   keyboardType="numeric"
                 />
@@ -677,7 +742,17 @@ if (data) {
         </KeyboardAwareScrollView>
         <TouchableOpacity style={styles.btn}>
 
-          <AuthButton title="SAVE" onPress={saveProfile} />
+         <TouchableOpacity
+  disabled={!isSaveEnabled}
+  style={{
+    opacity: isSaveEnabled ? 1 : 0.5,
+  }}
+>
+  <AuthButton
+    title="SAVE"
+    onPress={saveProfile}
+  />
+</TouchableOpacity>
 
         </TouchableOpacity>
         <BottomSheet
@@ -921,5 +996,8 @@ const styles = StyleSheet.create({
   bottomText: {
     fontFamily: "DMSans-Medium",
     fontSize: 16
+  },
+  inputBox:{
+    marginBottom:16
   }
 });
