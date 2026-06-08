@@ -14,7 +14,7 @@ import { FoodData } from './Data/FoodData';
 import Selector from '../../components/Selector';
 import WeekCard from '../Exercise/component/WeekCard';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { Skeleton } from '@rneui/base';
+
 const MealPlanScreen = ({ navigation }: any) => {
  const [monthIndex, setMonthIndex] = useState(0);
   const [selected, setSelected] = useState(0);
@@ -23,19 +23,25 @@ const MealPlanScreen = ({ navigation }: any) => {
   const [loader,setloader]= useState(true);
 const [itemdata, setItemdata] = useState<any[]>([]);
 
+useEffect(() => {
+  setloader(true);
 
-  useEffect(()=>{
-        setloader(true)
-        let timer = setTimeout(()=>{
+  const timer = setTimeout(() => {
+    setItemdata(
+      FoodData.map(item => ({
+        ...item,
+        isFavorite: false,
+      })),
+    );
+    setloader(false);
+  }, 500);
 
-         setItemdata(FoodData)
-          setloader(false)
-       
-        },500)
-        
-        
-        return ()=>clearTimeout(timer)
-        },[FoodData])
+  return () => clearTimeout(timer);
+}, []);
+useEffect(() => {
+  console.log('itemdata updated', JSON.stringify(itemdata, null, 2));
+}, [itemdata]);
+ 
          useFocusEffect(
   useCallback(() => {
     let backPressedOnce = false;
@@ -75,21 +81,7 @@ const [itemdata, setItemdata] = useState<any[]>([]);
     return () => subscription.remove();
   }, []),
 );
-useEffect(() => {
-  setloader(true);
 
-  const timer = setTimeout(() => {
-    setItemdata(
-      FoodData.map(item => ({
-        ...item,
-        isFavorite: false,
-      })),
-    );
-    setloader(false);
-  }, 500);
-
-  return () => clearTimeout(timer);
-}, []);
  const handleNext = () => {
   setMonthIndex((prev) => (prev + 1) % Months.length);
 };
@@ -103,10 +95,10 @@ const handlePrev = () => {
       <WeekCard days={item.day} date={item.date} active={selected === index} />
     </Pressable>
   );
-   const handleFavorite = (item: any) => {
+ const handleFavorite = (item: any) => {
   setItemdata(prev =>
     prev.map(food =>
-      food.id === item.id
+      String(food.id) === String(item.id)
         ? { ...food, isFavorite: !food.isFavorite }
         : food,
     ),

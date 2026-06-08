@@ -43,6 +43,8 @@ const EditProfile = ({ navigation }: any) => {
   const [checkValidation, setValidation] = useState<any>({ name: false, phone: false, email: false, weight: false, height: false, gender: false, age: false })
   const [pushImage, setPushImage] = useState('')
   const [imageUri, setImageUri] = useState('');
+  const [originalData, setOriginalData] = useState<any>(null);
+  const [originalImage, setOriginalImage] = useState('');
   const [showPermissionModal, setShowPermissionModal] =
     useState(false);
 
@@ -66,25 +68,40 @@ const EditProfile = ({ navigation }: any) => {
       const checkimg = await AsyncStorage.getItem(
         'ImageContainer',
       );
+      
+if (checkimg) {
+  setPushImage(checkimg);
+  setOriginalImage(checkimg);
+  setCheckImage(true);
+}
 
-      if (checkimg) {
-        setPushImage(checkimg);
-        setCheckImage(true);
-      }
+    const data = Storage.getString('userDetails');
 
-      const data = Storage.getString('userDetails');
-      if (data) {
-        const parsedData = JSON.parse(data);
-        if (parsedData.userName) setFullName(parsedData.userName);
-        if (parsedData.userNumber) setPhone(parsedData.userNumber);
-        if (parsedData.userEmail) setEmail(parsedData.userEmail);
-        if (parsedData.userWeight) setWeight(parsedData.userWeight);
-        if (parsedData.userGender) setGender(parsedData.userGender);
-        if (parsedData.userHeight) setHeight(parsedData.userHeight);
-        if (parsedData.userAge) setAge(parsedData.userAge);
-        if (parsedData.userWeightUnit) setWeightUnit(parsedData.userWeightUnit);
-        if (parsedData.userHeightUnit) setHeightUnit(parsedData.userHeightUnit);
-      }
+if (data) {
+  const parsedData = JSON.parse(data);
+
+  setFullName(parsedData.userName || '');
+  setPhone(parsedData.userNumber || '');
+  setEmail(parsedData.userEmail || '');
+  setWeight(parsedData.userWeight || '');
+  setGender(parsedData.userGender || '');
+  setHeight(parsedData.userHeight || '');
+  setAge(parsedData.userAge || '');
+  setWeightUnit(parsedData.userWeightUnit || 'KG');
+  setHeightUnit(parsedData.userHeightUnit || 'CM');
+
+  setOriginalData({
+    userName: parsedData.userName || '',
+    userNumber: parsedData.userNumber || '',
+    userEmail: parsedData.userEmail || '',
+    userWeight: parsedData.userWeight || '',
+    userHeight: parsedData.userHeight || '',
+    userGender: parsedData.userGender || '',
+    userAge: parsedData.userAge || '',
+    userWeightUnit: parsedData.userWeightUnit || 'KG',
+    userHeightUnit: parsedData.userHeightUnit || 'CM',
+  });
+}
     } catch (error) {
       console.log(error);
     }
@@ -231,32 +248,38 @@ const EditProfile = ({ navigation }: any) => {
       },
     );
   };
-  const saveProfile = async () => {
-    try {
-      await AsyncStorage.setItem(
-        'ImageContainer',
-        pushImage,
-      );
+ const saveProfile = async () => {
+  const isProfileChanged =
+    JSON.stringify(profileData) !== JSON.stringify(originalData);
 
-      userData();
+  const isImageChanged =
+    pushImage !== originalImage;
 
-      Toast.show({
-        type: 'success',
-        text1: 'Profile saved successfully',
-        position: 'bottom',
-      });
+  
+  if (!isProfileChanged && !isImageChanged) {
+    navigation.goBack();
+    return;
+  }
 
-      navigation.goBack();
-    } catch (error) {
-      console.log(error);
-      Toast.show({
-        type: 'error',
-        text1: 'Failed to save profile',
-        position: 'bottom',
-      });
-    }
-  };
+  try {
+    await AsyncStorage.setItem(
+      'ImageContainer',
+      pushImage,
+    );
 
+    userData();
+
+    Toast.show({
+      type: 'success',
+      text1: 'Profile updated successfully',
+      position: 'bottom',
+    });
+
+    navigation.goBack();
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   useEffect(() => {
     if (fullName.trim() === '') {

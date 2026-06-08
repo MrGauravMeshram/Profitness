@@ -23,6 +23,45 @@ import AdditionalExercise from './components/AdditionalExercise';
 const Home = ({ navigation }: any) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedGoal, setSelectedGoal] = useState('2');
+  const [popularData, setPopularData] = useState([
+  {
+    id: '1',
+    image: require('../../assets/png/manStr.png'),
+    title: 'Full Shot Man Stretching Arm',
+    level: 'Beginner',
+    duration: '30 min',
+    isFavorite: false,
+  },
+  {
+    id: '2',
+    image: require('../../assets/png/mandumbel.png'),
+    title: 'Athlete Practicing Monochrome',
+    level: 'Beginner',
+    duration: '50 min',
+    isFavorite: false,
+  },
+]);
+
+const [mealData, setMealData] = useState([
+  {
+    id: '1',
+    image: require('../../assets/png/salad.png'),
+    title: 'Greek salad with lettuce green onion',
+    level: '150 kcal',
+    duration: '',
+    isFavorite: false,
+  },
+  {
+    id: '2',
+    image: require('../../assets/png/saladfresh.png'),
+    title: 'Salad of Fresh Vegetable',
+    level: '270 kcal',
+    duration: '',
+    isFavorite: false,
+  },
+]);
+  
+
 
 
   const scrollY = useSharedValue(0);
@@ -111,38 +150,7 @@ const Home = ({ navigation }: any) => {
     },
   ];
 
-  const popularData = [
-    {
-      id: '1',
-      image: require('../../assets/png/manStr.png'),
-      title: 'Full Shot Man Stretching Arm',
-      level: 'Beginner',
-      duration: '30 min',
-    },
-    {
-      id: '2',
-      image: require('../../assets/png/mandumbel.png'),
-      title: 'Athlete Practicing Monochrome',
-      level: 'Beginner',
-      duration: '50 min',
-    },
-  ];
-  const mealData = [
-    {
-      id: '1',
-      image: require('../../assets/png/salad.png'),
-      title: 'Greek salad with lettuce green onion',
-      level: '150 kcal',
-      duration: '',
-    },
-    {
-      id: '2',
-      image: require('../../assets/png/saladfresh.png'),
-      title: 'Salad of Fresh Vegetable',
-      level: '270 kcal',
-      duration: '',
-    },
-  ];
+  
   useFocusEffect(
     useCallback(() => {
       let backPressedOnce = false;
@@ -176,7 +184,25 @@ const Home = ({ navigation }: any) => {
       return () => subscription.remove();
     }, []),
   );
+const handleExerciseFavorite = (item) => {
+  setPopularData(prev =>
+    prev.map(ex =>
+      ex.id === item.id
+        ? { ...ex, isFavorite: !ex.isFavorite }
+        : ex,
+    ),
+  );
+};
 
+const handleMealFavorite = (item) => {
+  setMealData(prev =>
+    prev.map(meal =>
+      meal.id === item.id
+        ? { ...meal, isFavorite: !meal.isFavorite }
+        : meal,
+    ),
+  );
+};
   return (
     <View style={styles.container}>
       <Animated.ScrollView
@@ -256,9 +282,9 @@ const Home = ({ navigation }: any) => {
 
         <CategoryList data={categoryData} />
         <View style={styles.line} />
-        <Popular heading="POPULAR EXERCISE" data={popularData} />
+        <Popular heading="POPULAR EXERCISE" data={popularData}  onPressFavorite={handleExerciseFavorite} />
         <View style={[styles.line, { width: 380 }]} />
-        <Popular heading="MEAL PLANS" data={mealData} />
+        <Popular heading="MEAL PLANS" data={mealData}   onPressFavorite={handleMealFavorite}/>
         <View style={[styles.line, { width: 380, marginBottom: 10 }]} />
         <AdditionalExercise
           heading="ADDITIONAL EXERCISE"
