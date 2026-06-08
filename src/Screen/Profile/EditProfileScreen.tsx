@@ -10,7 +10,7 @@ import {
   Linking,
   ScrollView,
   Alert,
-    KeyboardAvoidingView,
+  KeyboardAvoidingView,
   PermissionsAndroid,
   Platform,
   Modal
@@ -41,15 +41,16 @@ import AuthButton from '../Auth/component/AuthButton';
 const EditProfile = ({ navigation }: any) => {
   const [sheetIndex, setSheetIndex] = useState(-1);
   const [checkImage, setCheckImage] = useState<boolean>(false);
-  const [checkValidation, setValidation] = useState<any>({ name: false, phone: false, email: false, weight: false, height: false, gender: false, age: false })
+  const [checkValidation, setValidation] = useState<any>({ name: '', phone: '', email: '', weight: '', height: '', gender: '', age: '' });
+  const [showRequiredErrors, setShowRequiredErrors] = useState(false);
   const [pushImage, setPushImage] = useState('')
   const [imageUri, setImageUri] = useState('');
   const [originalData, setOriginalData] = useState<any>(null);
   const [originalImage, setOriginalImage] = useState('');
   const [showPermissionModal, setShowPermissionModal] =
     useState(false);
-const [weightConversion,setWeightConversion] = useState();
-const [heightCoversion,setHeightCoversion] = useState();
+  const [weightConversion, setWeightConversion] = useState();
+  const [heightCoversion, setHeightCoversion] = useState();
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -70,40 +71,40 @@ const [heightCoversion,setHeightCoversion] = useState();
       const checkimg = await AsyncStorage.getItem(
         'ImageContainer',
       );
-      
-if (checkimg) {
-  setPushImage(checkimg);
-  setOriginalImage(checkimg);
-  setCheckImage(true);
-}
 
-    const data = Storage.getString('userDetails');
+      if (checkimg) {
+        setPushImage(checkimg);
+        setOriginalImage(checkimg);
+        setCheckImage(true);
+      }
 
-if (data) {
-  const parsedData = JSON.parse(data);
+      const data = Storage.getString('userDetails');
 
-  setFullName(parsedData.userName || '');
-  setPhone(parsedData.userNumber || '');
-  setEmail(parsedData.userEmail || '');
-  setWeight(parsedData.userWeight || '');
-  setGender(parsedData.userGender || '');
-  setHeight(parsedData.userHeight || '');
-  setAge(parsedData.userAge || '');
-  setWeightUnit(parsedData.userWeightUnit || 'KG');
-  setHeightUnit(parsedData.userHeightUnit || 'CM');
+      if (data) {
+        const parsedData = JSON.parse(data);
 
-  setOriginalData({
-    userName: parsedData.userName || '',
-    userNumber: parsedData.userNumber || '',
-    userEmail: parsedData.userEmail || '',
-    userWeight: parsedData.userWeight || '',
-    userHeight: parsedData.userHeight || '',
-    userGender: parsedData.userGender || '',
-    userAge: parsedData.userAge || '',
-    userWeightUnit: parsedData.userWeightUnit || 'KG',
-    userHeightUnit: parsedData.userHeightUnit || 'CM',
-  });
-}
+        setFullName(parsedData.userName || '');
+        setPhone(parsedData.userNumber || '');
+        setEmail(parsedData.userEmail || '');
+        setWeight(parsedData.userWeight || '');
+        setGender(parsedData.userGender || '');
+        setHeight(parsedData.userHeight || '');
+        setAge(parsedData.userAge || '');
+        setWeightUnit(parsedData.userWeightUnit || 'KG');
+        setHeightUnit(parsedData.userHeightUnit || 'CM');
+
+        setOriginalData({
+          userName: parsedData.userName || '',
+          userNumber: parsedData.userNumber || '',
+          userEmail: parsedData.userEmail || '',
+          userWeight: parsedData.userWeight || '',
+          userHeight: parsedData.userHeight || '',
+          userGender: parsedData.userGender || '',
+          userAge: parsedData.userAge || '',
+          userWeightUnit: parsedData.userWeightUnit || 'KG',
+          userHeightUnit: parsedData.userHeightUnit || 'CM',
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -250,116 +251,140 @@ if (data) {
       },
     );
   };
- const saveProfile = async () => {
-  const isProfileChanged =
-    JSON.stringify(profileData) !== JSON.stringify(originalData);
+  const saveProfile = async () => {
+    let hasEmpty = false;
+    const newValidation = { ...checkValidation };
+    if (!fullName || fullName.trim() === '') { newValidation.name = 'required'; hasEmpty = true; }
+    if (!phone || phone.trim() === '') { newValidation.phone = 'required'; hasEmpty = true; }
+    if (!email || email.trim() === '') { newValidation.email = 'required'; hasEmpty = true; }
+    if (!weight || weight.trim() === '') { newValidation.weight = 'required'; hasEmpty = true; }
+    if (!height || height.trim() === '') { newValidation.height = 'required'; hasEmpty = true; }
+    if (!gender || gender.trim() === '') { newValidation.gender = 'required'; hasEmpty = true; }
+    if (!age || age.trim() === '') { newValidation.age = 'required'; hasEmpty = true; }
 
-  const isImageChanged =
-    pushImage !== originalImage;
+    if (hasEmpty) {
+      setValidation(newValidation);
+      setShowRequiredErrors(true);
+      return;
+    }
 
-  
-  if (!isProfileChanged && !isImageChanged) {
-    return;
-  }
+    const hasValidationError = Object.values(newValidation).some(val => val === 'invalid');
+    if (hasValidationError) {
+      return;
+    }
 
-  try {
-    await AsyncStorage.setItem(
-      'ImageContainer',
-      pushImage,
-    );
+    const isProfileChanged =
+      JSON.stringify(profileData) !== JSON.stringify(originalData);
 
-    userData();
+    const isImageChanged =
+      pushImage !== originalImage;
 
-    Toast.show({
-      type: 'success',
-      text1: 'Profile updated successfully',
-      position: 'bottom',
-    });
 
-    navigation.goBack();
-  } catch (error) {
-    console.log(error);
-  }
-};
+    if (!isProfileChanged && !isImageChanged) {
+      return;
+    }
+
+    try {
+      await AsyncStorage.setItem(
+        'ImageContainer',
+        pushImage,
+      );
+
+      userData();
+
+      Toast.show({
+        type: 'success',
+        text1: 'Profile updated successfully',
+        position: 'bottom',
+      });
+
+      navigation.goBack();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     if (fullName.trim() === '') {
-      setValidation({ ...checkValidation, name: false });
+      setValidation((prev: any) => ({ ...prev, name: 'required' }));
       return;
     }
 
     const isValid = /^[A-Za-z ]+$/.test(fullName);
 
-    setValidation({ ...checkValidation, name: !isValid });
+    setValidation((prev: any) => ({ ...prev, name: isValid ? '' : 'invalid' }));
   }, [fullName]);
 
   useEffect(() => {
     if (phone.trim() === '') {
-      setValidation({ ...checkValidation, phone: false });
+      setValidation((prev: any) => ({ ...prev, phone: 'required' }));
       return;
     }
     const isValidnums = /^[0-9]{10}$/.test(phone);
-    setValidation({ ...checkValidation, phone: !isValidnums });
+    setValidation((prev: any) => ({ ...prev, phone: isValidnums ? '' : 'invalid' }));
   }, [phone])
+
   useEffect(() => {
     if (email.trim() === '') {
-      setValidation({ ...checkValidation, email: false });
+      setValidation((prev: any) => ({ ...prev, email: 'required' }));
       return;
     }
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    setValidation({ ...checkValidation, email: !isValidEmail })
+    setValidation((prev: any) => ({ ...prev, email: isValidEmail ? '' : 'invalid' }))
   }, [email])
 
- useEffect(() => {
-  if (!weight || weight.trim() === '') {
-    setValidation(prev => ({
-      ...prev,
-      weight: false,
-    }));
-    return;
-  }
-
-  const weightNum = Number(weight);
-
-  const maxWeight =
-    weightUnit === 'KG'
-      ? 500
-      : 500 * 2.20462;
-
-  const isValidWeight =
-    /^\d+(\.\d{1,2})?$/.test(weight) &&
-    weightNum > 0 &&
-    weightNum <= maxWeight;
-
-  setValidation(prev => ({
-    ...prev,
-    weight: !isValidWeight,
-  }));
-}, [weight, weightUnit]);
-    useEffect(() => {
-      if (height.trim() === '') {
-        setValidation((prev: any) => ({
-          ...prev,
-          height: false,
-        }));
-        return;
-      }
-
-      const isValidHeight =
-        /^\d+(\.\d{1,2})?$/.test(height) &&
-        Number(height) > 0 &&
-        Number(height) <= 300;
-
+  useEffect(() => {
+    if (!weight || weight.trim() === '') {
       setValidation((prev: any) => ({
         ...prev,
-        height: !isValidHeight,
+        weight: 'required',
       }));
-    }, [height]);
+      return;
+    }
+
+    const weightNum = Number(weight);
+
+    const maxWeight =
+      weightUnit === 'KG'
+        ? 500
+        : 500 * 2.20462;
+
+    const isValidWeight =
+      /^\d+(\.\d{1,2})?$/.test(weight) &&
+      weightNum > 0 &&
+      weightNum <= maxWeight;
+
+    setValidation((prev: any) => ({
+      ...prev,
+      weight: isValidWeight ? '' : 'invalid',
+    }));
+  }, [weight, weightUnit]);
+
+  useEffect(() => {
+    if (height.trim() === '') {
+      setValidation((prev: any) => ({
+        ...prev,
+        height: 'required',
+      }));
+      return;
+    }
+
+    const isValidHeight =
+      /^\d+(\.\d{1,2})?$/.test(height) &&
+      Number(height) > 0 &&
+      Number(height) <= 300;
+
+    setValidation((prev: any) => ({
+      ...prev,
+      height: isValidHeight ? '' : 'invalid',
+    }));
+  }, [height]);
+
   useEffect(() => {
     if (age.trim() === '') {
       setValidation((prev: any) => ({
         ...prev,
-        age: false,
+        age: 'required',
       }));
       return;
     }
@@ -371,9 +396,17 @@ if (data) {
 
     setValidation((prev: any) => ({
       ...prev,
-      age: !isValidAge,
+      age: isValidAge ? '' : 'invalid',
     }));
   }, [age]);
+
+  useEffect(() => {
+    if (gender && gender.trim() !== '') {
+      setValidation((prev: any) => ({ ...prev, gender: '' }));
+    } else {
+      setValidation((prev: any) => ({ ...prev, gender: 'required' }));
+    }
+  }, [gender]);
   const profileData = {
     userName: fullName,
     userNumber: phone,
@@ -390,59 +423,68 @@ if (data) {
     Storage.set("userDetails", JSON.stringify(profileData))
   }
   const isProfileChanged =
-  JSON.stringify(profileData) !== JSON.stringify(originalData);
+    JSON.stringify(profileData) !== JSON.stringify(originalData);
 
-const isImageChanged =
-  pushImage !== originalImage;
+  const isImageChanged =
+    pushImage !== originalImage;
 
-const lbsvalue = 2.2046226218;
+  const lbsvalue = 2.2046226218;
 
 
-const isSaveEnabled =  isProfileChanged || isImageChanged;        
-const handleWeightUnitChange = (newUnit:string) => {
-  if (newUnit === weightUnit) return;
+  const hasFormatError = Object.values(checkValidation).some(val => val === 'invalid');
+  const hasRequiredError = showRequiredErrors && Object.values(checkValidation).some(val => val === 'required');
 
-  let currentWeight = Number(weight);
+  const isSaveEnabled = (isProfileChanged || isImageChanged) && !hasFormatError && !hasRequiredError;
 
-  if (!currentWeight) {
+  const getBorderColor = (error: string) => {
+    if (error === 'invalid') return 'red';
+    if (error === 'required' && showRequiredErrors) return 'red';
+    return 'lightgrey';
+  };
+  const handleWeightUnitChange = (newUnit: string) => {
+    if (newUnit === weightUnit) return;
+
+    let currentWeight = Number(weight);
+
+    if (!currentWeight) {
+      setWeightUnit(newUnit);
+      return;
+    }
+
+    if (weightUnit === 'KG' && newUnit === 'LBS') {
+      currentWeight = currentWeight * 2.20462;
+    } else if (weightUnit === 'LBS' && newUnit === 'KG') {
+      currentWeight = currentWeight / 2.20462;
+    }
+
+    setWeight(currentWeight.toFixed(2));
     setWeightUnit(newUnit);
-    return;
+  };
+
+  const handleHeightChange = (newUnit: string) => {
+    if (newUnit === heightUnit) return;
+    let currentHeight = Number(height);
+    if (!currentHeight) {
+      setHeight(newUnit);
+      return;
+    }
+    if (heightUnit === "CM" && newUnit === "FEET") {
+      currentHeight = currentHeight * 0.0328084;
+    } else if (heightUnit === 'FEET' && newUnit === "CM") {
+      currentHeight = currentHeight / 0.0328084;
+    }
+    setHeight(currentHeight.toFixed(2));
+    setHeightUnit(newUnit);
   }
 
-  if (weightUnit === 'KG' && newUnit === 'LBS') {
-    currentWeight = currentWeight * 2.20462;
-  } else if (weightUnit === 'LBS' && newUnit === 'KG') {
-    currentWeight = currentWeight / 2.20462;
-  }
 
-  setWeight(currentWeight.toFixed(2));
-  setWeightUnit(newUnit);
-};
-
-const handleHeightChange = (newUnit:string) =>{
-  if(newUnit === heightUnit) return;
-  let currentHeight = Number(height);
-  if(!currentHeight){
-    setHeight(newUnit);
-    return;
-  }
-  if(heightUnit === "CM" && newUnit === "FEET"){
-    currentHeight = currentHeight * 0.0328084;
-  }else if(heightUnit === 'FEET' && newUnit === "CM"){
-    currentHeight = currentHeight / 0.0328084;
-  }
-  setHeight(currentHeight.toFixed(2));
-  setHeightUnit(newUnit);
-}
-
-
-const handleHeightLength = ()=>{
-  if(heightUnit==="FEET"){
-    if(height>="12"){
-           return true;
+  const handleHeightLength = () => {
+    if (heightUnit === "FEET") {
+      if (height >= "12") {
+        return true;
+      }
     }
   }
-}
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
@@ -453,18 +495,20 @@ const handleHeightLength = ()=>{
           navigation={navigation}
         />
 
-     <KeyboardAwareScrollView
-  enableOnAndroid={true}
-  enableAutomaticScroll={true}
-  keyboardShouldPersistTaps="handled"
-  showsVerticalScrollIndicator={false}
-  extraScrollHeight={60}
-  extraHeight={60}
-  contentContainerStyle={{
-    flexGrow: 1,
-    paddingBottom: 120,
-  }}
->
+        <KeyboardAwareScrollView
+          enableOnAndroid={true}
+          enableAutomaticScroll={true}
+          enableResetScrollToCoords={false}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          extraScrollHeight={0}
+          extraHeight={150}
+          style={{ flex: 1 }}
+          contentContainerStyle={{
+            flexGrow: 1,
+
+          }}
+        >
           <View style={styles.imageSection}>
 
             <View style={styles.imageContainer}>
@@ -503,7 +547,7 @@ const handleHeightLength = ()=>{
 
             <Text style={styles.label}>Full Name</Text>
             <View style={styles.inputBox}>
-              <View style={[styles.inputContainer, { borderColor: checkValidation.name ? "red" : "lightgrey" }]}>
+              <View style={[styles.inputContainer, { borderColor: getBorderColor(checkValidation.name) }]}>
 
                 <TextInput
                   value={fullName}
@@ -515,14 +559,15 @@ const handleHeightLength = ()=>{
                 />
 
               </View>
-              {checkValidation.name && (<Text style={{ color: 'red' }}>Please Enter valid name</Text>)}
+              {checkValidation.name === 'required' && showRequiredErrors && (<Text style={{ color: 'red' }}>Please enter name</Text>)}
+              {checkValidation.name === 'invalid' && (<Text style={{ color: 'red' }}>Please Enter valid name</Text>)}
             </View>
 
 
 
             <Text style={styles.label}>Phone</Text>
             <View style={styles.inputBox}>
-              <View style={[styles.inputContainer, { borderColor: checkValidation.phone ? "red" : "lightgrey" }]}>
+              <View style={[styles.inputContainer, { borderColor: getBorderColor(checkValidation.phone) }]}>
 
                 <TextInput
                   value={phone}
@@ -535,13 +580,14 @@ const handleHeightLength = ()=>{
                 />
 
               </View>
-              {checkValidation.phone && (<Text style={{ color: 'red' }}>Please Enter valid phone number</Text>)}
+              {checkValidation.phone === 'required' && showRequiredErrors && (<Text style={{ color: 'red' }}>Please enter phone number</Text>)}
+              {checkValidation.phone === 'invalid' && (<Text style={{ color: 'red' }}>Please Enter valid phone number</Text>)}
             </View>
 
 
             <Text style={styles.label}>Email address</Text>
             <View style={styles.inputBox}>
-              <View style={[styles.inputContainer, { borderColor: checkValidation.email ? "red" : "lightgrey" }]}>
+              <View style={[styles.inputContainer, { borderColor: getBorderColor(checkValidation.email) }]}>
 
                 <TextInput
                   value={email}
@@ -552,14 +598,15 @@ const handleHeightLength = ()=>{
                 />
 
               </View>
-              {checkValidation.email && (<Text style={{ color: 'red' }}>Please Enter valid Email Address</Text>)}
+              {checkValidation.email === 'required' && showRequiredErrors && (<Text style={{ color: 'red' }}>Please enter email address</Text>)}
+              {checkValidation.email === 'invalid' && (<Text style={{ color: 'red' }}>Please Enter valid Email Address</Text>)}
             </View>
 
 
 
             <Text style={styles.label}>Weight</Text>
             <View style={styles.inputBox}>
-              <View style={[styles.inputContainer, { borderColor: checkValidation.weight ? "red" : "lightgrey" }]}>
+              <View style={[styles.inputContainer, { borderColor: getBorderColor(checkValidation.weight) }]}>
 
                 <TextInput
                   value={weight}
@@ -567,7 +614,7 @@ const handleHeightLength = ()=>{
                   placeholder='Weight'
                   placeholderTextColor='#777'
                   style={styles.input}
-                   maxLength={weightUnit === 'KG' ? 3 : 7}
+                  maxLength={weightUnit === 'KG' ? 3 : 7}
                   keyboardType="numeric"
                 />
 
@@ -578,7 +625,7 @@ const handleHeightLength = ()=>{
                       styles.unitButton,
                       weightUnit === 'LBS' && styles.activeUnit,
                     ]}
-                  onPress={() => handleWeightUnitChange('LBS')}
+                    onPress={() => handleWeightUnitChange('LBS')}
                   >
 
                     <Text
@@ -598,7 +645,7 @@ const handleHeightLength = ()=>{
                       styles.unitButton,
                       weightUnit === 'KG' && styles.activeUnit,
                     ]}
-              onPress={() => handleWeightUnitChange('KG')}
+                    onPress={() => handleWeightUnitChange('KG')}
                   >
 
                     <Text
@@ -616,7 +663,12 @@ const handleHeightLength = ()=>{
                 </View>
 
               </View>
-              {checkValidation.weight && (
+              {checkValidation.weight === 'required' && showRequiredErrors && (
+                <Text style={{ color: 'red' }}>
+                  Please enter weight
+                </Text>
+              )}
+              {checkValidation.weight === 'invalid' && (
                 <Text style={{ color: 'red' }}>
                   Please enter a valid weight
                 </Text>
@@ -626,7 +678,7 @@ const handleHeightLength = ()=>{
 
             <Text style={styles.label}>Height</Text>
             <View style={styles.inputBox}>
-              <View style={[styles.inputContainer, { borderColor: checkValidation.height ? "red" : "lightgrey" }]}>
+              <View style={[styles.inputContainer, { borderColor: getBorderColor(checkValidation.height) }]}>
 
                 <TextInput
                   value={height}
@@ -635,7 +687,7 @@ const handleHeightLength = ()=>{
                   placeholder='Height'
                   placeholderTextColor='#777'
                   keyboardType="numeric"
-                  maxLength={handleHeightLength ? 3:5}
+                  maxLength={handleHeightLength() ? 3 : 5}
                 />
 
                 <View style={styles.unitContainer}>
@@ -683,7 +735,12 @@ const handleHeightLength = ()=>{
                 </View>
 
               </View>
-              {checkValidation.height && (
+              {checkValidation.height === 'required' && showRequiredErrors && (
+                <Text style={{ color: 'red' }}>
+                  Please enter height
+                </Text>
+              )}
+              {checkValidation.height === 'invalid' && (
                 <Text style={{ color: 'red' }}>
                   Please enter a valid height
                 </Text>
@@ -692,28 +749,35 @@ const handleHeightLength = ()=>{
 
             <Text style={styles.label}>Gender</Text>
 
-            <View style={[styles.inputContainer,styles.inputBox]}>
-              <Dropdown
-                style={{ flex: 1 }}
-                placeholderStyle={{ color: '#777' }}
-                selectedTextStyle={{ color: '#111' }}
-                data={GenderData}
-                labelField="label"
-                valueField="value"
-                placeholder="Select Gender"
-                value={gender}
-                onChange={item => {
-                  setGender(item.value);
-                }}
-              />
+            <View style={styles.inputBox}>
+              <View style={[styles.inputContainer, { borderColor: getBorderColor(checkValidation.gender) }]}>
+                <Dropdown
+                  style={{ flex: 1 }}
+                  placeholderStyle={{ color: '#777' }}
+                  selectedTextStyle={{ color: '#111' }}
+                  data={GenderData}
+                  labelField="label"
+                  valueField="value"
+                  placeholder="Select Gender"
+                  value={gender}
+                  onChange={item => {
+                    setGender(item.value);
+                  }}
+                />
+              </View>
+              {checkValidation.gender === 'required' && showRequiredErrors && (
+                <Text style={{ color: 'red' }}>
+                  Please select a gender
+                </Text>
+              )}
             </View>
-            
+
 
 
 
             <Text style={styles.label}>Age</Text>
             <View>
-              <View style={[styles.inputContainer, { borderColor: checkValidation.age ? "red" : "lightgrey" }]}>
+              <View style={[styles.inputContainer, { borderColor: getBorderColor(checkValidation.age) }]}>
 
                 <TextInput
                   value={age}
@@ -726,7 +790,12 @@ const handleHeightLength = ()=>{
                 />
 
               </View>
-              {checkValidation.age && (
+              {checkValidation.age === 'required' && showRequiredErrors && (
+                <Text style={{ color: 'red' }}>
+                  Please enter age
+                </Text>
+              )}
+              {checkValidation.age === 'invalid' && (
                 <Text style={{ color: 'red' }}>
                   Please enter a valid age
                 </Text>
@@ -740,21 +809,19 @@ const handleHeightLength = ()=>{
           </View>
 
         </KeyboardAwareScrollView>
-        <TouchableOpacity style={styles.btn}>
-
-         <TouchableOpacity
-  disabled={!isSaveEnabled}
-  style={{
-    opacity: isSaveEnabled ? 1 : 0.5,
-  }}
->
-  <AuthButton
-    title="SAVE"
-    onPress={saveProfile}
-  />
-</TouchableOpacity>
-
-        </TouchableOpacity>
+        <View style={styles.btn}>
+          <View
+            pointerEvents={isSaveEnabled ? 'auto' : 'none'}
+            style={{
+              opacity: isSaveEnabled ? 1 : 0.5,
+            }}
+          >
+            <AuthButton
+              title="SAVE"
+              onPress={saveProfile}
+            />
+          </View>
+        </View>
         <BottomSheet
           ref={bottomSheetRef}
           index={-1}
@@ -997,7 +1064,7 @@ const styles = StyleSheet.create({
     fontFamily: "DMSans-Medium",
     fontSize: 16
   },
-  inputBox:{
-    marginBottom:16
+  inputBox: {
+    marginBottom: 16
   }
 });
