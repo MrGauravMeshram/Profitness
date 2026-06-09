@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "985481949917",
+    "project_id": "profitness-4beee",
+    "storage_bucket": "profitness-4beee.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:985481949917:android:8844f535a5507a8461e134",
+        "android_client_info": {
+          "package_name": "com.profitness"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrpe_XkW9LJsDBA8yghTjJ9CTkKhNvK88"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
