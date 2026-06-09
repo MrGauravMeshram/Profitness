@@ -6,6 +6,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  KeyboardTypeOptions,
 } from 'react-native';
 
 import { Eye, EyeOff } from 'lucide-react-native';
@@ -16,6 +17,9 @@ type InputProps = {
   value: string;
   onChangeText: (text: string) => void;
   secureTextEntry?: boolean;
+  length?: number
+  error?: string;
+  keytype?: KeyboardTypeOptions;
 };
 
 const CustomInput = ({
@@ -24,6 +28,9 @@ const CustomInput = ({
   value,
   onChangeText,
   secureTextEntry = false,
+  error,
+  length,
+  keytype = 'default',
 }: InputProps) => {
   const [hidePassword, setHidePassword] = useState(secureTextEntry);
 
@@ -31,7 +38,7 @@ const CustomInput = ({
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
 
-      <View style={styles.inputContainer}>
+      <View style={[styles.inputContainer, error ? styles.errorBorder : null]}>
         <TextInput
           placeholder={placeholder}
           placeholderTextColor="#666"
@@ -44,8 +51,9 @@ const CustomInput = ({
           spellCheck={false}
           autoCapitalize="none"
           autoComplete="off"
+          maxLength={length}
           importantForAutofill="no"
-          keyboardType="visible-password"
+          keyboardType={keytype}
         />
 
         {secureTextEntry && (
@@ -58,6 +66,7 @@ const CustomInput = ({
           </TouchableOpacity>
         )}
       </View>
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
     </View>
   );
 };
@@ -95,6 +104,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#111',
     textDecorationLine: 'none',
+    fontFamily: 'DMSans_18pt-Medium',
+  },
+
+  errorBorder: {
+    borderColor: 'red',
+  },
+
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginTop: 6,
     fontFamily: 'DMSans_18pt-Medium',
   },
 });

@@ -6,6 +6,13 @@ import { Toastconfig } from './src/components/Toast/Toast';
 import Netinfo from '@react-native-community/netinfo';
 import { getStaticFeatureFlag } from 'react-native-reanimated';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import
+ { getAuth
+,
+ createUserWithEmailAndPassword } 
+from
+ '@react-native-firebase/auth'
+;
 import Toast from 'react-native-toast-message';
 import NoInternetScreen from './src/Screen/NoInternetScreen/NoInternetScreen';
 

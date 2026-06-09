@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  Alert
 } from 'react-native';
 
 import {
@@ -14,7 +15,14 @@ import {
   DrawerContentComponentProps,
   useDrawerProgress,
 } from '@react-navigation/drawer';
-
+import {
+  getAuth
+  ,
+  signOut
+}
+  from
+  '@react-native-firebase/auth'
+  ;
 import Animated, {
   useAnimatedStyle,
   interpolate,
@@ -39,6 +47,7 @@ type DrawerItemProps = {
 };
 
 const DrawerItem = ({ icon, label, onPress }: DrawerItemProps) => (
+
   <TouchableOpacity
     style={styles.drawerItem}
     activeOpacity={0.6}
@@ -49,66 +58,81 @@ const DrawerItem = ({ icon, label, onPress }: DrawerItemProps) => (
   </TouchableOpacity>
 );
 
-const CustomDrawerContent = (props: DrawerContentComponentProps) => (
-  <DrawerContentScrollView
-    {...props}
-    scrollEnabled={false}
-    contentContainerStyle={{ flex: 1 }}
-  >
-    <View style={styles.drawerContainer}>
-      <TouchableOpacity
-        style={styles.closeButton}
-        onPress={() => props.navigation.closeDrawer()}
-      >
-        <Ionicons name="close" size={28} color="#111" />
-      </TouchableOpacity>
+const CustomDrawerContent = (props: DrawerContentComponentProps) => {
+  const handleLogout = () => {
+    signOut(getAuth()).then((res) => {
+      try {
+        Alert.alert("Successfully logout")
+      } catch (err) {
+        Alert.alert(err.message)
+        console.log(err.message)
+      }
+    })
+  }
+  return (
 
-      <Image
-        source={require('../assets/png/profile2.png')}
-        style={styles.profileImage}
-      />
-      <Text style={styles.name}>Dhruvit !</Text>
-      <Text style={styles.member}>Basic member</Text>
+    <DrawerContentScrollView
+      {...props}
+      scrollEnabled={false}
+      contentContainerStyle={{ flex: 1 }}
+    >
+      <View style={styles.drawerContainer}>
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => props.navigation.closeDrawer()}
+        >
+          <Ionicons name="close" size={28} color="#111" />
+        </TouchableOpacity>
 
-      <View style={styles.menuContainer}>
-        <DrawerItem icon="grid-outline" label="Dashboard" 
-        onPress={()=>{
-          props.navigation.navigate('Dashboard')
-        }}/>
-        <DrawerItem icon="analytics-outline" label="My Progress" 
-        onPress={()=>{
-          props.navigation.navigate('Progress')
-        }}/>
-        <DrawerItem
-          icon="barbell-outline"
-          label="Training"
-          onPress={() => {
-            props.navigation.navigate('Training');
-          }}
+        <Image
+          source={require('../assets/png/profile2.png')}
+          style={styles.profileImage}
         />
-        <DrawerItem
-          icon="apps-outline"
-          label="Categories"
+        <Text style={styles.name}>Dhruvit !</Text>
+        <Text style={styles.member}>Basic member</Text>
+
+        <View style={styles.menuContainer}>
+          <DrawerItem icon="grid-outline" label="Dashboard"
+            onPress={() => {
+              props.navigation.navigate('Dashboard')
+            }} />
+          <DrawerItem icon="analytics-outline" label="My Progress"
+            onPress={() => {
+              props.navigation.navigate('Progress')
+            }} />
+          <DrawerItem
+            icon="barbell-outline"
+            label="Training"
+            onPress={() => {
+              props.navigation.navigate('Training');
+            }}
+          />
+          <DrawerItem
+            icon="apps-outline"
+            label="Categories"
+            onPress={() => {
+              props.navigation.navigate('Categories');
+            }}
+          />
+          <DrawerItem icon="notifications-outline" label="Reminder" onPress={() => props.navigation.navigate('Reminder')} />
+          <DrawerItem icon="heart-outline" label="My Favorites" onPress={() => props.navigation.navigate('Favorite')} />
+          <DrawerItem icon="settings-outline" label="App Settings" onPress={() => props.navigation.navigate('Setting')} />
+          <DrawerItem icon="call-outline" label="Contact Support" />
+        </View>
+
+        <TouchableOpacity style={styles.signOut}
+
           onPress={() => {
-            props.navigation.navigate('Categories');
-          }}
-        />
-        <DrawerItem icon="notifications-outline" label="Reminder" onPress={()=>props.navigation.navigate('Reminder')}/>
-        <DrawerItem icon="heart-outline" label="My Favorites" onPress={()=>props.navigation.navigate('Favorite')}/>
-        <DrawerItem icon="settings-outline" label="App Settings" onPress={()=>props.navigation.navigate('Setting')}/>
-        <DrawerItem icon="call-outline" label="Contact Support" />
+            handleLogout();
+            props.navigation.navigate('Login')
+          }}>
+          <Ionicons name="log-out-outline" size={24} color="#111" />
+          <Text style={styles.signOutText}>Sign Out</Text>
+        </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={styles.signOut}
-      onPress={()=>{
-        props.navigation.navigate('Login')
-      }}>
-        <Ionicons name="log-out-outline" size={24} color="#111" />
-        <Text style={styles.signOutText}>Sign Out</Text>
-      </TouchableOpacity>
-    </View>
-  </DrawerContentScrollView>
-);
+    </DrawerContentScrollView>
+  )
+};
 
 const AnimatedScreen = ({ children }: { children: React.ReactNode }) => {
   const progress = useDrawerProgress();
@@ -142,14 +166,14 @@ const AnimatedScreen = ({ children }: { children: React.ReactNode }) => {
       Extrapolation.CLAMP,
     );
 
-  
+
 
     return {
       transform: [
         { translateX },
         { translateY },
         { scale },
-      
+
       ],
       borderRadius,
       overflow: 'hidden' as const,
@@ -170,6 +194,7 @@ const WrappedTabs = () => (
 );
 
 function MyDrawer() {
+
   return (
     <Drawer.Navigator
       drawerContent={props => <CustomDrawerContent {...props} />}
@@ -190,10 +215,10 @@ function MyDrawer() {
       <Drawer.Screen name="Categories" component={Categories} />
       <Drawer.Screen name="Dashboard" component={Dashboard}
       />
-      <Drawer.Screen name = 'Setting' component={AppSettingsScreen}/>
-      <Drawer.Screen name = 'Favorite' component={FavoriteScreen}/>
-      <Drawer.Screen name='Reminder' component={ReminderScreen}/>
-      <Drawer.Screen name='Progress' component={ProgressScreen}/>
+      <Drawer.Screen name='Setting' component={AppSettingsScreen} />
+      <Drawer.Screen name='Favorite' component={FavoriteScreen} />
+      <Drawer.Screen name='Reminder' component={ReminderScreen} />
+      <Drawer.Screen name='Progress' component={ProgressScreen} />
     </Drawer.Navigator>
   );
 }
