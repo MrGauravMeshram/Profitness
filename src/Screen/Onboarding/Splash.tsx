@@ -1,13 +1,29 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Image, StatusBar, Dimensions } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
 const SplashScreen = ({ navigation }: any) => {
   useEffect(() => {
+    const checkStatusAndNavigate = async () => {
+      try {
+        const steppingCompleted = await AsyncStorage.getItem('steppingCompleted');
+        if (steppingCompleted === 'true') {
+          navigation.navigate('Login');
+        } else {
+          navigation.navigate('Onboarding');
+        }
+      } catch (error) {
+        console.log(error);
+        navigation.navigate('Onboarding');
+      }
+    };
+
     const timer = setTimeout(() => {
-      navigation.navigate('Onboarding');
+      checkStatusAndNavigate();
     }, 3000);
+
     return () => clearTimeout(timer);
   }, [navigation]);
 

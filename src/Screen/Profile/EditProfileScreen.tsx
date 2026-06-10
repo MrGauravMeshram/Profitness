@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef, useEffect } from 'react';
+import React, { useMemo, useState, useRef, useEffect, useCallback } from 'react';
 
 import {
   View,
@@ -29,6 +29,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../Storage/Redux/store';
+import { setUserDetails, setProfileImage } from '../../Storage/Redux/slice';
+import { getAuth } from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import Toast from 'react-native-toast-message';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -39,6 +44,10 @@ import AuthButton from '../Auth/component/AuthButton';
 
 
 const EditProfile = ({ navigation }: any) => {
+  const dispatch = useDispatch();
+  const uid = useSelector((state: RootState) => state.userReducer.uid);
+
+
   const [sheetIndex, setSheetIndex] = useState(-1);
   const [checkImage, setCheckImage] = useState<boolean>(false);
   const [checkValidation, setValidation] = useState<any>({ name: '', phone: '', email: '', weight: '', height: '', gender: '', age: '' });
@@ -57,28 +66,33 @@ const EditProfile = ({ navigation }: any) => {
   const [weight, setWeight] = useState('');
   const [gender, setGender] = useState('');
   const [height, setHeight] = useState('');
+
   const [age, setAge] = useState('');
   const [weightUnit, setWeightUnit] = useState('KG');
   const [heightUnit, setHeightUnit] = useState('CM');
-
   useEffect(() => {
-    getData();
-  }, []);
+    const datas = Storage.getString(`userDetails_${uid}`);
+    console.log('user data', datas);
+  }, [uid]);
 
-
-  const getData = async () => {
+  const getData = useCallback(async () => {
+    if (!uid) return;
     try {
       const checkimg = await AsyncStorage.getItem(
-        'ImageContainer',
+        `ImageContainer_${uid}`,
       );
 
       if (checkimg) {
         setPushImage(checkimg);
         setOriginalImage(checkimg);
         setCheckImage(true);
+      } else {
+        setPushImage('');
+        setOriginalImage('');
+        setCheckImage(false);
       }
 
-      const data = Storage.getString('userDetails');
+      const data = Storage.getString(`userDetails_${uid}`);
 
       if (data) {
         const parsedData = JSON.parse(data);
@@ -104,18 +118,38 @@ const EditProfile = ({ navigation }: any) => {
           userWeightUnit: parsedData.userWeightUnit || 'KG',
           userHeightUnit: parsedData.userHeightUnit || 'CM',
         });
+      } else {
+        const firebaseUser = getAuth().currentUser;
+        setFullName(firebaseUser?.displayName || '');
+        setEmail(firebaseUser?.email || '');
+        setPhone('');
+        setWeight('');
+        setGender('');
+        setHeight('');
+        setAge('');
+        setWeightUnit('KG');
+        setHeightUnit('CM');
+
+        setOriginalData({
+          userName: firebaseUser?.displayName || '',
+          userNumber: '',
+          userEmail: firebaseUser?.email || '',
+          userWeight: '',
+          userHeight: '',
+          userGender: '',
+          userAge: '',
+          userWeightUnit: 'KG',
+          userHeightUnit: 'CM',
+        });
       }
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [uid]);
 
-  const setData = async (uri: any) => {
-    await AsyncStorage.setItem(
-      'ImageContainer',
-      uri,
-    );
-  };
+  useEffect(() => {
+    getData();
+  }, [getData]);
 
 
   const requestCameraPermission = async () => {
@@ -170,7 +204,10 @@ const EditProfile = ({ navigation }: any) => {
   }
   const clearData = async () => {
     try {
-      await AsyncStorage.removeItem('ImageContainer');
+      if (uid) {
+        await AsyncStorage.removeItem(`ImageContainer_${uid}`);
+        dispatch(setProfileImage(null));
+      }
 
       setPushImage('');
       setImageUri('');
@@ -285,12 +322,17 @@ const EditProfile = ({ navigation }: any) => {
     }
 
     try {
-      await AsyncStorage.setItem(
-        'ImageContainer',
-        pushImage,
-      );
+      if (uid) {
+        await AsyncStorage.setItem(
+          `ImageContainer_${uid}`,
+          pushImage,
+        );
 
-      userData();
+        userData();
+
+        dispatch(setUserDetails(profileData));
+        dispatch(setProfileImage(pushImage));
+      }
 
       Toast.show({
         type: 'success',
@@ -420,8 +462,10 @@ const EditProfile = ({ navigation }: any) => {
   }
 
   const userData = () => {
-    Storage.set("userDetails", JSON.stringify(profileData))
-  }
+    if (uid) {
+      Storage.set(`userDetails_${uid}`, JSON.stringify(profileData));
+    }
+  };
   const isProfileChanged =
     JSON.stringify(profileData) !== JSON.stringify(originalData);
 

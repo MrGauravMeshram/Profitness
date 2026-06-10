@@ -1,6 +1,6 @@
-import React,{useEffect,useState} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React, { useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Splash from '../Screen/Onboarding/Splash';
 import Onboarding from '../Screen/Onboarding/Onboarding';
 import Login from '../Screen/Auth/Login';
@@ -11,7 +11,7 @@ import Verify from '../Screen/Auth/Verify';
 import Favorite from '../Screen/SteppingScreen/SteppingScreen';
 import MyDrawer from './DrawerNavigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {TestListScreen, TestDetailScreen} from '../Screen/Test/Text';
+import { TestDetailScreen } from '../Screen/Test/Text';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FilterScreen from '../Screen/Filter/FilterScreen';
 import Subscription from '../Screen/Subscription/SubscriptionScreen';
@@ -22,7 +22,12 @@ import ExerciseDetialsScreen from '../Screen/Exercise/ExerciseDetialsScreen';
 import ScheduleExerciseScreen from '../Screen/Exercise/ScheduleExerciseScreen';
 import MealDetailsScreen from '../Screen/Meal/MealDetailsScreen';
 import MealPlanScreen from '../Screen/Meal/MealPlanScreen';
+import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 import { TouchableOpacity } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { setUser, setUserDetails, setProfileImage, clearUser } from '../Storage/Redux/slice';
+import { Storage } from '../Storage/MMkvstore';
+
 const Stack = createNativeStackNavigator();
 
 export type RootStackParamList = {
@@ -38,22 +43,75 @@ export type RootStackParamList = {
   Subscription: undefined;
   Newworkout: undefined;
   EditProfile: undefined;
-  ExerciseDetails: {item:any};
+  ExerciseDetails: { item: any };
   ScheduleExercise: undefined;
-    MealDetails: {item: any};  
+  MealDetails: { item: any };
 
 };
 
 const StackNavigation = () => {
+  const dispatch = useDispatch();
   const [initialRoute, setInitialRoute] = useState<string | null>(null);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [userLogin, setUserlogin] = useState<any>(null)
+  const [initializing, setInitializing] = useState(true)
+
 
   useEffect(() => {
-    onBoardingStatus();
+    onBoardingStatus(null);
   }, []);
 
-  const onBoardingStatus = async () => {
-    const value = await AsyncStorage.getItem('steppingCompleted');
+  useEffect(() => {
+    const subscriber = onAuthStateChanged(getAuth(), handleAuthChange)
+    return subscriber;
+  }, [])
+
+
+  const handleAuthChange = async (user: any) => {
+    setUserlogin(user);
+    if (user) {
+      dispatch(
+        setUser({
+          uid: user.uid,
+          name: user.displayName || null,
+          email: user.email || null,
+          photoURL: user.photoURL || null,
+        })
+      );
+
+      try {
+        const detailsData = Storage.getString(`userDetails_${user.uid}`);
+        if (detailsData) {
+          dispatch(setUserDetails(JSON.parse(detailsData)));
+        } else {
+          dispatch(setUserDetails(null));
+        }
+      } catch (err) {
+        console.log('Error reading MMKV userDetails:', err);
+        dispatch(setUserDetails(null));
+      }
+
+
+      try {
+        const imageUri = await AsyncStorage.getItem(`ImageContainer_${user.uid}`);
+        dispatch(setProfileImage(imageUri));
+      } catch (err) {
+        console.log('Error reading AsyncStorage ImageContainer:', err);
+        dispatch(setProfileImage(null));
+      }
+
+      await onBoardingStatus(user.uid);
+    } else {
+      dispatch(clearUser());
+      await onBoardingStatus(null);
+    }
+
+    if (initializing) setInitializing(false);
+  };
+
+  const onBoardingStatus = async (uid?: string | null) => {
+    const key = uid ? `steppingCompleted_${uid}` : 'steppingCompleted';
+    const value = await AsyncStorage.getItem(key);
     setInitialRoute(value === 'true' ? 'Main' : 'Onboarding');
     setIsCompleted(value === 'true');
   };
@@ -61,76 +119,97 @@ const StackNavigation = () => {
   if (initialRoute === null) {
     return null;
   }
+  if (initializing || initialRoute === null) {
+    return null;
+  }
+
+
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={initialRoute}
+
         screenOptions={{
           headerShown: false,
           animation: 'slide_from_right',
         }}>
-        <Stack.Screen name="Splash" component={Splash} />
-       
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Signup" component={Signup} />
-        <Stack.Screen name="Forgot" component={Forgot} />
-        <Stack.Screen name="Verify" component={Verify} />
-        <Stack.Screen name="Main" component={MyDrawer} />
-         <Stack.Screen name="Onboarding" component={Onboarding} />
-        <Stack.Screen name="Favorite" component={Favorite} />
-       
-        <Stack.Screen name="Filter" component={FilterScreen} />
-        <Stack.Screen name="Subscription" component={Subscription} />
-    <Stack.Screen name='Notification' component={NotificationScreen}/>
-         <Stack.Screen name="Newworkout" component={NewWorkout} />
-         <Stack.Screen name="SearchBarScreen" component={SearchBarScreen} />
-        <Stack.Screen name="EditProfile" component={EditProfile} />
-        <Stack.Screen
-          name="ExerciseDetails"
-          component={ExerciseDetialsScreen}
-            options={({navigation})=>({
-            animation:"fade",
-            headerShown:true,
-            headerTransparent:true,
-            headerTitle:'',
-            headerLeft:()=>(
-              <TouchableOpacity onPress={()=>navigation.goBack()} style={{backgroundColor:"#FFF",borderRadius:50}}>
-                   <MaterialIcons name="keyboard-arrow-left" color="#000" size={24} />
-                   </TouchableOpacity>
-            )
-          })}
-        />
-        <Stack.Screen
-          name="ScheduleExercise"
-          component={ScheduleExerciseScreen}
-        
-        />
-      
-          <Stack.Screen name="TestDetail" component={TestDetailScreen} options={{
-    headerShown: false,
-    animation: 'fade',
-  }}/>
-         <Stack.Screen
-  name="MealDetails"
-  component={MealDetailsScreen}
-  options={({navigation})=>({
-    headerShown: true,
-    headerTitle:"",
-    headerTransparent:true,
-    animation: 'none',
-    headerLeft:(()=>(
-       <TouchableOpacity onPress={()=>navigation.goBack()} style={{backgroundColor:"#FFF",borderRadius:50}}>
-                   <MaterialIcons name="keyboard-arrow-left" color="#000" size={24} />
-                   </TouchableOpacity>
+        {userLogin ? (
+          <>
+            {isCompleted ? (
+              <>
+                <Stack.Screen name="Main" component={MyDrawer} />
+                <Stack.Screen name="Favorite" component={Favorite} />
+              </>
+            ) : (
+              <>
+                <Stack.Screen name="Favorite" component={Favorite} />
+                <Stack.Screen name="Main" component={MyDrawer} />
+              </>
+            )}
+            <Stack.Screen name="Filter" component={FilterScreen} />
+            <Stack.Screen name="Subscription" component={Subscription} />
+            <Stack.Screen name='Notification' component={NotificationScreen} />
+            <Stack.Screen name="Newworkout" component={NewWorkout} />
+            <Stack.Screen name="SearchBarScreen" component={SearchBarScreen} />
+            <Stack.Screen name="EditProfile" component={EditProfile} />
+            <Stack.Screen
+              name="ExerciseDetails"
+              component={ExerciseDetialsScreen}
+              options={({ navigation }) => ({
+                animation: "fade",
+                headerShown: true,
+                headerTransparent: true,
+                headerTitle: '',
+                headerLeft: () => (
+                  <TouchableOpacity onPress={() => navigation.goBack()} style={{ backgroundColor: "#FFF", borderRadius: 50 }}>
+                    <MaterialIcons name="keyboard-arrow-left" color="#000" size={24} />
+                  </TouchableOpacity>
+                )
+              })}
+            />
+            <Stack.Screen
+              name="ScheduleExercise"
+              component={ScheduleExerciseScreen}
 
-    ))
-    
-  })}
-/>
-<Stack.Screen
-  name="MealPlanTest"
-  component={MealPlanScreen}
-/>
+            />
+
+            <Stack.Screen name="TestDetail" component={TestDetailScreen} options={{
+              headerShown: false,
+              animation: 'fade',
+            }} />
+            <Stack.Screen
+              name="MealDetails"
+              component={MealDetailsScreen}
+              options={({ navigation }) => ({
+                headerShown: true,
+                headerTitle: "",
+                headerTransparent: true,
+                animation: 'none',
+                headerLeft: (() => (
+                  <TouchableOpacity onPress={() => navigation.goBack()} style={{ backgroundColor: "#FFF", borderRadius: 50 }}>
+                    <MaterialIcons name="keyboard-arrow-left" color="#000" size={24} />
+                  </TouchableOpacity>
+
+                ))
+
+              })}
+            />
+            <Stack.Screen
+              name="MealPlanTest"
+              component={MealPlanScreen}
+            />
+
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="Splash" component={Splash} />
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Signup" component={Signup} />
+            <Stack.Screen name="Forgot" component={Forgot} />
+            <Stack.Screen name="Verify" component={Verify} />
+
+            <Stack.Screen name="Onboarding" component={Onboarding} />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

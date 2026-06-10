@@ -6,15 +6,22 @@ import { Toastconfig } from './src/components/Toast/Toast';
 import Netinfo from '@react-native-community/netinfo';
 import { getStaticFeatureFlag } from 'react-native-reanimated';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import
- { getAuth
-,
- createUserWithEmailAndPassword } 
-from
- '@react-native-firebase/auth'
-;
+import { Provider, useDispatch } from 'react-redux';
+import { store } from './src/Storage/Redux/store';
+import { UseDispatch } from 'react-redux';
+
 import Toast from 'react-native-toast-message';
 import NoInternetScreen from './src/Screen/NoInternetScreen/NoInternetScreen';
+import { GoogleOneTapSignIn } from 'react-native-nitro-google-signin';
+import { getAuth } from '@react-native-firebase/auth';
+import { setUser } from './src/Storage/Redux/slice';
+
+const auth = getAuth();
+const uid = auth.currentUser?.uid;
+console.log(uid)
+GoogleOneTapSignIn.configure({
+  webClientId: '985481949917-b3hum8it775kv7jurljueb0214fb616q.apps.googleusercontent.com',
+});
 
 console.log('SET enabled:', getStaticFeatureFlag('ENABLE_SHARED_ELEMENT_TRANSITIONS'));
 const App = () => {
@@ -27,6 +34,8 @@ const App = () => {
     };  
 
   }, [])
+
+  
   // if(!isConnected){
     
   //   return (
@@ -38,6 +47,7 @@ const App = () => {
   // } 
   return (
     <>
+    <Provider store={store}>
     <GestureHandlerRootView style={{flex:1}}>
      <StackNavigator/>
      {!isConnected &&    <View
@@ -53,6 +63,7 @@ const App = () => {
       </View>}
       <Toast bottomOffset={50} config={Toastconfig}/>
     </GestureHandlerRootView>
+    </Provider>
   </>
   )
 }

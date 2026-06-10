@@ -11,6 +11,8 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import asyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../Storage/Redux/store';
 import AgeMeter from './component/Age';
 import WeightSelector from './component/AgeScale';
 import HeadingText from '../../components/headingText';
@@ -119,6 +121,7 @@ const steps = [
 ];
 
 const FavoriteScreen = ({ navigation }: any) => {
+  const uid = useSelector((state: RootState) => state.userReducer.uid);
   const [currentStep, setCurrentStep] = useState(0);
   const [goal, setGoal] = useState('Improve fitness');
 
@@ -141,7 +144,8 @@ const FavoriteScreen = ({ navigation }: any) => {
 
  const handleNext = async () => {
   if (currentStep === steps.length - 1) {
-    await asyncStorage.setItem('steppingCompleted', 'true');
+    const key = uid ? `steppingCompleted_${uid}` : 'steppingCompleted';
+    await asyncStorage.setItem(key, 'true');
        navigation.reset({
       index: 0,
       routes: [{ name: 'Main' }],
@@ -153,11 +157,14 @@ const FavoriteScreen = ({ navigation }: any) => {
   setCurrentStep(prev => prev + 1);
 };
 
-const getitem = async () => {
-  const value = await asyncStorage.getItem('steppingCompleted');
-  console.log(value);
-}
-getitem();
+React.useEffect(() => {
+  const getitem = async () => {
+    const key = uid ? `steppingCompleted_${uid}` : 'steppingCompleted';
+    const value = await asyncStorage.getItem(key);
+    console.log('Stepping completed value:', value);
+  };
+  getitem();
+}, [uid]);
 
   const handleSelect = (id: string) => {
     if (selected.includes(id)) {

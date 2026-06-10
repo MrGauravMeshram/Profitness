@@ -2,11 +2,14 @@ import React from 'react';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import SearchBar from '../../../components/searchBar';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { RootState } from '../../../Storage/Redux/store';
+import { useSelector,} from 'react-redux';
 type Props = {
   isSticky?: boolean;
 };
 const HomeHeader = () => {
   const navigation: any = useNavigation();
+  const {userDetails} = useSelector((state:RootState)=>state.userReducer)
   return (
     <>
       <View style={styles.circleOne} />
@@ -40,7 +43,7 @@ const HomeHeader = () => {
       <View style={styles.textContainer}>
         <Text style={styles.greeting}>Hello, Good Morning</Text>
 
-        <Text style={styles.name}>Gaurav !</Text>
+        <Text style={styles.name}>{userDetails?.userName}</Text>
       </View>
       <View>
       

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,9 +6,10 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  Alert
-} from 'react-native';
+  Alert,
 
+} from 'react-native';
+import Modal from 'react-native-modal';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -32,11 +33,14 @@ import FavoriteScreen from '../Screen/Favorites/FavoriteScreen';
 import TrainingScreen from '../Screen/Training/TrainingScreen';
 import Dashboard from '../Screen/DashBoard/Dashboard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Toast from 'react-native-toast-message';
 import ReminderScreen from '../Screen/Reminder/ReminderScreen';
 import MyTabs from './BottomTabNavigation';
 import AppSettingsScreen from '../Screen/AppSettings/AppSettingsScreen';
 import Categories from '../Screen/Categories/CategoriesScreen';
 import ProgressScreen from '../Screen/Progress/ProgressScreen';
+import { useSelector } from 'react-redux';
+import { RootState } from '../Storage/Redux/store';
 const { width } = Dimensions.get('window');
 const Drawer = createDrawerNavigator();
 
@@ -59,16 +63,67 @@ const DrawerItem = ({ icon, label, onPress }: DrawerItemProps) => (
 );
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
+  const [showModal, setShowModal] = useState(false);
+
   const handleLogout = () => {
-    signOut(getAuth()).then((res) => {
-      try {
-        Alert.alert("Successfully logout")
-      } catch (err) {
-        Alert.alert(err.message)
-        console.log(err.message)
-      }
-    })
-  }
+    signOut(getAuth())
+      .then(() => {
+        Toast.show({
+          type: 'success',
+          text1: "Logout Successfully",
+          position: "bottom",
+          visibilityTime: 2000,
+
+        })
+      })
+      .catch((err: any) => {
+        Alert.alert(err?.message || "An error occurred during sign out");
+        console.log(err);
+      });
+  };
+
+  const getModal = () => {
+    return (
+      <Modal
+        isVisible={showModal}
+        onBackdropPress={() => setShowModal(false)}
+        onBackButtonPress={() => setShowModal(false)}
+        animationIn="zoomIn"
+        animationOut="zoomOut"
+        backdropOpacity={0.4}
+      >
+        <View style={styles.modalContent}>
+          <View style={styles.modalIconContainer}>
+            <Ionicons name="log-out-outline" size={36} color="#FF4D4D" />
+          </View>
+          <Text style={styles.modalTitle}>Sign Out</Text>
+          <Text style={styles.modalDescription}>
+            Are you sure you want to sign out of your account?
+          </Text>
+          <View style={styles.modalButtonContainer}>
+            <TouchableOpacity
+              style={[styles.modalButton, styles.cancelButton]}
+              onPress={() => setShowModal(false)}
+            >
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.modalButton, styles.confirmButton]}
+              onPress={() => {
+                setShowModal(false);
+                handleLogout();
+              }}
+            >
+              <Text style={styles.confirmButtonText}>Sign Out</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+  const { userDetails } = useSelector((state: RootState) => state.userReducer)
+  console.log("userDetails", userDetails)
+
   return (
 
     <DrawerContentScrollView
@@ -88,7 +143,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           source={require('../assets/png/profile2.png')}
           style={styles.profileImage}
         />
-        <Text style={styles.name}>Dhruvit !</Text>
+        <Text style={styles.name}>{userDetails?.userName}</Text>
         <Text style={styles.member}>Basic member</Text>
 
         <View style={styles.menuContainer}>
@@ -120,16 +175,17 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           <DrawerItem icon="call-outline" label="Contact Support" />
         </View>
 
-        <TouchableOpacity style={styles.signOut}
-
+        <TouchableOpacity
+          style={styles.signOut}
           onPress={() => {
-            handleLogout();
-            props.navigation.navigate('Login')
-          }}>
+            setShowModal(true);
+          }}
+        >
           <Ionicons name="log-out-outline" size={24} color="#111" />
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
       </View>
+      {getModal()}
     </DrawerContentScrollView>
   )
 };
@@ -293,5 +349,75 @@ const styles = StyleSheet.create({
     color: '#111',
     marginLeft: 16,
     fontFamily: 'Montserrat-Medium',
+  },
+
+  modalContent: {
+    backgroundColor: '#FFFFFF',
+    padding: 24,
+    borderRadius: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 5,
+  },
+  modalIconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#FFEBEB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#111111',
+    marginBottom: 8,
+    fontFamily: 'DMSans-Bold',
+  },
+  modalDescription: {
+    fontSize: 15,
+    color: '#666666',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+    fontFamily: 'DMSans-Medium',
+  },
+  modalButtonContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+  },
+  modalButton: {
+    flex: 1,
+    height: 48,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cancelButton: {
+    marginRight: 8,
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
+    backgroundColor: '#FFFFFF',
+  },
+  cancelButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#666666',
+    fontFamily: 'DMSans-Bold',
+  },
+  confirmButton: {
+    marginLeft: 8,
+    backgroundColor: '#FF4D4D',
+  },
+  confirmButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    fontFamily: 'DMSans-Bold',
   },
 });

@@ -184,7 +184,7 @@ const [mealData, setMealData] = useState([
       return () => subscription.remove();
     }, []),
   );
-const handleExerciseFavorite = (item) => {
+const handleExerciseFavorite = (item: any) => {
   setPopularData(prev =>
     prev.map(ex =>
       ex.id === item.id
@@ -194,7 +194,7 @@ const handleExerciseFavorite = (item) => {
   );
 };
 
-const handleMealFavorite = (item) => {
+const handleMealFavorite = (item: any) => {
   setMealData(prev =>
     prev.map(meal =>
       meal.id === item.id

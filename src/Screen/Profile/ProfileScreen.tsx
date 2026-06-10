@@ -8,49 +8,17 @@ import {
   BackHandler,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
-import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';  
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Storage } from '../../Storage/MMkvstore';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../Storage/Redux/store';
 import Header from '../../components/ScreensHeader';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CategoryList from '../Home/components/Category'
 
 const Profile = ({ navigation }: any) => {
-  const [profileImage,setProfileImage] = useState<any>('')
-  const[profileDetailsdata,setProfileDetials] = useState<any>('')
-const getProfileImage = async () => {
-  try{
-  const profile = await AsyncStorage.getItem('ImageContainer');
-
-  if (profile) {
-    setProfileImage(profile);
-  }else{
-    setProfileImage('')
-  }
-}catch(err){
-      console.log(err)
-}
-};
-
-useFocusEffect(
-  useCallback(() => {
-    getProfileImage();
-    getProfileData();
-  
-  }, [])
-);
-
-const getProfileData = () => {
-  const data = Storage.getString('userDetails');
-
-  if (data) {
-    const parsedData = JSON.parse(data);
-    setProfileDetials(parsedData);
-  } else {
-    setProfileDetials(null);
-  }
-};
+  const profileDetailsdata = useSelector((state: RootState) => state.userReducer.userDetails);
+  const profileImage = useSelector((state: RootState) => state.userReducer.profileImage);
   const GoalsData = [
     {
       id: '1',

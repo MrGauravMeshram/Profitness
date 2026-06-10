@@ -7,6 +7,18 @@ import CustomInput from '../../components/inputfield';
 import AuthButton from './component/AuthButton';
 import SocialButton from './component/SocialButton';
 import Toast from 'react-native-toast-message';
+import { GoogleOneTapSignIn }
+  from
+  'react-native-nitro-google-signin'
+  ;
+import auth, {
+  GoogleAuthProvider,
+} from '@react-native-firebase/auth';
+
+import {
+  isSuccessResponse,
+  isNoSavedCredentialFoundResponse,
+} from 'react-native-nitro-google-signin';
 import AuthFooter from './component/AuthFooter';
 import {
   getAuth
@@ -35,6 +47,7 @@ const RegisterScreen = ({ navigation }: any) => {
     email: '',
     password: '',
   });
+
 
   useEffect(() => {
     if (fullName.trim() === '') {
@@ -119,8 +132,9 @@ const RegisterScreen = ({ navigation }: any) => {
       return;
     }
 
-    createUserWithEmailAndPassword(getAuth(), email, password)
-      .then(() => {
+     createUserWithEmailAndPassword(getAuth(), email, password)
+      .then(async () => {
+        await auth().signOut();
         Toast.show({
           type: 'success',
           text1: 'Account created successfully',
@@ -129,7 +143,7 @@ const RegisterScreen = ({ navigation }: any) => {
           bottomOffset: 70,
           position: 'bottom'
         });
-        navigation.goBack()
+        navigation.goBack();
       })
       .catch((err: any) => {
         console.log("Firebase Error:", err);
@@ -144,6 +158,63 @@ const RegisterScreen = ({ navigation }: any) => {
         }
       });
   };
+
+  const signInWithGoogle = async () => {
+    try {
+      await GoogleOneTapSignIn.checkPlayServices();
+
+      // On Register, we call createAccount() directly to show the account picker
+      // (giving options to choose/register different emails)
+      let response = await GoogleOneTapSignIn.createAccount();
+      console.log('Google createAccount response:', response);
+
+      if (isNoSavedCredentialFoundResponse(response)) {
+        console.log('No saved credential found, calling presentExplicitSignIn...');
+        response = await GoogleOneTapSignIn.presentExplicitSignIn();
+        console.log('Google presentExplicitSignIn response:', response);
+      }
+
+      if (!isSuccessResponse(response)) {
+        console.log('Google Sign-In response was not successful:', response);
+        return;
+      }
+
+      const { idToken } = response.data;
+      if (!idToken) {
+        throw new Error('No ID Token received from Google Sign-In');
+      }
+
+      const googleCredential =
+        GoogleAuthProvider.credential(idToken);
+
+      const userCredential = await auth().signInWithCredential(
+        googleCredential,
+      );
+
+      const isNewUser = userCredential.additionalUserInfo?.isNewUser;
+      if (!isNewUser) {
+        console.log('User already registered. Signing out and navigating to Login...');
+        await auth().signOut();
+        Alert.alert('Account Exists', 'This email is already registered. Please log in.');
+        navigation.goBack();
+        return;
+      }
+
+      console.log('New user registered with Google. Signing out and navigating to Login...');
+      await auth().signOut();
+      Toast.show({
+        type: 'success',
+        text1: 'Google Register Success. Please log in.',
+        position: 'bottom',
+      });
+      navigation.goBack();
+
+    } catch (error) {
+      console.log('Google Sign-In error:', error);
+      Alert.alert('Google Sign-In Error', error instanceof Error ? error.message : String(error));
+    }
+  };
+
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -209,6 +280,7 @@ const RegisterScreen = ({ navigation }: any) => {
               <SocialButton
                 title="Connect with Google"
                 icon={require('../../assets/png/google.png')}
+                onPress={signInWithGoogle}
               />
 
               <SocialButton

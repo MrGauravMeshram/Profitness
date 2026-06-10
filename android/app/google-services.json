@@ -12,7 +12,20 @@
           "package_name": "com.profitness"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "985481949917-g6qqi9ebsug8tppc3dbei03cool6ibpo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.profitness",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "985481949917-b3hum8it775kv7jurljueb0214fb616q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBrpe_XkW9LJsDBA8yghTjJ9CTkKhNvK88"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "985481949917-b3hum8it775kv7jurljueb0214fb616q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
