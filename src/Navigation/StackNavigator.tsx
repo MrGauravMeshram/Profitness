@@ -53,8 +53,9 @@ const StackNavigation = () => {
   const dispatch = useDispatch();
   const [initialRoute, setInitialRoute] = useState<string | null>(null);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [userLogin, setUserlogin] = useState<any>(null)
-  const [initializing, setInitializing] = useState(true)
+  const [userLogin, setUserlogin] = useState<any>(null);
+  const [initializing, setInitializing] = useState(true);
+  const [showSplash, setShowSplash] = useState(true);
 
 
   useEffect(() => {
@@ -68,7 +69,6 @@ const StackNavigation = () => {
 
 
   const handleAuthChange = async (user: any) => {
-    setUserlogin(user);
     if (user) {
       dispatch(
         setUser({
@@ -101,9 +101,11 @@ const StackNavigation = () => {
       }
 
       await onBoardingStatus(user.uid);
+      setUserlogin(user);
     } else {
       dispatch(clearUser());
       await onBoardingStatus(null);
+      setUserlogin(null);
     }
 
     if (initializing) setInitializing(false);
@@ -201,13 +203,25 @@ const StackNavigation = () => {
           </>
         ) : (
           <>
-            <Stack.Screen name="Splash" component={Splash} />
-            <Stack.Screen name="Login" component={Login} />
+            {showSplash && (
+              <Stack.Screen name="Splash">
+                {props => <Splash {...props} onFinish={() => setShowSplash(false)} />}
+              </Stack.Screen>
+            )}
+            {isCompleted ? (
+              <>
+                <Stack.Screen name="Login" component={Login} />
+                <Stack.Screen name="Onboarding" component={Onboarding} />
+              </>
+            ) : (
+              <>
+                <Stack.Screen name="Onboarding" component={Onboarding} />
+                <Stack.Screen name="Login" component={Login} />
+              </>
+            )}
             <Stack.Screen name="Signup" component={Signup} />
             <Stack.Screen name="Forgot" component={Forgot} />
             <Stack.Screen name="Verify" component={Verify} />
-
-            <Stack.Screen name="Onboarding" component={Onboarding} />
           </>
         )}
       </Stack.Navigator>

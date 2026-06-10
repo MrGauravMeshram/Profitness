@@ -4,19 +4,27 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
-const SplashScreen = ({ navigation }: any) => {
+const SplashScreen = ({ navigation, onFinish }: any) => {
   useEffect(() => {
     const checkStatusAndNavigate = async () => {
       try {
         const steppingCompleted = await AsyncStorage.getItem('steppingCompleted');
-        if (steppingCompleted === 'true') {
-          navigation.navigate('Login');
+        if (onFinish) {
+          onFinish();
         } else {
-          navigation.navigate('Onboarding');
+          if (steppingCompleted === 'true') {
+            navigation.navigate('Login');
+          } else {
+            navigation.navigate('Onboarding');
+          }
         }
       } catch (error) {
         console.log(error);
-        navigation.navigate('Onboarding');
+        if (onFinish) {
+          onFinish();
+        } else {
+          navigation.navigate('Onboarding');
+        }
       }
     };
 
@@ -25,7 +33,7 @@ const SplashScreen = ({ navigation }: any) => {
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [navigation]);
+  }, [navigation, onFinish]);
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>

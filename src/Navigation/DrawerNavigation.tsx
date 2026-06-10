@@ -122,6 +122,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     );
   };
   const { userDetails } = useSelector((state: RootState) => state.userReducer)
+  const { profileImage } = useSelector((state: RootState) => state.userReducer)
   console.log("userDetails", userDetails)
 
   return (
@@ -140,7 +141,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         </TouchableOpacity>
 
         <Image
-          source={require('../assets/png/profile2.png')}
+          source={profileImage ? { uri: profileImage } : require('../assets/png/profile2.png')}
           style={styles.profileImage}
         />
         <Text style={styles.name}>{userDetails?.userName}</Text>

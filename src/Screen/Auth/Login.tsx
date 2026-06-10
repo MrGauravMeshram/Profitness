@@ -15,6 +15,8 @@ import { useDispatch, UseDispatch } from 'react-redux';
 import { setUser } from '../../Storage/Redux/slice';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { GoogleOneTapSignIn, isSuccessResponse, isNoSavedCredentialFoundResponse } from 'react-native-nitro-google-signin';
+import { Storage } from '../../Storage/MMkvstore';
+
 const Login = ({ navigation }: any) => {
   const [checkValidation, setValidation] = useState<any>({
     email: 'required',
@@ -92,7 +94,6 @@ const uid = auth.currentUser?.uid;
           visibilityTime: 2000,
           autoHide: true,
         });
-        getData(user.uid); 
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -127,20 +128,6 @@ const uid = auth.currentUser?.uid;
       });
   };
 
-  const getData = async (userUid?: string) => {
-    try {
-      const key = userUid ? `steppingCompleted_${userUid}` : 'steppingCompleted';
-      const value = await AsyncStorage.getItem(key);
-      if (value !== 'true') {
-        navigation.navigate('Favorite');
-      } else {
-        navigation.navigate('Main');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const signInWithGoogle = async () => {
     try {
       await GoogleOneTapSignIn.checkPlayServices();
@@ -173,17 +160,41 @@ const uid = auth.currentUser?.uid;
       const googleCredential =
         GoogleAuthProvider.credential(idToken);
 
-      await getAuth().signInWithCredential(
+      const userCredential = await getAuth().signInWithCredential(
         googleCredential,
       );
+
+      const user = userCredential.user;
+      if (user) {
+        const detailsExist = Storage.getString(`userDetails_${user.uid}`);
+        if (!detailsExist) {
+          const profileData = {
+            userName: user.displayName || '',
+            userNumber: user.phoneNumber || '',
+            userEmail: user.email || '',
+            userWeight: '',
+            userHeight: '',
+            userGender: '',
+            userAge: '',
+            userWeightUnit: 'KG',
+            userHeightUnit: 'CM',
+          };
+          Storage.set(`userDetails_${user.uid}`, JSON.stringify(profileData));
+          if (user.photoURL) {
+            try {
+              await AsyncStorage.setItem(`ImageContainer_${user.uid}`, user.photoURL);
+            } catch (storageError) {
+              console.log("Error saving profile image:", storageError);
+            }
+          }
+        }
+      }
 
       Toast.show({
         type: 'success',
         text1: 'Login Successfully',
         position: 'bottom',
       });
-      const currentGoogleUser = getAuth().currentUser;
-      getData(currentGoogleUser?.uid);
 
     } catch (error) {
       console.log('Google Sign-In error:', error);

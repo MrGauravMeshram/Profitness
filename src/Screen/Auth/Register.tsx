@@ -29,6 +29,9 @@ import {
   '@react-native-firebase/auth'
   ;
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Storage } from '../../Storage/MMkvstore';
+
 
 const RegisterScreen = ({ navigation }: any) => {
   const [fullName, setFullName] = useState('');
@@ -133,7 +136,28 @@ const RegisterScreen = ({ navigation }: any) => {
     }
 
      createUserWithEmailAndPassword(getAuth(), email, password)
-      .then(async () => {
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+        if (user) {
+          try {
+            await user.updateProfile({ displayName: fullName });
+          } catch (profileError) {
+            console.log("Error updating user display name:", profileError);
+          }
+          const profileData = {
+            userName: fullName,
+            userNumber: phone,
+            userEmail: email,
+            userWeight: '',
+            userHeight: '',
+            userGender: '',
+            userAge: '',
+            userWeightUnit: 'KG',
+            userHeightUnit: 'CM',
+          };
+          Storage.set(`userDetails_${user.uid}`, JSON.stringify(profileData));
+        }
+
         await auth().signOut();
         Toast.show({
           type: 'success',
@@ -201,6 +225,29 @@ const RegisterScreen = ({ navigation }: any) => {
       }
 
       console.log('New user registered with Google. Signing out and navigating to Login...');
+      const user = userCredential.user;
+      if (user) {
+        const profileData = {
+          userName: user.displayName || '',
+          userNumber: user.phoneNumber || '',
+          userEmail: user.email || '',
+          userWeight: '',
+          userHeight: '',
+          userGender: '',
+          userAge: '',
+          userWeightUnit: 'KG',
+          userHeightUnit: 'CM',
+        };
+        Storage.set(`userDetails_${user.uid}`, JSON.stringify(profileData));
+        if (user.photoURL) {
+          try {
+            await AsyncStorage.setItem(`ImageContainer_${user.uid}`, user.photoURL);
+          } catch (storageError) {
+            console.log("Error saving profile image:", storageError);
+          }
+        }
+      }
+
       await auth().signOut();
       Toast.show({
         type: 'success',
