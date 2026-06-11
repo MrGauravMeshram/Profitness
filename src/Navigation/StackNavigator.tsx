@@ -157,7 +157,7 @@ const StackNavigation = () => {
               name="ExerciseDetails"
               component={ExerciseDetialsScreen}
               options={{
-                animation: "fade",
+                animation: "none",
                 headerShown: false,
               }}
             />

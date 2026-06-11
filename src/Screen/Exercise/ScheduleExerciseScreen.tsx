@@ -114,7 +114,7 @@ const ScheduleExerciseScreen = ({ navigation }: any) => {
                 triggerDate.setDate(triggerDate.getDate() + 7);
             }
 
-            // Check if exact alarms are permitted (Android 12+)
+
             const settings = await notifee.getNotificationSettings();
             if (settings.android.alarm === AndroidNotificationSetting.DISABLED) {
                 Toast.show({

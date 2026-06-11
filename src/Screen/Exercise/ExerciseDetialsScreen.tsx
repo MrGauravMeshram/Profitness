@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  StatusBar
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -16,8 +17,10 @@ import Animated, {
   useAnimatedScrollHandler,
   interpolate,
   useAnimatedRef,
+  SharedTransition
 } from 'react-native-reanimated'
 import React, { useState } from 'react'
+
 import Selector from '../../components/Selector'
 import { ProgramData } from './Data/programData'
 import { ExerciseCardData } from './Data/ExerciseData'
@@ -84,9 +87,15 @@ const ExerciseDetailsScreen = ({ navigation, route }: Props) => {
   });
 
   const Insets = useSafeAreaInsets();
+  const transition = SharedTransition.duration(330) as any;
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FFF' }}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
       <Animated.ScrollView
         ref={ScrollViewRef}
         scrollEventThrottle={16}
@@ -163,6 +172,7 @@ const ExerciseDetailsScreen = ({ navigation, route }: Props) => {
                 kcal={ex.kcal}
                 level={ex.level}
                 onPress={() => { }}
+                disableTransition={true}
               />
               {index !== ExerciseCardData[selected].length - 1 && (
                 <View style={styles.lines} />
@@ -173,15 +183,16 @@ const ExerciseDetailsScreen = ({ navigation, route }: Props) => {
       </Animated.ScrollView>
 
 
-      <Animated.View style={[styles.headerContainer, headerAnimatedStyle]}>
-        {item && (
-          <Image
-            source={{ uri: item.image }}
-            style={styles.detailImage}
-            resizeMode="cover"
-          />
-        )}
-        {/* Banner Box (Kcal and Time) */}
+      {item && (
+        <Animated.Image
+          source={{ uri: item.image }}
+          sharedTransitionTag={`Exercise-${item.id}`}
+          style={[styles.headerContainer, headerAnimatedStyle,]}
+          resizeMode="cover"
+        />
+      )}
+
+      <Animated.View style={[styles.headerContainer, headerAnimatedStyle, { backgroundColor: 'transparent' }]} pointerEvents="box-none">
         <View style={styles.bannerBox}>
           <View style={styles.innerText}>
             <MaterialCommunityIcons

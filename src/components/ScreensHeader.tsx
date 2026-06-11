@@ -12,7 +12,7 @@ type Props = {
   onFilterPress?: () => void;
 };
 
-const Header = ({ title, navigation, name, icon="chevron-back", onFilterPress }: Props) => {
+const Header = ({ title, navigation, name, icon = "chevron-back", onFilterPress }: Props) => {
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -35,10 +35,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-   
-  
+    textAlign: "center",
+    elevation: 5,
     paddingHorizontal: 20,
     paddingTop: 20,
+    paddingBottom: 10,
   },
 
   headerTitle: {

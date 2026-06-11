@@ -1,4 +1,4 @@
-import { View, StyleSheet, FlatList, ScrollView, BackHandler } from 'react-native';
+import { View, StyleSheet, FlatList, ScrollView, BackHandler, StatusBar } from 'react-native';
 import Toast from 'react-native-toast-message';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
@@ -95,6 +95,11 @@ const Exercise = ({ navigation }: any) => {
   }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <ScrollView
         stickyHeaderIndices={[1]}
         contentContainerStyle={{ paddingBottom: 100 }}

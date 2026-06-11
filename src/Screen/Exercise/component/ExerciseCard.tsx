@@ -2,7 +2,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import React, { useState } from 'react'
 import { Skeleton } from '@rneui/themed'
-import Animated from 'react-native-reanimated'
+import Animated, { SharedTransition } from 'react-native-reanimated'
 import LinearGradient from 'react-native-linear-gradient'
 
 
@@ -16,8 +16,12 @@ type PropsCard = {
   image: any
   loader?: boolean
   onPress: () => void
+  disableTransition?: boolean
 }
-const ExerciseCard = ({ id, title, subtitle, kcal, time, level, image, onPress, loader }: PropsCard) => {
+const transition = SharedTransition.duration(550).springify() as any;
+
+
+const ExerciseCard = ({ id, title, subtitle, kcal, time, level, image, onPress, loader, disableTransition }: PropsCard) => {
   const [imageLoading, setImageLoading] = useState(true);
   if (loader) {
     return (
@@ -57,8 +61,8 @@ const ExerciseCard = ({ id, title, subtitle, kcal, time, level, image, onPress, 
     <TouchableOpacity onPress={onPress}>
       <View style={style.container}>
 
-        <View style={style.ImageContainer}>
-          <View style={style.ImageContainer}>
+        <View style={style.ImageContainer} collapsable={false}>
+          <View style={style.ImageContainer} collapsable={false}>
             {imageLoading && (
               <Skeleton
                 width="100%"
@@ -73,7 +77,7 @@ const ExerciseCard = ({ id, title, subtitle, kcal, time, level, image, onPress, 
             )}
 
             <Animated.Image
-              sharedTransitionTag={`Exercise-${id}`}
+              sharedTransitionTag={disableTransition ? undefined : `Exercise-${id}`}
               source={{ uri: image }}
               style={style.image}
               onLoadStart={() => setImageLoading(true)}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
   View,
@@ -15,37 +15,30 @@ import Header from '../../components/ScreensHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PremiumModal from '../../components/Modal';
 import ExerciseList from '../Home/components/PopularExercise';
+import { PopularData } from './Data/PopularExerciseData'
+import FAB from '../Home/components/FAB';
 
 const TrainingScreen = ({ navigation }: any) => {
   const [modalVisible, setModalVisible] =
-  useState(true);
-  const [selectedTab, setSelectedTab] = useState('Beginner');
+    useState(true);
+  const [fullExerciseData, setFullExercise] = useState<any[]>([]);
+  const [selectedTab, setSelectedTab] = useState<'Beginner' | 'Intermediate' | 'Advanced'>('Beginner');
+  const [isLoader, setIsLoader] = useState(true);
 
-  const tabs = ['Beginner', 'Intermediate', 'Advanced'];
+  const tabs: ('Beginner' | 'Intermediate' | 'Advanced')[] = ['Beginner', 'Intermediate', 'Advanced'];
 
-  const popularData = [
-    {
-      id: '1',
-      image: require('../../assets/png/manStr.png'),
-      title: 'Full Shot Woman Stretching Arm',
-      level: 'Beginner',
-      duration: '30 min',
-    },
-    {
-      id: '2',
-      image: require('../../assets/png/mandumbel.png'),
-      title: 'Athletic Practicing Claps hands Arm Balance',
-      level: 'Beginner',
-      duration: '50 min',
-    },
-    {
-      id: '3',
-      image: require('../../assets/png/train3.png'),
-      title: 'Athlete Practicing Monochrome',
-      level: 'Beginner',
-      duration: '20 min',
-    },
-  ];
+
+  useEffect(() => {
+    setIsLoader(true);
+
+    const timer = setTimeout(() => {
+      const fullExercise = PopularData[selectedTab] || [];
+      setFullExercise(fullExercise);
+      setIsLoader(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [selectedTab]);
 
   const forYouData = [
     {
@@ -70,14 +63,14 @@ const TrainingScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Header
-          name="funnel-outline"
-          title="TRAINING"
-          navigation={navigation}
-          onFilterPress={() => navigation.navigate('Filter')}
-        />
 
+      <Header
+        name="funnel-outline"
+        title="TRAINING"
+        navigation={navigation}
+        onFilterPress={() => navigation.navigate('Filter')}
+      />
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.tabsRow}>
           {tabs.map(tab => {
             const active = selectedTab === tab;
@@ -100,10 +93,10 @@ const TrainingScreen = ({ navigation }: any) => {
         <ExerciseList
           heading="Popular Training"
           buttonText=""
-          data={popularData}
+          data={fullExerciseData as any}
+          loader={isLoader}
         />
 
-        {/* Just For You */}
         <View style={styles.forYouContainer}>
           <Text style={styles.forYouHeading}>Just For you</Text>
 
@@ -147,19 +140,20 @@ const TrainingScreen = ({ navigation }: any) => {
         </View>
       </ScrollView>
 
-      <TouchableOpacity activeOpacity={0.8} style={styles.floatingButton}>
-        <Ionicons name="add" size={28} color="#FFF" />
-      </TouchableOpacity>
-     {
-  modalVisible && (
-    <PremiumModal
-      navigation={navigation}
-      onClose={() =>
-        setModalVisible(false)
+      <View style={{ position: 'absolute', right: 20, bottom: 30, zIndex: 999 }}>
+        <FAB />
+      </View>
+
+      {
+        modalVisible && (
+          <PremiumModal
+            navigation={navigation}
+            onClose={() =>
+              setModalVisible(false)
+            }
+          />
+        )
       }
-    />
-  )
-}
     </SafeAreaView>
   );
 };

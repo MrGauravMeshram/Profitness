@@ -1,14 +1,14 @@
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, BackHandler, Pressable } from 'react-native';
 import Toast from 'react-native-toast-message';
-import React, { useState,useEffect ,useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../../components/ScreensHeader';
 import { WeekData } from '../../Data/WeekData';
-import {Months} from './Data/MonthData'
+import { Months } from './Data/MonthData'
 import { Food } from './Data/Data';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import PopularExercise from '../Home/components/PopularExercise';
 import { FoodData } from './Data/FoodData';
 import Selector from '../../components/Selector';
@@ -16,101 +16,100 @@ import WeekCard from '../Exercise/component/WeekCard';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const MealPlanScreen = ({ navigation }: any) => {
- const [monthIndex, setMonthIndex] = useState(new Date().getMonth());
+  const [monthIndex, setMonthIndex] = useState(new Date().getMonth());
   const [selected, setSelected] = useState(new Date().getDay());
   const [isChoose, setChoose] = useState(0);
+
   const [selectedMeal, setSelectedMeal] = useState<any>('BreakFast');
 
-  const [loader,setloader]= useState(true);
-const [itemdata, setItemdata] = useState<any[]>([]);
-const date = new Date();
-const currentMonth = date.toLocaleString('default', {
-  month: 'long',
-});
-const year = date.getFullYear();
-var currentDay = date.getDate();
-const currentmeal = FoodData[selectedMeal]
-useEffect(() => {
-  setloader(true);
+  const [loader, setloader] = useState(true);
+  const [itemdata, setItemdata] = useState<any[]>([]);
+  const date = new Date();
+  const currentMonth = date.toLocaleString('default', {
+    month: 'long',
+  });
+  const year = date.getFullYear();
+  var currentDay = date.getDate();
+  const currentmeal = FoodData[selectedMeal]
+  useEffect(() => {
+    setloader(true);
 
-  const timer = setTimeout(() => {
-   setItemdata(
-  FoodData.BreakFast.map(item => ({
-    ...item,
-    isFavorite: false,
-  })),
-);
-    setloader(false);
-  }, 500);
+    const timer = setTimeout(() => {
+      setItemdata(
+        FoodData.BreakFast.map(item => ({
+          ...item,
+          isFavorite: false,
+        })),
+      );
+      setloader(false);
+    }, 500);
 
-  return () => clearTimeout(timer);
-}, []);
-useEffect(() => {
-  console.log('itemdata updated', JSON.stringify(itemdata, null, 2));
-}, [itemdata]);
- 
-         useFocusEffect(
-  useCallback(() => {
-    let backPressedOnce = false;
+    return () => clearTimeout(timer);
+  }, []);
+  useEffect(() => {
+    console.log('itemdata updated', JSON.stringify(itemdata, null, 2));
+  }, [itemdata]);
 
-    const backAction = () => {
-      if (backPressedOnce) {
-        BackHandler.exitApp();
+  useFocusEffect(
+    useCallback(() => {
+      let backPressedOnce = false;
+
+      const backAction = () => {
+        if (backPressedOnce) {
+          BackHandler.exitApp();
+          return true;
+        }
+
+        backPressedOnce = true;
+
+        Toast.show({
+          type: 'info',
+          text1: 'Press back again to exit',
+          position: 'bottom',
+        });
+
+        setTimeout(() => {
+          backPressedOnce = false;
+        }, 1500);
+
         return true;
-      }
+      };
 
-      backPressedOnce = true;
 
-      Toast.show({
-        type: 'info',
-        text1: 'Press back again to exit',
-        position: 'bottom',
-      });
 
-      setTimeout(() => {
-        backPressedOnce = false;
-      }, 1500);
 
-      return true;
-    };
 
-   
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction,
+      );
 
-   
-    // const handlePrev = ()=>{
-    //   setCurrentMonth(Months[])
-    // }
-    const subscription = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
-
-    return () => subscription.remove();
-  }, []),
-);
-
- const handleNext = () => {
-  setMonthIndex((prev) => (prev + 1) % Months.length);
-};
-const handlePrev = () => {
-  setMonthIndex((prev) =>
-    prev === 0 ? Months.length - 1 : prev - 1
+      return () => subscription.remove();
+    }, []),
   );
-};
+
+  const handleNext = () => {
+    setMonthIndex((prev) => (prev + 1) % Months.length);
+  };
+  const handlePrev = () => {
+    setMonthIndex((prev) =>
+      prev === 0 ? Months.length - 1 : prev - 1
+    );
+  };
   const renderWeekData = ({ item, index }: any) => (
     <Pressable onPress={() => setSelected(index)}>
       <WeekCard days={item.day} date={item.date} active={selected === index} />
     </Pressable>
   );
- const handleFavorite = (item: any) => {
-  setItemdata(prev =>
-    prev.map(food =>
-      String(food.id) === String(item.id)
-        ? { ...food, isFavorite: !food.isFavorite }
-        : food,
-    ),
-  );
-};
+  const handleFavorite = (item: any) => {
+    setItemdata(prev =>
+      prev.map(food =>
+        String(food.id) === String(item.id)
+          ? { ...food, isFavorite: !food.isFavorite }
+          : food,
+      ),
+    );
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -118,7 +117,7 @@ const handlePrev = () => {
         <Header
           title="MEAL PLAN"
           name="funnel"
-          onFilterPress={() => {}}
+          onFilterPress={() => { }}
           navigation={navigation}
           icon={null}
         />
@@ -128,16 +127,16 @@ const handlePrev = () => {
         contentContainerStyle={{ paddingBottom: 120 }}>
         <View style={Styles.dateContainer}>
           <TouchableOpacity onPress={handlePrev} >
-          <MaterialIcons name="keyboard-arrow-left" size={28} color="black" />
+            <MaterialIcons name="keyboard-arrow-left" size={28} color="black" />
           </TouchableOpacity>
           <View style={{ alignItems: 'center' }}>
             <Text style={Styles.dateText}>
- {Months[monthIndex]}
-</Text>
+              {Months[monthIndex]}
+            </Text>
             <Text style={Styles.year}>{year}</Text>
           </View>
           <TouchableOpacity onPress={handleNext}>
-          <MaterialIcons name="keyboard-arrow-right" size={28} color="black"/>
+            <MaterialIcons name="keyboard-arrow-right" size={28} color="black" />
           </TouchableOpacity>
         </View>
         <View>
@@ -157,28 +156,28 @@ const handlePrev = () => {
               key={idx}
               title={title}
               active={selectedMeal === title}
-            onPress={() => setSelectedMeal(title)}
+              onPress={() => setSelectedMeal(title)}
             />
           ))}
         </View>
         <View style={Styles.mealText}>
           <Text style={Styles.text}>15 meals</Text>
         </View>
-      <PopularExercise
-  data={currentmeal.map(item => ({
-    id: item.id.toString(),
-    image: item.image,
-    title: item.title,
-    level: item.kcal,
-    duration: item.time,
-    isFavorite: item.isFavorite,
-  }))}
-  onPressItem={(item: any) =>
-    navigation.push('MealDetails', { item })
-  }
-  onPressFavorite={handleFavorite}
-  loader={loader}
-/>
+        <PopularExercise
+          data={currentmeal.map(item => ({
+            id: item.id.toString(),
+            image: item.image,
+            title: item.title,
+            level: item.kcal,
+            duration: item.time,
+            isFavorite: item.isFavorite,
+          }))}
+          onPressItem={(item: any) =>
+            navigation.push('MealDetails', { item })
+          }
+          onPressFavorite={handleFavorite}
+          loader={loader}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -196,8 +195,8 @@ const Styles = StyleSheet.create({
   dateText: {
     fontFamily: 'Montserrat-SemiBold',
     fontSize: 16,
-    textAlign:"center",
-    minWidth:90
+    textAlign: "center",
+    minWidth: 90
   },
   year: {
     fontFamily: 'Montserrat-Medium',

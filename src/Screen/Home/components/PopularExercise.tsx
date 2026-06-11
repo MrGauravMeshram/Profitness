@@ -52,9 +52,10 @@ const ExerciseList = ({
   isFavorite
 }: Props) => {
   const [isLoaded, setIsLoaded] = useState(true)
-   const [isLiked,setisLiked] = useState(false);
-  const transition = SharedTransition.duration(350) as any;
- 
+  const [isLiked, setisLiked] = useState(false);
+  const transition = SharedTransition.duration(550).springify() as any;
+
+
   if (loader) {
     return (
       <View style={[styles.container, { paddingTop: 30 }]}>
@@ -154,10 +155,10 @@ const ExerciseList = ({
                     style={styles.favoriteButton}
                     onPress={() => onPressFavorite?.(item)}>
                     {item.isFavorite ? (
-  <FontAwesome name="heart" color="red" size={24} />
-) : (
-  <Feather name="heart" color="#000" size={24} />
-)}
+                      <FontAwesome name="heart" color="red" size={24} />
+                    ) : (
+                      <Feather name="heart" color="#000" size={24} />
+                    )}
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.title}>{item.title}</Text>

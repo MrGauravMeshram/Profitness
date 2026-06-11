@@ -41,7 +41,7 @@ const MealDetailsScreen = ({ route }: Props & any) => {
     },
   ];
   console.log('detail item', item.id);
-  const transition = SharedTransition.duration(330) as any;
+  const transition = SharedTransition.duration(300).springify(200) as any;
   return (
     <View style={styles.root}>
       <ScrollView
@@ -52,7 +52,7 @@ const MealDetailsScreen = ({ route }: Props & any) => {
           <View style={styles.heroContainer}>
 
             <Animated.Image
-              source={{uri : item.image}}
+              source={{ uri: item.image }}
               sharedTransitionTag={`meal-${item.id}`}
               sharedTransitionStyle={transition}
               style={styles.heroImage}
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   heroImage: {
     width: '100%',
-    height: 350,
+    height: 380,
     borderRadius: 18,
   },
 
