@@ -156,17 +156,10 @@ const StackNavigation = () => {
             <Stack.Screen
               name="ExerciseDetails"
               component={ExerciseDetialsScreen}
-              options={({ navigation }) => ({
+              options={{
                 animation: "fade",
-                headerShown: true,
-                headerTransparent: true,
-                headerTitle: '',
-                headerLeft: () => (
-                  <TouchableOpacity onPress={() => navigation.goBack()} style={{ backgroundColor: "#FFF", borderRadius: 50 }}>
-                    <MaterialIcons name="keyboard-arrow-left" color="#000" size={24} />
-                  </TouchableOpacity>
-                )
-              })}
+                headerShown: false,
+              }}
             />
             <Stack.Screen
               name="ScheduleExercise"

@@ -14,18 +14,18 @@ import Animated, {
   LinearTransition,
   withTiming,
 } from 'react-native-reanimated';
+import { ImageSourcePropType } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { Skeleton } from '@rneui/themed';
 import LinearGradient from 'react-native-linear-gradient';
 type ExerciseItem = {
   id: string;
-  image: any;
+  image: string | ImageSourcePropType;
   title: string;
   level: string;
   duration: string;
   isFavorite?: boolean;
-
 };
 
 type Props = {

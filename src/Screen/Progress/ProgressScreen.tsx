@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import LinearGradient from 'react-native-linear-gradient';
 import Selector from '../../components/Selector';
 import Card from '../DashBoard/Component/Card';
+import { BarChart } from "react-native-gifted-charts";
 import {WeekData} from '../../Data/WeekData';
 import {ProgressData} from './Data/ProgressData.ts';
 

@@ -6,15 +6,15 @@ import { Toastconfig } from './src/components/Toast/Toast';
 import Netinfo from '@react-native-community/netinfo';
 import { getStaticFeatureFlag } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider } from 'react-redux';
 import { store } from './src/Storage/Redux/store';
-import { UseDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
+import notifee, { AndroidImportance } from '@notifee/react-native';
 import NoInternetScreen from './src/Screen/NoInternetScreen/NoInternetScreen';
 import { GoogleOneTapSignIn } from 'react-native-nitro-google-signin';
 import { getAuth } from '@react-native-firebase/auth';
-import { setUser } from './src/Storage/Redux/slice';
+
 import { Storage } from './src/Storage/MMkvstore';
 
 const auth = getAuth();
@@ -32,14 +32,13 @@ const App = () => {
     try {
       const keys = await AsyncStorage.getAllKeys();
 
-      console.log('===== AsyncStorage Data =====');
       for (const key of keys) {
         const value = await AsyncStorage.getItem(key);
         console.log(`${key}:`, value);
       }
 
       const mmkvKeys = Storage.getAllKeys();
-      console.log('===== MMKV Data =====');
+
       mmkvKeys.forEach(key => {
         const value = Storage.getString(key);
         console.log(`${key}:`, value);
@@ -48,6 +47,19 @@ const App = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    createChannel();
+  }, []);
+
+  const createChannel = async () => {
+    await notifee.createChannel({
+      id: 'exercise',
+      name: 'Exercise Reminder',
+      importance: AndroidImportance.HIGH,
+    });
+  };
+
   useEffect(() => {
     printAllStorage();
   }, []);
@@ -96,5 +108,6 @@ const App = () => {
     </>
   )
 }
+
 
 export default App

@@ -16,23 +16,30 @@ import WeekCard from '../Exercise/component/WeekCard';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const MealPlanScreen = ({ navigation }: any) => {
- const [monthIndex, setMonthIndex] = useState(0);
-  const [selected, setSelected] = useState(0);
+ const [monthIndex, setMonthIndex] = useState(new Date().getMonth());
+  const [selected, setSelected] = useState(new Date().getDay());
   const [isChoose, setChoose] = useState(0);
+  const [selectedMeal, setSelectedMeal] = useState<any>('BreakFast');
 
   const [loader,setloader]= useState(true);
 const [itemdata, setItemdata] = useState<any[]>([]);
-
+const date = new Date();
+const currentMonth = date.toLocaleString('default', {
+  month: 'long',
+});
+const year = date.getFullYear();
+var currentDay = date.getDate();
+const currentmeal = FoodData[selectedMeal]
 useEffect(() => {
   setloader(true);
 
   const timer = setTimeout(() => {
-    setItemdata(
-      FoodData.map(item => ({
-        ...item,
-        isFavorite: false,
-      })),
-    );
+   setItemdata(
+  FoodData.BreakFast.map(item => ({
+    ...item,
+    isFavorite: false,
+  })),
+);
     setloader(false);
   }, 500);
 
@@ -125,9 +132,9 @@ const handlePrev = () => {
           </TouchableOpacity>
           <View style={{ alignItems: 'center' }}>
             <Text style={Styles.dateText}>
-  {Months[monthIndex]}
+ {Months[monthIndex]}
 </Text>
-            <Text style={Styles.year}>2026</Text>
+            <Text style={Styles.year}>{year}</Text>
           </View>
           <TouchableOpacity onPress={handleNext}>
           <MaterialIcons name="keyboard-arrow-right" size={28} color="black"/>
@@ -149,8 +156,8 @@ const handlePrev = () => {
             <Selector
               key={idx}
               title={title}
-              active={isChoose === idx}
-              onPress={() => setChoose(idx)}
+              active={selectedMeal === title}
+            onPress={() => setSelectedMeal(title)}
             />
           ))}
         </View>
@@ -158,7 +165,7 @@ const handlePrev = () => {
           <Text style={Styles.text}>15 meals</Text>
         </View>
       <PopularExercise
-  data={itemdata.map(item => ({
+  data={currentmeal.map(item => ({
     id: item.id.toString(),
     image: item.image,
     title: item.title,
