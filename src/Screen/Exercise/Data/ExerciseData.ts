@@ -149,4 +149,52 @@ export const ExerciseCardData = {
     image: 'https://images.unsplash.com/....',
   },
 ],
+Biceps: [
+  {
+    id: 18,
+    title: 'Dumbbell Curl',
+    kcal: '110 kcal',
+    time: '8 min',
+    level: 'Beginner',
+    image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438',
+  },
+  {
+    id: 19,
+    title: 'Hammer Curl',
+    kcal: '120 kcal',
+    time: '9 min',
+    level: 'Beginner',
+    image: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e',
+  },
+],
+
+Triceps: [
+  {
+    id: 20,
+    title: 'Tricep Dips',
+    kcal: '125 kcal',
+    time: '10 min',
+    level: 'Beginner',
+    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b',
+  },
+  {
+    id: 21,
+    title: 'Cable Pushdown',
+    kcal: '145 kcal',
+    time: '12 min',
+    level: 'Intermediate',
+    image: 'https://images.unsplash.com/photo-1594737625785-cf2d9d58d0f9',
+  },
+],
+
+Shoulders: [
+  {
+    id: 22,
+    title: 'Shoulder Press',
+    kcal: '120 kcal',
+    time: '10 min',
+    level: 'Beginner',
+    image: 'https://images.unsplash.com/photo-1534258936925-c58bed479fcb',
+  },
+],
 };

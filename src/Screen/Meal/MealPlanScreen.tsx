@@ -3,7 +3,6 @@ import Toast from 'react-native-toast-message';
 import React, { useState, useEffect, useCallback } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import Header from '../../components/ScreensHeader';
 import { WeekData } from '../../Data/WeekData';
 import { Months } from './Data/MonthData'
@@ -14,29 +13,36 @@ import { FoodData } from './Data/FoodData';
 import Selector from '../../components/Selector';
 import WeekCard from '../Exercise/component/WeekCard';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useSelector, useDispatch } from 'react-redux';
+import { setMeal } from '../../Storage/Redux/filterSlice';
 
 const MealPlanScreen = ({ navigation }: any) => {
+  const dispatch = useDispatch();
+  const reduxMeal = useSelector((state: any) => state.filter.Meal);
+
   const [monthIndex, setMonthIndex] = useState(new Date().getMonth());
   const [selected, setSelected] = useState(new Date().getDay());
-  const [isChoose, setChoose] = useState(0);
 
-  const [selectedMeal, setSelectedMeal] = useState<any>('BreakFast');
+  const [selectedMeal, setSelectedMeal] = useState<any>('Breakfast');
 
   const [loader, setloader] = useState(true);
   const [itemdata, setItemdata] = useState<any[]>([]);
   const date = new Date();
-  const currentMonth = date.toLocaleString('default', {
-    month: 'long',
-  });
   const year = date.getFullYear();
-  var currentDay = date.getDate();
-  const currentmeal = FoodData[selectedMeal]
+
+  useEffect(() => {
+    if (reduxMeal) {
+      setSelectedMeal(reduxMeal);
+    }
+  }, [reduxMeal]);
+
   useEffect(() => {
     setloader(true);
 
     const timer = setTimeout(() => {
+      const foods = FoodData[selectedMeal as keyof typeof FoodData] || [];
       setItemdata(
-        FoodData.BreakFast.map(item => ({
+        foods.map(item => ({
           ...item,
           isFavorite: false,
         })),
@@ -45,7 +51,12 @@ const MealPlanScreen = ({ navigation }: any) => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [selectedMeal]);
+
+  const handleSelectMeal = (meal: string) => {
+    setSelectedMeal(meal);
+    dispatch(setMeal(meal));
+  };
   useEffect(() => {
     console.log('itemdata updated', JSON.stringify(itemdata, null, 2));
   }, [itemdata]);
@@ -116,8 +127,8 @@ const MealPlanScreen = ({ navigation }: any) => {
       <View style={{ paddingBottom: 15 }}>
         <Header
           title="MEAL PLAN"
-          name="funnel"
-          onFilterPress={() => { }}
+          name="funnel-outline"
+          onFilterPress={() => navigation.navigate('Filter')}
           navigation={navigation}
           icon={null}
         />
@@ -156,7 +167,7 @@ const MealPlanScreen = ({ navigation }: any) => {
               key={idx}
               title={title}
               active={selectedMeal === title}
-              onPress={() => setSelectedMeal(title)}
+              onPress={() => handleSelectMeal(title)}
             />
           ))}
         </View>
@@ -164,7 +175,7 @@ const MealPlanScreen = ({ navigation }: any) => {
           <Text style={Styles.text}>15 meals</Text>
         </View>
         <PopularExercise
-          data={currentmeal.map(item => ({
+          data={itemdata.map(item => ({
             id: item.id.toString(),
             image: item.image,
             title: item.title,

@@ -7,27 +7,79 @@ import Selector from '../../components/Selector';
 import ExerciseCard from './component/ExerciseCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ExerciseCardData } from './Data/ExerciseData'
-type ExerciseType = 'Cardio' | 'Legs' | 'Back' | 'Chest';
+import { useSelector, useDispatch } from 'react-redux';
+import { setExercise } from '../../Storage/Redux/filterSlice';
 const Exercise = ({ navigation }: any) => {
-  const [selected, setSelected] = useState<ExerciseType>('Cardio')
-  const [exerciselist, setExerciselist] = useState(ExerciseCardData[selected] || []);
+  const dispatch = useDispatch();
+
+  const selectedTime = useSelector(
+    (state:any) => state.filter.Time
+  );
+  const ExerciseFilter = useSelector(
+    (state: any) => state.filter.Exercise
+  );
+  const selectedLevel = useSelector(
+    (state: any) => state.filter.Level
+  );
+
+  const [selected, setSelected] = useState<any>('Cardio')
+  const [exerciselist, setExerciselist] = useState(ExerciseCardData[selected as keyof typeof ExerciseCardData] || []);
+
   const [loader, setLoader] = useState(true)
 
   useEffect(() => {
     setLoader(true);
 
-
     const timer = setTimeout(() => {
-      setExerciselist(ExerciseCardData[selected] || []);
+      let data = ExerciseCardData[selected as keyof typeof ExerciseCardData] || [];
+
+      if (selectedTime && selectedTime !== 'All') {
+        data = data.filter((item: any) => {
+          const minutes = parseInt(item.time);
+
+          switch (selectedTime) {
+            case '10-15 Min':
+              return minutes >= 10 && minutes <= 15;
+
+            case '15-30 Min':
+              return minutes >= 15 && minutes <= 30;
+
+            case '30-45 Min':
+              return minutes >= 30 && minutes <= 45;
+
+            default:
+              return true;
+          }
+        });
+      }
+
+      if (selectedLevel && selectedLevel !== 'All') {
+        data = data.filter((item: any) => item.level.toLowerCase() === selectedLevel.toLowerCase());
+      }
+
+      setExerciselist(data);
       setLoader(false);
     }, 500);
 
+    return () => clearTimeout(timer);
+  }, [selected, selectedTime, selectedLevel]);
+  
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [selected]);
+  useEffect(() => {
+    if (
+      ExerciseFilter &&
+      ExerciseFilter !== 'All'
+    ) {
+      setSelected(ExerciseFilter);
+    } else {
+      setSelected('Cardio');
+    }
+  }, [ExerciseFilter]);
 
+  const handleSelectExercise = (item: any) => {
+    setSelected(item);
+    dispatch(setExercise(item));
+  };
   useFocusEffect(
     useCallback(() => {
       let backPressedOnce = false;
@@ -68,14 +120,17 @@ const Exercise = ({ navigation }: any) => {
     'Cardio',
     'Legs',
     'Back',
-    'Chest'
+    'Chest',
+    'Shoulder',
+    'Biceps',
+    'Triceps'
   ]
 
   const renderItem = ({ item }: any) => {
     return (
       <>
 
-        <Selector title={item} active={selected === item} onPress={() => setSelected(item)} />
+        <Selector title={item} active={selected === item} onPress={() => handleSelectExercise(item)} />
 
       </>
     )
@@ -86,7 +141,7 @@ const Exercise = ({ navigation }: any) => {
         <View style={{ paddingVertical: 25 }}>
           <ExerciseCard id={item.id} title={item.title} kcal={item.kcal} time={item.time} level={item.level} image={item.image} subtitle='' onPress={() => navigation.navigate('ExerciseDetails', { item })} loader={loader} />
         </View>
-        {index !== ExerciseCardData[selected].length - 1 && (
+        {index !== exerciselist.length - 1 && (
           <View style={style.line} />
         )}
 
@@ -105,7 +160,7 @@ const Exercise = ({ navigation }: any) => {
         contentContainerStyle={{ paddingBottom: 100 }}
 
         overScrollMode='never'>
-        <Header title='FULL EXERCISE' name='' navigation={navigation} icon={null} />
+        <Header title='FULL EXERCISE' name='funnel-outline' navigation={navigation} icon={null} onFilterPress={() => navigation.navigate('Filter')} />
 
         <View style={style.SelectorView}>
 

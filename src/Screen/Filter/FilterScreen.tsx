@@ -7,6 +7,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Selector from '../../components/Selector';
 import Header from '../../components/ScreensHeader';
 import AuthButton from '../../Screen/Auth/component/AuthButton';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  setCategories,
+  setExercise,
+  setLevel,
+  setMeal,
+  setTime,
+  resetFilters,
+} from '../../Storage/Redux/filterSlice';
 
 import {
   categoriesData,
@@ -17,15 +26,18 @@ import {
 } from '../../Data/FilterData';
 
 const FilterScreen = ({ navigation }: any) => {
-  const [selectedCategory, setSelectedCategory] = useState('Running');
+  const dispatch = useDispatch();
+  const filterState = useSelector((state: any) => state.filter);
 
-  const [selectedExercise, setSelectedExercise] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState(filterState.Categories || 'All');
 
-  const [selectedLevel, setSelectedLevel] = useState('Beginner');
+  const [selectedExercise, setSelectedExercise] = useState(filterState.Exercise || 'All');
 
-  const [selectedMeal, setSelectedMeal] = useState('Breakfast');
+  const [selectedLevel, setSelectedLevel] = useState(filterState.Level || 'Beginner');
 
-  const [selectedTime, setSelectedTime] = useState('15-30 Min');
+  const [selectedMeal, setSelectedMeal] = useState(filterState.Meal || 'Breakfast');
+
+  const [selectedTime, setSelectedTime] = useState(filterState.Time || '15-30 Min');
 
   const renderCategory = ({ item }: any) => (
     <Selector
@@ -51,7 +63,7 @@ const FilterScreen = ({ navigation }: any) => {
     />
   );
 
-  // Meal Render
+
 
   const renderMeal = ({ item }: any) => (
     <Selector
@@ -61,7 +73,7 @@ const FilterScreen = ({ navigation }: any) => {
     />
   );
 
-  // Time Render
+  
 
   const renderTime = ({ item }: any) => (
     <Selector
@@ -70,10 +82,33 @@ const FilterScreen = ({ navigation }: any) => {
       onPress={() => setSelectedTime(item)}
     />
   );
+  const applyFilters = () => {
+        dispatch(setCategories(selectedCategory));
+        dispatch(setExercise(selectedExercise));
+        dispatch(setLevel(selectedLevel));
+        dispatch(setMeal(selectedMeal));
+        dispatch(setTime(selectedTime));
+        navigation.goBack();
+    
+  }
+
+  const handleClearAll = () => {
+    dispatch(resetFilters());
+    setSelectedCategory('All');
+    setSelectedExercise('All');
+    setSelectedLevel('Beginner');
+    setSelectedMeal('Breakfast');
+    setSelectedTime('15-30 Min');
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header name="Clear All" title="FILTERS PLAN" navigation={navigation} />
+      <Header
+        title="FILTERS PLAN"
+        navigation={navigation}
+        rightText="Clear All"
+        onFilterPress={handleClearAll}
+      />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -90,7 +125,7 @@ const FilterScreen = ({ navigation }: any) => {
           columnWrapperStyle={styles.row}
         />
 
-        {/* Exercise */}
+
 
         <Text style={styles.heading}>EXERCISE</Text>
 
@@ -103,7 +138,7 @@ const FilterScreen = ({ navigation }: any) => {
           columnWrapperStyle={styles.row}
         />
 
-        {/* Level */}
+        
 
         <Text style={styles.heading}>LEVEL</Text>
 
@@ -139,7 +174,7 @@ const FilterScreen = ({ navigation }: any) => {
         />
 
         <View style={styles.buttonBox}>
-          <AuthButton title="APPLY FILTERS" />
+          <AuthButton title="APPLY FILTERS" onPress={applyFilters}/>
         </View>
       </ScrollView>
     </SafeAreaView>

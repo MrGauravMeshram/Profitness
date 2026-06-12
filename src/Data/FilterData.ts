@@ -20,7 +20,7 @@ export const exerciseData = [
   'Legs',
 ];
 
-export const levelData = ['Beginner', 'Average', 'Hard'];
+export const levelData = ['Beginner', 'Intermediate', 'Advanced'];
 
 export const mealData = ['Breakfast', 'Lunch', 'Dinner'];
 

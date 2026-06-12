@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,7 @@ import { ImageSourcePropType } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { Skeleton } from '@rneui/themed';
+import {useSelector}  from 'react-redux'
 import LinearGradient from 'react-native-linear-gradient';
 type ExerciseItem = {
   id: string;
@@ -40,6 +41,9 @@ type Props = {
   isFavorite?: boolean;
 };
 
+
+
+
 const ExerciseList = ({
   heading = '',
   buttonText = '',
@@ -53,7 +57,10 @@ const ExerciseList = ({
 }: Props) => {
   const [isLoaded, setIsLoaded] = useState(true)
   const [isLiked, setisLiked] = useState(false);
+  const [Time,setTime] = useState()
   const transition = SharedTransition.duration(550).springify() as any;
+
+
 
 
   if (loader) {

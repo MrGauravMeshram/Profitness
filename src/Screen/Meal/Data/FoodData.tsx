@@ -1,5 +1,5 @@
 export const FoodData = {
-  BreakFast: [
+  Breakfast: [
     {
       id: 1,
       title: 'Green beans, tomatoes, eggs',

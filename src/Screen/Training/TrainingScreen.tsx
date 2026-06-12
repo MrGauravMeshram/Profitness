@@ -10,23 +10,41 @@ import {
   ImageBackground,
 } from 'react-native';
 
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from '../../components/ScreensHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PremiumModal from '../../components/Modal';
 import ExerciseList from '../Home/components/PopularExercise';
+import { useSelector, useDispatch } from 'react-redux';
+import { setLevel } from '../../Storage/Redux/filterSlice';
 import { PopularData } from './Data/PopularExerciseData'
+
 import FAB from '../Home/components/FAB';
 
 const TrainingScreen = ({ navigation }: any) => {
   const [modalVisible, setModalVisible] =
     useState(true);
+  const dispatch = useDispatch();
   const [fullExerciseData, setFullExercise] = useState<any[]>([]);
   const [selectedTab, setSelectedTab] = useState<'Beginner' | 'Intermediate' | 'Advanced'>('Beginner');
   const [isLoader, setIsLoader] = useState(true);
 
   const tabs: ('Beginner' | 'Intermediate' | 'Advanced')[] = ['Beginner', 'Intermediate', 'Advanced'];
+  const Category = useSelector(
+    (state:any) => state.filter.Level
+  )
 
+  const selectedTime = useSelector(
+    (state: any) => state.filter.Time
+  );
+
+  useEffect(() => {
+    if (Category) {
+      setSelectedTab(Category as any);
+    } else {
+      setSelectedTab('Beginner');
+    }
+    console.log(Category);
+  }, [Category])
 
   useEffect(() => {
     setIsLoader(true);
@@ -39,6 +57,34 @@ const TrainingScreen = ({ navigation }: any) => {
 
     return () => clearTimeout(timer);
   }, [selectedTab]);
+
+  const handleTabPress = (tab: 'Beginner' | 'Intermediate' | 'Advanced') => {
+    setSelectedTab(tab);
+    dispatch(setLevel(tab));
+  };
+  const filterByTime = (data: any[]) => {
+  if (!selectedTime) return data;
+
+  return data.filter(item => {
+    const duration = parseInt(item.duration);
+
+    switch (selectedTime) {
+      case '10-15 Min':
+        return duration >= 10 && duration <= 15;
+
+      case '15-30 Min':
+        return duration >= 15 && duration <= 30;
+
+      case '30-45 Min':
+        return duration >= 30 && duration <= 45;
+
+      default:
+        return true;
+    }
+  });
+};
+
+const filteredData = filterByTime(fullExerciseData);
 
   const forYouData = [
     {
@@ -79,7 +125,7 @@ const TrainingScreen = ({ navigation }: any) => {
               <TouchableOpacity
                 key={tab}
                 activeOpacity={0.8}
-                onPress={() => setSelectedTab(tab)}
+                onPress={() => handleTabPress(tab)}
                 style={[styles.tabButton, active && styles.activeTab]}
               >
                 <Text style={[styles.tabText, active && styles.activeTabText]}>
@@ -93,7 +139,7 @@ const TrainingScreen = ({ navigation }: any) => {
         <ExerciseList
           heading="Popular Training"
           buttonText=""
-          data={fullExerciseData as any}
+          data={filteredData as any}
           loader={isLoader}
         />
 

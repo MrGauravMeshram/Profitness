@@ -1,8 +1,13 @@
 import userReducer from './slice'
 import { configureStore } from '@reduxjs/toolkit';
-
+import filterReducer from './filterSlice';
 export const store = configureStore({
-  reducer: {userReducer},
+  reducer: {
+    userReducer: userReducer,
+    filter: filterReducer,
+    
+  },
+  
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -1,5 +1,5 @@
 export const Food = [
-    "BreakFast",
+    "Breakfast",
     "Lunch",
     "Dinner"
 ]

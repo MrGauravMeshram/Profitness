@@ -46,19 +46,19 @@ export const PopularData = {
             id: '7',
             image: "https://images.unsplash.com/photo-1714646442330-9068099f5521?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             title: 'Advanced Full Body Challenge',
-            duration: '60 min',
+            duration: '30 min',
         },
         {
             id: '8',
             image: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             title: 'Heavy Strength Conditioning',
-            duration: '55 min',
+            duration: '35 min',
         },
         {
             id: '9',
             image: "https://images.unsplash.com/photo-1534258936925-c58bed479fcb?q=80&w=1631&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             title: 'Elite Athletic Performance',
-            duration: '70 min',
+            duration: '45 min',
         },
     ],
 };

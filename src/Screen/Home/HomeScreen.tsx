@@ -1,8 +1,7 @@
-import React, { useState, useCallback } from 'react';
-import { View, StyleSheet, Text, BackHandler, Image, Dimensions, ScrollView } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, StyleSheet, Text, BackHandler, Image, Dimensions } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Header from './components/Header';
-import Banner from './components/Banner';
 import SelectGoal from './components/SelectGoal';
 import Toast from 'react-native-toast-message';
 import Carousel from 'react-native-reanimated-carousel';
@@ -18,11 +17,13 @@ import Popular from './components/PopularExercise';
 import SearchBar from '../../components/searchBar';
 import { BannerData } from './BannerImageData/ImageData';
 const { width } = Dimensions.get('window');
+import { useSelector } from 'react-redux';
 import AdditionalExercise from './components/AdditionalExercise';
-
-const Home = ({ navigation }: any) => {
+import { CategoryData } from './Data/CategoriesData';
+const Home = ({ navigation: _navigation }: any) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedGoal, setSelectedGoal] = useState('2');
+  const [categoryData, setCategoryData] = useState<any[]>(CategoryData);
   const [popularData, setPopularData] = useState([
   {
     id: '1',
@@ -60,8 +61,19 @@ const [mealData, setMealData] = useState([
     isFavorite: false,
   },
 ]);
-  
-
+const Category = useSelector(
+  (state:any) => state.filter.Categories
+) 
+  useEffect(() => {
+    if (!Category || Category === 'All') {
+      setCategoryData(CategoryData);
+    } else {
+      const filtered = CategoryData.filter(
+        item => item.title.toLowerCase() === Category.toLowerCase()
+      );
+      setCategoryData(filtered);
+    }
+  }, [Category])
 
 
   const scrollY = useSharedValue(0);
@@ -73,7 +85,7 @@ const [mealData, setMealData] = useState([
     },
   });
 
-  // Animated style for the sticky container — computed on UI thread
+  
   const stickyAnimatedStyle = useAnimatedStyle(() => {
     const top = interpolate(
       scrollY.value,
@@ -130,25 +142,7 @@ const [mealData, setMealData] = useState([
     { id: '4', title: 'Healthy' },
   ];
 
-  const categoryData = [
-    { id: '1', title: 'Yoga', image: require('../../assets/png/Yoga.png') },
-    { id: '2', title: 'Gym', image: require('../../assets/png/gyms.png') },
-    {
-      id: '3',
-      title: 'Cardio',
-      image: require('../../assets/png/cardiao.png'),
-    },
-    {
-      id: '4',
-      title: 'Stretch',
-      image: require('../../assets/png/stretch.png'),
-    },
-    {
-      id: '5',
-      title: 'Full Body',
-      image: require('../../assets/png/fullbody.png'),
-    },
-  ];
+  
 
   
   useFocusEffect(

@@ -10,20 +10,35 @@ type Props = {
   navigation: any;
   icon?: any;
   onFilterPress?: () => void;
+  rightText?: string;
 };
 
-const Header = ({ title, navigation, name, icon = "chevron-back", onFilterPress }: Props) => {
+const Header = ({ title, navigation, name, icon = "chevron-back", onFilterPress, rightText }: Props) => {
   return (
     <View style={styles.header}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Ionicons name={icon} size={24} color="#111" />
-      </TouchableOpacity>
+      {icon ? (
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name={icon} size={24} color="#111" />
+        </TouchableOpacity>
+      ) : (
+        <View style={{ width: 24 }} />
+      )}
 
       <Text style={styles.headerTitle}>{title}</Text>
 
-      <TouchableOpacity onPress={onFilterPress}>
-        <Ionicons name={name} size={22} color="#111" />
-      </TouchableOpacity>
+      {onFilterPress ? (
+        <TouchableOpacity onPress={onFilterPress}>
+          {rightText ? (
+            <Text style={styles.rightText}>{rightText}</Text>
+          ) : name ? (
+            <Ionicons name={name} size={22} color="#111" />
+          ) : (
+            <View style={{ width: 22 }} />
+          )}
+        </TouchableOpacity>
+      ) : (
+        <View style={{ width: 22 }} />
+      )}
     </View>
   );
 };
@@ -47,4 +62,11 @@ const styles = StyleSheet.create({
     color: '#111',
     fontFamily: 'BebasNeue-Regular',
   },
+
+  rightText: {
+    fontSize: 14,
+    color: '#FF4D4D',
+    fontFamily: 'Montserrat-Bold',
+  },
 });
+
