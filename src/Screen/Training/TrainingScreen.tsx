@@ -14,6 +14,7 @@ import Header from '../../components/ScreensHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PremiumModal from '../../components/Modal';
 import ExerciseList from '../Home/components/PopularExercise';
+import NoFilter from '../../components/noFilter';
 import { useSelector, useDispatch } from 'react-redux';
 import { setLevel } from '../../Storage/Redux/filterSlice';
 import { PopularData } from './Data/PopularExerciseData'
@@ -30,7 +31,7 @@ const TrainingScreen = ({ navigation }: any) => {
 
   const tabs: ('Beginner' | 'Intermediate' | 'Advanced')[] = ['Beginner', 'Intermediate', 'Advanced'];
   const Category = useSelector(
-    (state:any) => state.filter.Level
+    (state: any) => state.filter.Level
   )
 
   const selectedTime = useSelector(
@@ -63,28 +64,28 @@ const TrainingScreen = ({ navigation }: any) => {
     dispatch(setLevel(tab));
   };
   const filterByTime = (data: any[]) => {
-  if (!selectedTime) return data;
+    if (!selectedTime) return data;
 
-  return data.filter(item => {
-    const duration = parseInt(item.duration);
+    return data.filter(item => {
+      const duration = parseInt(item.duration);
 
-    switch (selectedTime) {
-      case '10-15 Min':
-        return duration >= 10 && duration <= 15;
+      switch (selectedTime) {
+        case '10-15 Min':
+          return duration >= 10 && duration <= 15;
 
-      case '15-30 Min':
-        return duration >= 15 && duration <= 30;
+        case '15-30 Min':
+          return duration >= 15 && duration <= 30;
 
-      case '30-45 Min':
-        return duration >= 30 && duration <= 45;
+        case '30-45 Min':
+          return duration >= 30 && duration <= 45;
 
-      default:
-        return true;
-    }
-  });
-};
+        default:
+          return true;
+      }
+    });
+  };
 
-const filteredData = filterByTime(fullExerciseData);
+  const filteredData = filterByTime(fullExerciseData);
 
   const forYouData = [
     {
@@ -135,13 +136,19 @@ const filteredData = filterByTime(fullExerciseData);
             );
           })}
         </View>
+        {filteredData.length > 0 ? (
+          <ExerciseList
+            heading="Popular Training"
+            buttonText=""
+            data={filteredData as any}
+            loader={isLoader}
+          />
+        ) : (
+          <View>
+            <NoFilter />
+          </View>
+        )}
 
-        <ExerciseList
-          heading="Popular Training"
-          buttonText=""
-          data={filteredData as any}
-          loader={isLoader}
-        />
 
         <View style={styles.forYouContainer}>
           <Text style={styles.forYouHeading}>Just For you</Text>

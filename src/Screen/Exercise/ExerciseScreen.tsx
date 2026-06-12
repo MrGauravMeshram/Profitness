@@ -6,6 +6,7 @@ import Header from '../../components/ScreensHeader';
 import Selector from '../../components/Selector';
 import ExerciseCard from './component/ExerciseCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import NoFilter from '../../components/noFilter';
 import { ExerciseCardData } from './Data/ExerciseData'
 import { useSelector, useDispatch } from 'react-redux';
 import { setExercise } from '../../Storage/Redux/filterSlice';
@@ -13,7 +14,7 @@ const Exercise = ({ navigation }: any) => {
   const dispatch = useDispatch();
 
   const selectedTime = useSelector(
-    (state:any) => state.filter.Time
+    (state: any) => state.filter.Time
   );
   const ExerciseFilter = useSelector(
     (state: any) => state.filter.Exercise
@@ -63,7 +64,7 @@ const Exercise = ({ navigation }: any) => {
 
     return () => clearTimeout(timer);
   }, [selected, selectedTime, selectedLevel]);
-  
+
 
   useEffect(() => {
     if (
@@ -177,15 +178,27 @@ const Exercise = ({ navigation }: any) => {
 
         </View>
 
-        <FlatList
-          data={exerciselist}
-          renderItem={renderData}
-          scrollEnabled={false}
-          nestedScrollEnabled
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={style.cardlist}
-
-        />
+        {
+          exerciselist.length > 0 ? (
+            <FlatList
+              data={exerciselist}
+              renderItem={renderData}
+              scrollEnabled={false}
+              nestedScrollEnabled
+              keyExtractor={(item) => item.id.toString()}
+              contentContainerStyle={style.cardlist}
+            />
+          ) : (
+            <>
+              <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                <NoFilter
+                  title="No Exercise Found"
+                  subtitle="Try changing your filters"
+                />
+              </View>
+            </>
+          )
+        }
 
 
       </ScrollView>

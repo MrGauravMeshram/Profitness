@@ -12,6 +12,7 @@ type Props = {
   active?: boolean;
   onPress?: () => void;
   style?: ViewStyle;
+  containerStyle?: ViewStyle;
 };
 
 const Selector = ({
@@ -19,9 +20,10 @@ const Selector = ({
   active = false,
   onPress,
   style,
+  containerStyle,
 }: Props) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={onPress}

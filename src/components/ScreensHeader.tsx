@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextStyle } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -11,34 +11,43 @@ type Props = {
   icon?: any;
   onFilterPress?: () => void;
   rightText?: string;
+  rightTextStyle?: TextStyle;
 };
 
-const Header = ({ title, navigation, name, icon = "chevron-back", onFilterPress, rightText }: Props) => {
+const Header = ({
+  title,
+  navigation,
+  name,
+  icon = "chevron-back",
+  onFilterPress,
+  rightText,
+  rightTextStyle,
+}: Props) => {
   return (
     <View style={styles.header}>
-      {icon ? (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name={icon} size={24} color="#111" />
-        </TouchableOpacity>
-      ) : (
-        <View style={{ width: 24 }} />
-      )}
+      <View style={styles.leftContainer}>
+        {icon ? (
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name={icon} size={24} color="#111" />
+          </TouchableOpacity>
+        ) : null}
+      </View>
 
-      <Text style={styles.headerTitle}>{title}</Text>
+      <Text style={styles.headerTitle} numberOfLines={1}>
+        {title}
+      </Text>
 
-      {onFilterPress ? (
-        <TouchableOpacity onPress={onFilterPress}>
-          {rightText ? (
-            <Text style={styles.rightText}>{rightText}</Text>
-          ) : name ? (
-            <Ionicons name={name} size={22} color="#111" />
-          ) : (
-            <View style={{ width: 22 }} />
-          )}
-        </TouchableOpacity>
-      ) : (
-        <View style={{ width: 22 }} />
-      )}
+      <View style={styles.rightContainer}>
+        {onFilterPress ? (
+          <TouchableOpacity onPress={onFilterPress}>
+            {rightText ? (
+              <Text style={[styles.rightText, rightTextStyle]}>{rightText}</Text>
+            ) : name ? (
+              <Ionicons name={name} size={22} color="#111" />
+            ) : null}
+          </TouchableOpacity>
+        ) : null}
+      </View>
     </View>
   );
 };
@@ -49,18 +58,36 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    textAlign: "center",
-    elevation: 5,
+    justifyContent: 'center',
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 10,
+    minHeight: 54,
+    position: 'relative',
+  },
+
+  leftContainer: {
+    position: 'absolute',
+    left: 20,
+    height: '100%',
+    justifyContent: 'center',
+    zIndex: 10,
+  },
+
+  rightContainer: {
+    position: 'absolute',
+    right: 20,
+    height: '100%',
+    justifyContent: 'center',
+    zIndex: 10,
   },
 
   headerTitle: {
     fontSize: 24,
     color: '#111',
     fontFamily: 'BebasNeue-Regular',
+    textAlign: 'center',
+    marginHorizontal: 80,
   },
 
   rightText: {

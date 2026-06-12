@@ -9,6 +9,7 @@ import { Months } from './Data/MonthData'
 import { Food } from './Data/Data';
 import { useFocusEffect } from '@react-navigation/native';
 import PopularExercise from '../Home/components/PopularExercise';
+import NoFilter from '../../components/noFilter';
 import { FoodData } from './Data/FoodData';
 import Selector from '../../components/Selector';
 import WeekCard from '../Exercise/component/WeekCard';
@@ -19,6 +20,7 @@ import { setMeal } from '../../Storage/Redux/filterSlice';
 const MealPlanScreen = ({ navigation }: any) => {
   const dispatch = useDispatch();
   const reduxMeal = useSelector((state: any) => state.filter.Meal);
+  const selectedTime = useSelector((state: any) => state.filter.Time);
 
   const [monthIndex, setMonthIndex] = useState(new Date().getMonth());
   const [selected, setSelected] = useState(new Date().getDay());
@@ -40,7 +42,28 @@ const MealPlanScreen = ({ navigation }: any) => {
     setloader(true);
 
     const timer = setTimeout(() => {
-      const foods = FoodData[selectedMeal as keyof typeof FoodData] || [];
+      let foods = FoodData[selectedMeal as keyof typeof FoodData] || [];
+
+      if (selectedTime && selectedTime !== 'All') {
+        foods = foods.filter((item: any) => {
+          const minutes = parseInt(item.time);
+
+          switch (selectedTime) {
+            case '10-15 Min':
+              return minutes >= 10 && minutes <= 15;
+
+            case '15-30 Min':
+              return minutes >= 15 && minutes <= 30;
+
+            case '30-45 Min':
+              return minutes >= 30 && minutes <= 45;
+
+            default:
+              return true;
+          }
+        });
+      }
+
       setItemdata(
         foods.map(item => ({
           ...item,
@@ -51,7 +74,7 @@ const MealPlanScreen = ({ navigation }: any) => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [selectedMeal]);
+  }, [selectedMeal, selectedTime]);
 
   const handleSelectMeal = (meal: string) => {
     setSelectedMeal(meal);
@@ -172,23 +195,29 @@ const MealPlanScreen = ({ navigation }: any) => {
           ))}
         </View>
         <View style={Styles.mealText}>
-          <Text style={Styles.text}>15 meals</Text>
+          <Text style={Styles.text}>{itemdata.length} meals</Text>
         </View>
-        <PopularExercise
-          data={itemdata.map(item => ({
-            id: item.id.toString(),
-            image: item.image,
-            title: item.title,
-            level: item.kcal,
-            duration: item.time,
-            isFavorite: item.isFavorite,
-          }))}
-          onPressItem={(item: any) =>
-            navigation.push('MealDetails', { item })
-          }
-          onPressFavorite={handleFavorite}
-          loader={loader}
-        />
+        {itemdata.length > 0 ? (
+          <PopularExercise
+            data={itemdata.map(item => ({
+              id: item.id.toString(),
+              image: item.image,
+              title: item.title,
+              level: item.kcal,
+              duration: item.time,
+              isFavorite: item.isFavorite,
+            }))}
+            onPressItem={(item: any) =>
+              navigation.push('MealDetails', { item })
+            }
+            onPressFavorite={handleFavorite}
+            loader={loader}
+          />
+        ) : (
+          <View style={{ marginTop: 20 }}>
+            <NoFilter />
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
