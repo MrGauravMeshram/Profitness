@@ -161,7 +161,7 @@ React.useEffect(() => {
   const getitem = async () => {
     const key = uid ? `steppingCompleted_${uid}` : 'steppingCompleted';
     const value = await asyncStorage.getItem(key);
-    console.log('Stepping completed value:', value);
+    
   };
   getitem();
 }, [uid]);

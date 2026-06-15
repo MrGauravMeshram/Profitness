@@ -22,6 +22,7 @@ import ExerciseDetialsScreen from '../Screen/Exercise/ExerciseDetialsScreen';
 import ScheduleExerciseScreen from '../Screen/Exercise/ScheduleExerciseScreen';
 import MealDetailsScreen from '../Screen/Meal/MealDetailsScreen';
 import MealPlanScreen from '../Screen/Meal/MealPlanScreen';
+import ExerciseStartScreen from '../Screen/Exercise/ExerciseStartScreen';
 import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 import { TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -87,7 +88,7 @@ const StackNavigation = () => {
           dispatch(setUserDetails(null));
         }
       } catch (err) {
-        console.log('Error reading MMKV userDetails:', err);
+
         dispatch(setUserDetails(null));
       }
 
@@ -96,7 +97,7 @@ const StackNavigation = () => {
         const imageUri = await AsyncStorage.getItem(`ImageContainer_${user.uid}`);
         dispatch(setProfileImage(imageUri));
       } catch (err) {
-        console.log('Error reading AsyncStorage ImageContainer:', err);
+
         dispatch(setProfileImage(null));
       }
 
@@ -191,6 +192,10 @@ const StackNavigation = () => {
             <Stack.Screen
               name="MealPlanTest"
               component={MealPlanScreen}
+            />
+            <Stack.Screen
+              name="ExerciseStartScreen"
+              component={ExerciseStartScreen}
             />
 
           </>

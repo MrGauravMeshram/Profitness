@@ -78,7 +78,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       })
       .catch((err: any) => {
         Alert.alert(err?.message || "An error occurred during sign out");
-        console.log(err);
+        
       });
   };
 
@@ -123,7 +123,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   };
   const { userDetails } = useSelector((state: RootState) => state.userReducer)
   const { profileImage } = useSelector((state: RootState) => state.userReducer)
-  console.log("userDetails", userDetails)
+  
 
   return (
 

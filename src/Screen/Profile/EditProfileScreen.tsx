@@ -72,7 +72,7 @@ const EditProfile = ({ navigation }: any) => {
   const [heightUnit, setHeightUnit] = useState('CM');
   useEffect(() => {
     const datas = Storage.getString(`userDetails_${uid}`);
-    console.log('user data', datas);
+    
   }, [uid]);
 
   const getData = useCallback(async () => {
@@ -143,7 +143,7 @@ const EditProfile = ({ navigation }: any) => {
         });
       }
     } catch (error) {
-      console.log(error);
+      
     }
   }, [uid]);
 
@@ -163,7 +163,7 @@ const EditProfile = ({ navigation }: any) => {
         },
       );
 
-      console.log('Permission Result:', result);
+      
 
       if (result === PermissionsAndroid.RESULTS.GRANTED) {
         return true;
@@ -215,7 +215,7 @@ const EditProfile = ({ navigation }: any) => {
 
       bottomSheetRef.current?.close();
     } catch (error) {
-      console.log(error);
+      
     }
   };
   const openCamera = async () => {
@@ -235,13 +235,13 @@ const EditProfile = ({ navigation }: any) => {
         },
         response => {
           if (response.didCancel) {
-            console.log('Cancelled');
+            
           } else if (response.errorCode) {
-            console.log(response.errorMessage);
+            
           } else {
             const uri = response.assets?.[0]?.uri || '';
 
-            console.log(uri);
+            
 
             setImageUri(uri);
             setPushImage(uri);
@@ -271,13 +271,13 @@ const EditProfile = ({ navigation }: any) => {
       },
       response => {
         if (response.didCancel) {
-          console.log('Cancelled');
+          
         } else if (response.errorCode) {
-          console.log(response.errorMessage);
+          
         } else {
           const uri = response.assets?.[0]?.uri || '';
 
-          console.log(uri);
+          
 
           setImageUri(uri);
           setPushImage(uri);
@@ -342,7 +342,7 @@ const EditProfile = ({ navigation }: any) => {
 
       navigation.goBack();
     } catch (error) {
-      console.log(error);
+      
     }
   };
 

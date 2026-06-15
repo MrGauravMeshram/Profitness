@@ -12,12 +12,16 @@ import {
 
 import HeadingText from '../../components/headingText';
 import AuthButton from './component/AuthButton';
+import { useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { RootState } from '../../Storage/Redux/store';
 const VerifyAccount = ({ navigation }: any) => {
   const [otp, setOtp] = useState(['', '', '', '']);
 
   const inputRefs = useRef<Array<TextInput | null>>([]);
-
+  const userEmail = useSelector(
+    (state: RootState) => state.userReducer.resetEmail
+  );
   const handleChange = (text: string, index: number) => {
     const newOtp = [...otp];
     newOtp[index] = text;
@@ -43,7 +47,7 @@ const VerifyAccount = ({ navigation }: any) => {
         <View style={styles.container}>
           <HeadingText
             title="VERIFY ACCOUNT"
-            subtitle="Verify your account by entering verification code we sent to dhruvit@gmail.com"
+            subtitle={`Verify your account by entering verification code we sent to ${userEmail}`}
             onPress={() => navigation.goBack()}
           />
 

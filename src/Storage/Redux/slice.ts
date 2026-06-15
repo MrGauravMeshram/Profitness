@@ -21,6 +21,7 @@ interface UserState {
   photoURL: string | null;
   userDetails: UserDetails | null;
   profileImage: string | null;
+  resetEmail:string |null;
 }
 
 const initialState: UserState = {
@@ -30,6 +31,7 @@ const initialState: UserState = {
   photoURL: null,
   userDetails: null,
   profileImage: null,
+  resetEmail:null
 };
 
 const userSlice = createSlice({
@@ -49,6 +51,7 @@ const userSlice = createSlice({
       state.name = action.payload.name;
       state.email = action.payload.email;
       state.photoURL = action.payload.photoURL;
+      
     },
 
     setUserDetails: (state, action: PayloadAction<UserDetails | null>) => {
@@ -58,6 +61,9 @@ const userSlice = createSlice({
     setProfileImage: (state, action: PayloadAction<string | null>) => {
       state.profileImage = action.payload;
     },
+    setResetEmail :(state,action:PayloadAction<string|null>)=>{
+      state.resetEmail = action.payload
+    },
 
     clearUser: state => {
       state.uid = null;
@@ -66,9 +72,10 @@ const userSlice = createSlice({
       state.photoURL = null;
       state.userDetails = null;
       state.profileImage = null;
+      state.resetEmail = null;
     },
   },
 });
 
-export const { setUser, setUserDetails, setProfileImage, clearUser } = userSlice.actions;
+export const { setUser, setUserDetails, setProfileImage, clearUser,setResetEmail } = userSlice.actions;
 export default userSlice.reducer;

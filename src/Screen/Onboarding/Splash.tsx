@@ -19,7 +19,7 @@ const SplashScreen = ({ navigation, onFinish }: any) => {
           }
         }
       } catch (error) {
-        console.log(error);
+        
         if (onFinish) {
           onFinish();
         } else {

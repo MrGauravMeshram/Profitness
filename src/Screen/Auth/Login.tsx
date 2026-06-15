@@ -86,7 +86,7 @@ const uid = auth.currentUser?.uid;
       .then((userCredential) => {
 
         const user = userCredential.user;
-        console.log('User signed in:', user);
+        
         Toast.show({
           type: 'success',
           text1: 'Logged in successfully',
@@ -98,7 +98,7 @@ const uid = auth.currentUser?.uid;
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log('Error signing in:', errorCode, errorMessage);
+        
         if (errorCode === 'auth/user-not-found') {
           setFirebaseErrors({
             email: 'Wrong email',
@@ -133,22 +133,22 @@ const uid = auth.currentUser?.uid;
       await GoogleOneTapSignIn.checkPlayServices();
 
       let response = await GoogleOneTapSignIn.signIn();
-      console.log('Initial Google Sign-In response:', response);
+      
 
       if (isNoSavedCredentialFoundResponse(response)) {
-        console.log('No saved credential found, calling createAccount...');
+        
         response = await GoogleOneTapSignIn.createAccount();
-        console.log('Google createAccount response:', response);
+        
       }
 
       if (isNoSavedCredentialFoundResponse(response)) {
-        console.log('Still no credential, calling presentExplicitSignIn...');
+        
         response = await GoogleOneTapSignIn.presentExplicitSignIn();
-        console.log('Google presentExplicitSignIn response:', response);
+        
       }
 
       if (!isSuccessResponse(response)) {
-        console.log('Google Sign-In response was not successful:', response);
+        
         return;
       }
 
@@ -184,7 +184,7 @@ const uid = auth.currentUser?.uid;
             try {
               await AsyncStorage.setItem(`ImageContainer_${user.uid}`, user.photoURL);
             } catch (storageError) {
-              console.log("Error saving profile image:", storageError);
+              
             }
           }
         }
@@ -197,7 +197,7 @@ const uid = auth.currentUser?.uid;
       });
 
     } catch (error) {
-      console.log('Google Sign-In error:', error);
+      
       Alert.alert('Google Sign-In Error', error instanceof Error ? error.message : String(error));
     }
   };

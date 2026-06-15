@@ -40,7 +40,7 @@ const MealDetailsScreen = ({ route }: Props & any) => {
       image: require('../../assets/Images/chickensalad.jpg'),
     },
   ];
-  console.log('detail item', item.id);
+  
   const transition = SharedTransition.duration(300).springify(200) as any;
   return (
     <View style={styles.root}>

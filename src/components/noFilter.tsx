@@ -1,7 +1,15 @@
 import { View, Text, StyleSheet, Image } from 'react-native'
 import React from 'react'
 
-const noFilter = () => {
+interface NoFilterProps {
+  title?: string;
+  subtitle?: string;
+}
+
+const noFilter = ({
+  title = "Too Many Filters Applied",
+  subtitle = "Try a different Permutation combination of filter. Or try removing some filters."
+}: NoFilterProps) => {
   return (
     <View style={style.container}>
       <View style={style.imageContainer}>
@@ -10,8 +18,8 @@ const noFilter = () => {
           style={{ height: "100%", width: "100%" }} />
       </View>
       <View>
-        <Text style={style.textstyle}>Too Many Filters Applied</Text>
-        <Text style={[style.textstyle, style.subtext]}>Try a different Permutation combination of filter. Or try removing some filters.</Text>
+        <Text style={style.textstyle}>{title}</Text>
+        <Text style={[style.textstyle, style.subtext]}>{subtitle}</Text>
       </View>
     </View>
   )

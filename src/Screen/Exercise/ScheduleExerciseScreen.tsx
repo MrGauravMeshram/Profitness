@@ -8,6 +8,7 @@ import TimePickerButton from './component/TimeComponent';
 import Arrow from '../../components/ArrowComponent';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import ToggleButton from '../../components/ToggleButton';
+import ExerciseStartScreen from './ExerciseStartScreen';
 import AuthButton from '../Auth/component/AuthButton';
 import notifee, { AuthorizationStatus, TriggerType, AndroidNotificationSetting, AndroidImportance, AndroidCategory } from '@notifee/react-native';
 import Toast from 'react-native-toast-message';
@@ -155,10 +156,7 @@ const ScheduleExerciseScreen = ({ navigation }: any) => {
                 text1: 'Reminder set successfully!',
                 text2: `Scheduled for ${formatTime(time)}`,
             });
-
-            setTimeout(() => {
-                navigation.goBack();
-            }, 1000);
+            navigation.navigate('ExerciseStartScreen');
         } catch (error) {
             console.error('Failed to schedule reminder:', error);
             Toast.show({

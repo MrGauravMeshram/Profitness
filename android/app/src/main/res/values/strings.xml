@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Profitness</string>
+     <string name="facebook_app_id">986994710608603</string>
+    <string name="facebook_client_token">cd5d9816e4385a96ec4c9ace90221972</string>
 </resources>

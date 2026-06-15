@@ -23,7 +23,9 @@ import AuthFooter from './component/AuthFooter';
 import {
   getAuth
   ,
-  createUserWithEmailAndPassword
+  createUserWithEmailAndPassword,
+  FacebookAuthProvider,
+  signInWithCredential,
 }
   from
   '@react-native-firebase/auth'
@@ -31,7 +33,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Storage } from '../../Storage/MMkvstore';
-
+import
+ { LoginManager
+,
+ AccessToken } 
+from
+ 'react-native-fbsdk-next'
+;
 
 const RegisterScreen = ({ navigation }: any) => {
   const [fullName, setFullName] = useState('');
@@ -262,6 +270,19 @@ const RegisterScreen = ({ navigation }: any) => {
     }
   };
 
+const onPressFaceBook = async()=>{
+  const result = await LoginManager.logInWithPermissions(['public_profile','email']);
+  if(result.isCancelled){
+    throw 'use Cancel the Login'
+  }
+  const data = await AccessToken.getCurrentAccessToken();
+  if(!data){
+    throw 'Something went wrong obtaining access Token'
+  }
+  const faceBookCredential = FacebookAuthProvider.credential(data.accessToken);
+  return signInWithCredential(getAuth(),faceBookCredential);
+}
+
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -336,6 +357,7 @@ const RegisterScreen = ({ navigation }: any) => {
                 backgroundColor="#4967B5"
                 borderColor="#4967B5"
                 textColor="#FFFFFF"
+                onPress={onPressFaceBook}
               />
             </View>
 

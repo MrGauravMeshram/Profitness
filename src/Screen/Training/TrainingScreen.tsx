@@ -44,7 +44,7 @@ const TrainingScreen = ({ navigation }: any) => {
     } else {
       setSelectedTab('Beginner');
     }
-    console.log(Category);
+    
   }, [Category])
 
   useEffect(() => {
